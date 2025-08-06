@@ -6,11 +6,19 @@ export type NodeAttributes = {
   isWall: boolean;
   isVisited: boolean;
 };
+export type ModeSelection = "start" | "end" | "wall" | "visualize";
+export type AlgoSelection = "BFS" | "DFS" | "DIJAKSTRA" | "A*" | null;
 
-// will see if there is any need
-export type NodeProps = {
-  node: NodeAttributes;
-  onClick: () => void;
+type Position = [number, number];
+
+export type HandleStartEndProps = {
+  mode: SelectionMode;
+  startPos: Position | null;
+  endPos: Position | null;
+  grid: NodeAttributes[][];
+  row: number;
+  col: number;
+  setStartPos: (pos: Position | null) => void;
+  setEndPos: (pos: Position | null) => void;
 };
-
 

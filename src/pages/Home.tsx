@@ -1,95 +1,36 @@
 import { useState } from "react";
 
+import { type AlgoSelection, type ModeSelection } from "../types";
+
 import { Controls } from "../components/Controls";
-import { Node } from "../components/Node";
-
-import { generateGrid } from "../utils/generateGrid";
-import { cloneGrid } from "../algorithms/general";
-
-type SelectionMode = "start" | "end" | "wall" | "visualize" | null;
+import { Grid } from "../components/Grid";
 
 export const Home = () => {
   
-  const [grid, setGrid] = useState(generateGrid());
-  const [mode, setMode] = useState<SelectionMode>(null);
-  const [startPos, setStartPos] = useState<[number,number] | null>(null);
-  const [endPos, setEndPos] = useState<[number,number] | null>(null);
+  const [mode, setMode] = useState<ModeSelection>("wall");
+  const [algo, setAlgo] = useState<AlgoSelection>(null);
+  const [inputDisabled, setInputDisabled] = useState(false);
+  const [resetFlag, setResetFlag] = useState(false); // toggled to reset grid
 
-
-  const handleClick = (row: number, col: number) => {
-    // TODO: add functionality
-    if(mode === null) return;
-    const updateGrid = cloneGrid(grid);
-    const node = updateGrid[row][col];
-
-
-    if(mode === "start") {
-      if(startPos) {
-        const [prevRow, prevCol] = startPos;
-        // to disable click on the end node if we setting start node
-        if(node.isEnd) return;
-        // if we click on the same cell it will reset it
-        if(prevRow === row && prevCol === col) {
-          updateGrid[prevRow][prevCol].isStart = !updateGrid[prevRow][prevCol].isStart;
-          setGrid(updateGrid);
-          return;
-        }
-        updateGrid[prevRow][prevCol].isStart = false;
-      }
-      node.isStart = true;
-      setStartPos([row, col]);
-    }
-
-    else if(mode === "end") {
-      if(endPos) {
-        const [prevRow, prevCol] = endPos;
-        // to disable click on the start node if we setting end node
-        if(node.isStart) return;
-        // if we click on the same cell it will reset it
-        if(prevRow === row && prevCol === col) {
-          updateGrid[prevRow][prevCol].isEnd = !updateGrid[prevRow][prevCol].isEnd;
-          setGrid(updateGrid);
-          return;
-        }
-        
-        updateGrid[prevRow][prevCol].isEnd = false;
-      }
-      node.isEnd = true;
-      setEndPos([row,col]);
-    }
-    setGrid(updateGrid);
-    
-  };
-
-  const resetGrid = () => {
-    setGrid(generateGrid());
-    setMode(null);
-    setStartPos(null);
-    setEndPos(null);
+  const handleReset = () => {
+    setResetFlag(prev => !prev);
+    setInputDisabled(false);
+    setMode('wall');
+    setAlgo(null);
   };
 
 
   return (
     <div className="min-h-screen">
       <Controls 
-        setMode={setMode}
         mode={mode}
-        onReset={resetGrid}
+        setMode={setMode}
+        onReset={handleReset}
+        setInputDisabled={setInputDisabled}
+        setAlgo={setAlgo}
       />
       <div className="">
-
-      
-        {grid.map((row, i) => 
-          <div key={i} className="flex">
-            {row.map((cell, j) => 
-              <Node
-                key={`${i}-${j}`}
-                node={cell}
-                onClick={() => handleClick(i, j)}
-              />
-            )}
-          </div>
-        )}
+        <Grid mode={mode} algo={algo} resetFlag={resetFlag} inputDisabled={inputDisabled} />
       </div>
     </div>
   );
