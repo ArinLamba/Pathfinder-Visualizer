@@ -2,7 +2,7 @@ import type { handleStartEndProps, NodeAttributes } from "../types"
 
 export const cloneGrid = (grid: NodeAttributes[][]) => {
   return grid.map(row => row.map(node => ({...node})));
-}
+};
 
 
 export const handleStartEnd = ({
