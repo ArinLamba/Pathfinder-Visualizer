@@ -65,7 +65,7 @@ export const Controls = ({ setMode, onReset, mode }: Props) => {
             className={endBtnClass}
             onClick={() => setMode(isEndActive ? null : "end")}
           >
-            {mode === "start" ? "Cancel End" : "Set End"}
+            {isEndActive ? "Cancel End" : "Set End"}
           </button>
           {/* Visualize Button */}
           <button className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-md transition">

@@ -6,11 +6,17 @@ export type NodeAttributes = {
   isWall: boolean;
   isVisited: boolean;
 };
+export type SelectionMode = "start" | "end" | "wall" | "visualize" | null;
 
-// will see if there is any need
-export type NodeProps = {
-  node: NodeAttributes;
-  onClick: () => void;
+type Position = [number, number];
+export type handleStartEndProps = {
+  mode: SelectionMode;
+  startPos: Position | null;
+  endPos: Position | null;
+  updateGrid: NodeAttributes[][];
+  row: number;
+  col: number;
+  setStartPos: (pos: Position | null) => void;
+  setEndPos: (pos: Position | null) => void;
 };
-
 
