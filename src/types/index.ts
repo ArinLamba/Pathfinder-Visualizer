@@ -6,14 +6,16 @@ export type NodeAttributes = {
   isWall: boolean;
   isVisited: boolean;
 };
-export type SelectionMode = "start" | "end" | "wall" | "visualize" | null;
+export type ModeSelection = "start" | "end" | "wall" | "visualize";
+export type AlgoSelection = "BFS" | "DFS" | "DIJAKSTRA" | "A*" | null;
 
 type Position = [number, number];
-export type handleStartEndProps = {
+
+export type HandleStartEndProps = {
   mode: SelectionMode;
   startPos: Position | null;
   endPos: Position | null;
-  updateGrid: NodeAttributes[][];
+  grid: NodeAttributes[][];
   row: number;
   col: number;
   setStartPos: (pos: Position | null) => void;
