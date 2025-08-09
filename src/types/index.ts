@@ -5,11 +5,13 @@ export type NodeAttributes = {
   isEnd: boolean;
   isWall: boolean;
   isVisited: boolean;
+  isPath?: boolean;
+  parent?: [number, number] | null;
 };
 export type ModeSelection = "start" | "end" | "wall" | "visualize";
 export type AlgoSelection = "BFS" | "DFS" | "DIJAKSTRA" | "A*" | null;
 
-type Position = [number, number];
+export type Position = [number, number] | null;
 
 export type HandleStartEndProps = {
   mode: SelectionMode;

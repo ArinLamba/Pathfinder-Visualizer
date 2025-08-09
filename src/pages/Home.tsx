@@ -29,7 +29,7 @@ export const Home = () => {
         setInputDisabled={setInputDisabled}
         setAlgo={setAlgo}
       />
-      <div className="">
+      <div className="m-9 inset-0">
         <Grid mode={mode} algo={algo} resetFlag={resetFlag} inputDisabled={inputDisabled} />
       </div>
     </div>

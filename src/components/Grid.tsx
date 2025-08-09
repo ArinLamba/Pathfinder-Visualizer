@@ -3,8 +3,8 @@ import type { AlgoSelection, ModeSelection } from "../types";
 
 import { Node } from "../components/Node";
 
-import { bfs } from "../algorithms/bfs";
 import { generateGrid } from "../utils/generateGrid";
+import { animatePath, bfs } from "../algorithms/bfs";
 import { addWalls, cloneGrid, handleStartEnd } from "../algorithms/gameHandlers";
 
 type Props = {
@@ -19,22 +19,29 @@ export const Grid = ({ mode, algo, resetFlag, inputDisabled } : Props) => {
   const [grid, setGrid] = useState(generateGrid());
   const [startPos, setStartPos] = useState<[number,number] | null>(null);
   const [endPos, setEndPos] = useState<[number,number] | null>(null);
+  const [isMouseDown, setIsMouseDown] = useState(false);
+
+
+  const toggleWall = (row:number, col:number) => {
+    if(grid[row][col].isStart || grid[row][col].isEnd) return;
+    const newGrid = cloneGrid(grid);
+    addWalls({grid: newGrid, row, col});
+    setGrid(newGrid);
+  };
 
 
   const handleClick = (row: number, col: number) => {
-    // TODO: add functionality
-
-    const newGrid = cloneGrid(grid);
-    // function to add walls they should be added by default no button is required to toggle them (i am thinking of it rn )
-
+    if(mode === null || inputDisabled) return;
+    
+    // function to add walls they should be added by default no button is required to toggle them (i am thinking of it rn ) 
     // write your function here 
     if(mode === "wall") {
-      addWalls({grid: newGrid, row, col});
-      setGrid(newGrid);
+      toggleWall(row, col);
+      return;
     }
-
     // end function here
-    if(mode === null || inputDisabled) return;
+    
+    const newGrid = cloneGrid(grid);
     if(newGrid[row][col].isVisited) return;
 
     if(mode === "start" || mode === "end") {
@@ -43,14 +50,14 @@ export const Grid = ({ mode, algo, resetFlag, inputDisabled } : Props) => {
     setGrid(newGrid);
     
   };
-
-
-  // BFS TODO : have to optimize for getting back shortest path
+  
+  // BFS shortest path 
   useEffect(() => {
     if(algo === "BFS") {
       const newGrid = cloneGrid(grid);
-      bfs({grid: newGrid, startPos, endPos});
+      const path = bfs({grid: newGrid, startPos, endPos});
       setGrid(newGrid);
+      animatePath(path, setGrid);
     }
     
   }, [algo]);
@@ -65,14 +72,25 @@ export const Grid = ({ mode, algo, resetFlag, inputDisabled } : Props) => {
 
   return (
     <div className="">
-      <div className="">
+      <div 
+        onMouseLeave={() => setIsMouseDown(false)}
+        onMouseUp={() => setIsMouseDown(false)}
+      >
         {grid.map((row, i) => 
           <div key={i} className="flex ">
             {row.map((cell, j) => 
               <Node
                 key={`${i}-${j}`}
                 node={cell}
-                onClick={() => handleClick(i, j)}
+                onMouseDown={() => {
+                  setIsMouseDown(true);
+                  handleClick(i,j);
+                }}
+                onMouseEnter={() => {
+                  if(isMouseDown && mode === "wall") {
+                    toggleWall(i, j);
+                  }
+                }}
               />
             )}
           </div>
