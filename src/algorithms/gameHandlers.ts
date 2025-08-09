@@ -42,7 +42,7 @@ export const handleStartEnd = ({
     setStartPos([row, col]);
   }
 
-  if (mode === "end") {
+  else if (mode === "end") {
     if (node.isStart) return; // Don't allow placing end on start
 
     if (endPos) {

@@ -3,14 +3,15 @@ import type { NodeAttributes } from "../types";
 
 type Props = {
   node: NodeAttributes;
-  onClick: (e: React.MouseEvent) => void;
+  onMouseDown: () => void;
+  onMouseEnter: () => void;
 }
 
-export const Node = ({ node, onClick } : Props) => {
+export const Node = ({ node, onMouseDown, onMouseEnter } : Props) => {
 
-  const { isStart, isEnd, isVisited, isWall } = node;
-  let className = "w-10 h-10 text-2xl flex items-center justify-evenly border border-black cursor-default";
-  if(isStart) className += " bg-yellow-500";
+  const { isStart, isEnd, isVisited, isWall, isPath } = node;
+  let className = "md:w-8 md:h-8 h-5 w-5 text-2xl flex items-center justify-evenly border rounded border-black cursor-default";
+  if(isStart || isPath) className += " bg-yellow-500";
   else if(isEnd) className += " bg-red-600";
   else if(isVisited) className += " bg-slate-300"
   else if(isWall) className += " bg-gray-700"
@@ -19,7 +20,9 @@ export const Node = ({ node, onClick } : Props) => {
   return (
     <button 
       className={className}
-      onClick={onClick}
+      onMouseDown={onMouseDown}
+      onMouseEnter={onMouseEnter}
+
       >
       {isStart ? <ArrowRight size={28} /> : ""}
       {isEnd ? <Target /> : ""}
