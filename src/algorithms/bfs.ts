@@ -2,41 +2,51 @@ import type React from "react";
 import type { NodeAttributes, Position } from "../types"
 import { directions, isValid } from "../utils/constants";
 import { cloneGrid } from "./gameHandlers";
+import { generateEmptyGrid } from "../utils/generateGrid";
 
+type BfsResult = {
+  newGrid: NodeAttributes[][];
+  bfsPath: Position[];
+};
 
 type Props = {
   grid: NodeAttributes[][];
   startPos: Position;
   endPos: Position;
-}
-
+};
 
 export const bfs = ({
   grid,
   startPos,
   endPos,
-}: Props): [number,number][] => {
+}: Props) : BfsResult => {
 
-  if(startPos === null && endPos === null) return [];
-
-  const [startRow,startCol] = startPos!;
-  const [endRow, endCol] = endPos!;
+  const newGrid = cloneGrid(grid);
   
-  const queue: [number, number][] = [];
+  // to keep track of the vistied nodes on separete node
+  const visitedGrid = generateEmptyGrid();
+  // to animate the bfs path
+  const bfsPath: Position[] = [];
+
+
+  const [startRow,startCol] = startPos;
+  const [endRow, endCol] = endPos;
+  
+  const queue: Position[] = [];
   queue.push([startRow, startCol]);
-  const cell = grid[startRow][startCol];
+  const cell = newGrid[startRow][startCol];
   cell.parent = null;
-  cell.isVisited = true;
+  visitedGrid[startRow][startCol].isVisited = true;
+  // 
+  bfsPath.push([startRow, startCol]);
 
-  while(queue.length > 0) {
-    const front = queue.shift();
-    // ts shit
-    if(!front) continue;
+  let head = 0;
+  while(head < queue.length) {
+    const [row, col] = queue[head++]
 
-    const [row, col] = front;
     if(row === endRow && col === endCol) {
       //TODO: add something or return smallest path
-      return getPath(endPos, grid);
+      return {newGrid, bfsPath};
     }
 
     // into four directions 
@@ -44,21 +54,23 @@ export const bfs = ({
       const nrow = row + dx;
       const ncol = col + dy;
       if(!isValid(nrow, ncol)) continue;
-      const neighbour = grid[nrow][ncol];
+      const neighbour = newGrid[nrow][ncol];
 
-      if(neighbour.isVisited || neighbour.isWall) continue;
+      if(visitedGrid[nrow][ncol].isVisited || neighbour.isWall) continue;
       queue.push([nrow,ncol]);
       neighbour.parent = [row,col];
-      neighbour.isVisited = true;
+      visitedGrid[nrow][ncol].isVisited = true;
+      // to track the visited nodes in order to animate them
+      bfsPath.push([nrow, ncol]);
     }
   }
-  return [];
+  return {newGrid, bfsPath};
 };
 
-export const getPath = (endPos: [number,number] | null, grid: NodeAttributes[][]) =>  {
+export const getPath = (endPos: Position, grid: NodeAttributes[][]) : Position[] =>  {
   
-  const [endR, endC] = endPos!;
-  const path: [number,number][] = [];
+  const [endR, endC] = endPos;
+  const path: Position[] = [];
   let current: NodeAttributes = grid[endR][endC];
 
   while(current) {
@@ -72,14 +84,36 @@ export const getPath = (endPos: [number,number] | null, grid: NodeAttributes[][]
   return path.reverse();
 };
 
-export const animatePath = (path: [number,number][] ,setGrid: React.Dispatch<React.SetStateAction<NodeAttributes[][]>>) => {
+export const animateBFS = (
+  bfsPath: Position[],
+  setGrid: React.Dispatch<React.SetStateAction<NodeAttributes[][]>>
+) => {
+  bfsPath.forEach(([row, col], i) => {
+    setTimeout(() => {
+      setGrid((prevGrid) => {
+        const newGrid = [...prevGrid];           // clone outer array
+        const newRow = [...newGrid[row]];        // clone the specific row
+        newRow[col] = { ...newRow[col], isVisited: true }; // clone the cell
+        newGrid[row] = newRow;                   // replace the row
+        return newGrid;
+      });
+    }, 10 * i);
+  });
+};
+
+
+export const animatePath = (path: Position[] ,setGrid: React.Dispatch<React.SetStateAction<NodeAttributes[][]>>) => {
+
   path.forEach(([row,col], i) => {
     setTimeout(() => {
       setGrid((prevGrid) => {
-        const newGrid = cloneGrid(prevGrid);
-        newGrid[row][col].isPath = true;
+        const newGrid = [...prevGrid];           // clone outer array
+        const newRow = [...newGrid[row]];        // clone the specific row
+        newRow[col] = { ...newRow[col], isPath: true }; // clone the cell
+        newGrid[row] = newRow;                   // replace the row
         return newGrid;
-      })
-    },100 * i);
+      });
+    },30 * i );
+    
   })
 };

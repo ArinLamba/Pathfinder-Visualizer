@@ -16,3 +16,17 @@ export const generateGrid = () => {
     }))
   );
 };
+
+export const generateEmptyGrid = () => {
+
+  return Array.from({length: BOARD_ROWS}, (_, i) =>
+    Array.from({length: BOARD_COLS}, (_, j) => ({
+      row: i,
+      col: j,
+      isStart: false,
+      isEnd: false,
+      isWall: false,
+      isVisited: false,
+    }))
+  );
+};

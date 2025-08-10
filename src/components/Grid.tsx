@@ -3,7 +3,7 @@ import type { AlgoSelection, ModeSelection } from "../types";
 
 import { Node } from "../components/Node";
 
-import { animatePath, bfs } from "../algorithms/bfs";
+import { animateBFS, animatePath, bfs, getPath } from "../algorithms/bfs";
 import { dfs } from "../algorithms/dfs";
 
 import { generateGrid } from "../utils/generateGrid";
@@ -33,7 +33,6 @@ export const Grid = ({ mode, algo, resetFlag, inputDisabled } : Props) => {
 
 
   const handleClick = (row: number, col: number) => {
-    
     // function to add walls they should be added by default no button is required to toggle them
     // write your function here 
     if(mode === "wall") {
@@ -46,11 +45,13 @@ export const Grid = ({ mode, algo, resetFlag, inputDisabled } : Props) => {
     const newGrid = cloneGrid(grid);
     if(newGrid[row][col].isVisited) return;
 
+    // function to handle start and end button 
     if(mode === "start") {
       handleStart({startPos, grid: newGrid, row, col, setStartPos});
     } else if(mode === "end") {
       handleEnd({endPos, grid: newGrid, row, col, setEndPos});
     }
+    // end function here
     setGrid(newGrid);
     
   };
@@ -58,13 +59,16 @@ export const Grid = ({ mode, algo, resetFlag, inputDisabled } : Props) => {
   // BFS shortest path 
   useEffect(() => {
     if(algo === "BFS") {
-      const newGrid = cloneGrid(grid);
-      const path = bfs({ grid: newGrid, startPos, endPos });
-      setGrid(newGrid);
-      animatePath(path, setGrid);
+      const {newGrid, bfsPath} = bfs({ grid, startPos, endPos });
+      animateBFS(bfsPath, setGrid);
+      const path = getPath(endPos, newGrid);
+
+      setTimeout(() => {
+        animatePath(path, setGrid);
+      },10 * bfsPath.length);
       return;
     }
-    if(algo === "DFS") {
+    else if(algo === "DFS") {
       const newGrid = cloneGrid(grid);
       dfs({ grid: newGrid, startPos, endPos});
       setGrid(newGrid);

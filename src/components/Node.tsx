@@ -1,3 +1,4 @@
+import React from "react";
 
 import { ArrowRight, Target } from "lucide-react";
 
@@ -9,7 +10,7 @@ type Props = {
   onMouseEnter: () => void;
 }
 
-export const Node = ({ node, onToggleWall, onMouseEnter } : Props) => {
+export const Node = React.memo(({ node, onToggleWall, onMouseEnter } : Props) => {
 
   const { isStart, isEnd, isVisited, isWall, isPath } = node;
 
@@ -30,4 +31,4 @@ export const Node = ({ node, onToggleWall, onMouseEnter } : Props) => {
       {isEnd ? <Target size={24} /> : ""}
     </button>
   );
-};
+});

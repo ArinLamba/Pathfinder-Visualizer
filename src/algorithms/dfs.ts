@@ -42,5 +42,4 @@ export const dfs = ({
   }
   dfsTraversal(startRow, startCol);
   return;
-
 };
