@@ -1,10 +1,14 @@
 import type React from "react";
-import type { HandleStartEndProps, NodeAttributes } from "../types"
+import type { NodeAttributes, Position } from "../types"
 import { directions, isValid } from "../utils/constants";
 import { cloneGrid } from "./gameHandlers";
 
 
-type Props = Pick<HandleStartEndProps, "grid" | "startPos" | "endPos">;
+type Props = {
+  grid: NodeAttributes[][];
+  startPos: Position;
+  endPos: Position;
+}
 
 
 export const bfs = ({

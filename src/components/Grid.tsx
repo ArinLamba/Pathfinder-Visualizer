@@ -7,7 +7,7 @@ import { animatePath, bfs } from "../algorithms/bfs";
 import { dfs } from "../algorithms/dfs";
 
 import { generateGrid } from "../utils/generateGrid";
-import { addWalls, cloneGrid, handleStartEnd } from "../algorithms/gameHandlers";
+import { addWalls, cloneGrid, handleEnd, handleStart } from "../algorithms/gameHandlers";
 
 type Props = {
   mode: ModeSelection;
@@ -19,8 +19,8 @@ type Props = {
 export const Grid = ({ mode, algo, resetFlag, inputDisabled } : Props) => {
   
   const [grid, setGrid] = useState(generateGrid());
-  const [startPos, setStartPos] = useState<[number,number] | null>(null);
-  const [endPos, setEndPos] = useState<[number,number] | null>([10,10]);
+  const [startPos, setStartPos] = useState<[number,number] >([11,14]);
+  const [endPos, setEndPos] = useState<[number,number] >([11,41]);
   const [isMouseDown, setIsMouseDown] = useState(false);
 
 
@@ -33,21 +33,23 @@ export const Grid = ({ mode, algo, resetFlag, inputDisabled } : Props) => {
 
 
   const handleClick = (row: number, col: number) => {
-    if(mode === null || inputDisabled) return;
     
-    // function to add walls they should be added by default no button is required to toggle them (i am thinking of it rn ) 
+    // function to add walls they should be added by default no button is required to toggle them
     // write your function here 
     if(mode === "wall") {
       toggleWall(row, col);
       return;
     }
     // end function here
+    if(mode === null || inputDisabled) return;
     
     const newGrid = cloneGrid(grid);
     if(newGrid[row][col].isVisited) return;
 
-    if(mode === "start" || mode === "end") {
-      handleStartEnd({mode, startPos, endPos, grid: newGrid, row, col, setStartPos, setEndPos});
+    if(mode === "start") {
+      handleStart({startPos, grid: newGrid, row, col, setStartPos});
+    } else if(mode === "end") {
+      handleEnd({endPos, grid: newGrid, row, col, setEndPos});
     }
     setGrid(newGrid);
     
@@ -63,9 +65,9 @@ export const Grid = ({ mode, algo, resetFlag, inputDisabled } : Props) => {
       return;
     }
     if(algo === "DFS") {
-      console.log(algo);
       const newGrid = cloneGrid(grid);
-      dfs({ grid: newGrid, startPos, endPos, setGrid });
+      dfs({ grid: newGrid, startPos, endPos});
+      setGrid(newGrid);
       return;
     }
     
@@ -75,8 +77,8 @@ export const Grid = ({ mode, algo, resetFlag, inputDisabled } : Props) => {
   // Whenever resetFlag changes, reset the grid
   useEffect(() => {
     setGrid(generateGrid());
-    setStartPos(null);
-    setEndPos(null);
+    setStartPos([11,14]);
+    setEndPos([11,41]);
   }, [resetFlag]);
 
   return (

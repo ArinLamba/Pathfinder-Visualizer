@@ -54,6 +54,11 @@ export const Controls = ({
     setAlgo(null);
   };
 
+  const handleSelect = (e: any) => {
+    // setInputDisabled(false);
+    setSelectedAlgo(e.target.value as AlgoSelection);
+  };
+
 
   return (
     <header className="w-full px-6 py-4 bg-gray-900 shadow-md">
@@ -67,7 +72,7 @@ export const Controls = ({
           <div className="relative inline-block w-44 ">
             <select
               value={selectedAlgo || ''}
-              onChange={(e) => setSelectedAlgo(e.target.value as AlgoSelection)}
+              onChange={(e) => handleSelect(e)}
               className="appearance-none w-full bg-gray-800 border border-gray-700 text-white text-sm rounded-lg focus:ring-emerald-500 focus:border-emerald-500 block px-4 py-2"
             >
               <option value="" disabled>
@@ -109,7 +114,7 @@ export const Controls = ({
           {/* Reset Button */}
           <button 
             className={baseClass}
-              onClick={onReset}
+            onClick={onReset}
           >
             Reset
           </button>
