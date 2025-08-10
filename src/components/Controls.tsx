@@ -103,7 +103,7 @@ export const Controls = ({
             className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-md transition"
             onClick={handleVisualize}
           >
-            Visualize {selectedAlgo ? `${selectedAlgo}!` : ''}
+            {selectedAlgo ? `Visualize ${selectedAlgo}!` : 'Select an Algorithm'}
           </button>
 
           {/* Reset Button */}

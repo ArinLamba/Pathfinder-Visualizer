@@ -3,8 +3,10 @@ import type { AlgoSelection, ModeSelection } from "../types";
 
 import { Node } from "../components/Node";
 
-import { generateGrid } from "../utils/generateGrid";
 import { animatePath, bfs } from "../algorithms/bfs";
+import { dfs } from "../algorithms/dfs";
+
+import { generateGrid } from "../utils/generateGrid";
 import { addWalls, cloneGrid, handleStartEnd } from "../algorithms/gameHandlers";
 
 type Props = {
@@ -18,7 +20,7 @@ export const Grid = ({ mode, algo, resetFlag, inputDisabled } : Props) => {
   
   const [grid, setGrid] = useState(generateGrid());
   const [startPos, setStartPos] = useState<[number,number] | null>(null);
-  const [endPos, setEndPos] = useState<[number,number] | null>(null);
+  const [endPos, setEndPos] = useState<[number,number] | null>([10,10]);
   const [isMouseDown, setIsMouseDown] = useState(false);
 
 
@@ -55,9 +57,16 @@ export const Grid = ({ mode, algo, resetFlag, inputDisabled } : Props) => {
   useEffect(() => {
     if(algo === "BFS") {
       const newGrid = cloneGrid(grid);
-      const path = bfs({grid: newGrid, startPos, endPos});
+      const path = bfs({ grid: newGrid, startPos, endPos });
       setGrid(newGrid);
       animatePath(path, setGrid);
+      return;
+    }
+    if(algo === "DFS") {
+      console.log(algo);
+      const newGrid = cloneGrid(grid);
+      dfs({ grid: newGrid, startPos, endPos, setGrid });
+      return;
     }
     
   }, [algo]);
@@ -75,14 +84,15 @@ export const Grid = ({ mode, algo, resetFlag, inputDisabled } : Props) => {
       <div 
         onMouseLeave={() => setIsMouseDown(false)}
         onMouseUp={() => setIsMouseDown(false)}
+        className=""
       >
         {grid.map((row, i) => 
-          <div key={i} className="flex ">
+          <div key={i} className="flex max-w-fit bg-white">
             {row.map((cell, j) => 
               <Node
                 key={`${i}-${j}`}
                 node={cell}
-                onMouseDown={() => {
+                onToggleWall={() => {
                   setIsMouseDown(true);
                   handleClick(i,j);
                 }}
