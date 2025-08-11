@@ -1,5 +1,5 @@
-export const BOARD_ROWS = 21;
-export const BOARD_COLS = 55;
+export const BOARD_ROWS = 24;
+export const BOARD_COLS = 59;
 
 export const START_ROW = 10;
 export const START_COL = 14;
