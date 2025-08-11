@@ -8,19 +8,21 @@ import { animateDFS, dfs } from "../algorithms/dfs";
 
 import { generateGrid } from "../utils/generateGrid";
 import { addWalls, cloneGrid, handleEnd, handleStart } from "../algorithms/gameHandlers";
+import { END_COL, END_ROW, START_COL, START_ROW } from "../utils/constants";
 
 type Props = {
   mode: ModeSelection;
   algo: AlgoSelection;
   resetFlag: boolean; // used to trigger grid reset
   inputDisabled: boolean;
+  setInputDisabled: (input: boolean) => void;
 }
 
-export const Grid = ({ mode, algo, resetFlag, inputDisabled } : Props) => {
+export const Grid = ({ mode, algo, resetFlag, inputDisabled, setInputDisabled } : Props) => {
   
   const [grid, setGrid] = useState(generateGrid());
-  const [startPos, setStartPos] = useState<[number,number] >([11,14]);
-  const [endPos, setEndPos] = useState<[number,number] >([11,41]);
+  const [startPos, setStartPos] = useState<[number,number] >([START_ROW, START_COL]);
+  const [endPos, setEndPos] = useState<[number,number] >([END_ROW, END_COL]);
   const [isMouseDown, setIsMouseDown] = useState(false);
 
 
@@ -59,25 +61,38 @@ export const Grid = ({ mode, algo, resetFlag, inputDisabled } : Props) => {
   // BFS shortest path 
   useEffect(() => {
     if(algo === "BFS") {
+      
       const {newGrid, bfsPath} = bfs({ grid, startPos, endPos });
-      animateBFS(bfsPath, setGrid);
       const path = getPath(endPos, newGrid);
+      // disabled while animation running
+      setInputDisabled(true);
+
+      animateBFS(bfsPath, setGrid);
       
       // wait for bfs path to complete
       setTimeout(() => {
         animatePath(path, setGrid);
+        setInputDisabled(false);
       },15 * bfsPath.length);
+
       return;
     }
+
+
     else if(algo === "DFS") {
       const newGrid = cloneGrid(grid);
       const dfsPath = dfs({ grid: newGrid, startPos, endPos});
+
+      // input is disabled while path is animating
+      setInputDisabled(true);
       animateDFS(dfsPath, setGrid);
 
       // wait for dfs to complete
       setTimeout(() => {
         animatePath(dfsPath, setGrid);
-      }, 15 * dfsPath.length);
+        setInputDisabled(false);
+      }, 20 * dfsPath.length);
+
       return;
     }
     
@@ -87,8 +102,8 @@ export const Grid = ({ mode, algo, resetFlag, inputDisabled } : Props) => {
   // Whenever resetFlag changes, reset the grid
   useEffect(() => {
     setGrid(generateGrid());
-    setStartPos([11,14]);
-    setEndPos([11,41]);
+    setStartPos([START_ROW,START_COL]);
+    setEndPos([END_ROW,END_COL]);
   }, [resetFlag]);
 
   return (
@@ -104,7 +119,7 @@ export const Grid = ({ mode, algo, resetFlag, inputDisabled } : Props) => {
               <Node
                 key={`${i}-${j}`}
                 node={cell}
-                onToggleWall={() => {
+                onToggleWall={() => { 
                   setIsMouseDown(true);
                   handleClick(i,j);
                 }}

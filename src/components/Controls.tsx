@@ -37,7 +37,6 @@ export const Controls = ({
   const handleVisualize = () => {
     if(!selectedAlgo) return;
     setAlgo(selectedAlgo);
-    setInputDisabled(true);
     setMode("wall");
     // TODO: thinking of adding auto reset the grid except the wall cells in case of user added more walls and then compute again the algo
   }

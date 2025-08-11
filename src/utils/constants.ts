@@ -1,5 +1,11 @@
-export const BOARD_ROWS = 22;
+export const BOARD_ROWS = 21;
 export const BOARD_COLS = 55;
+
+export const START_ROW = 10;
+export const START_COL = 14;
+export const END_ROW = 10;
+export const END_COL = 41;
+
 
 export const directions = [
   [-1, 0],  // up
