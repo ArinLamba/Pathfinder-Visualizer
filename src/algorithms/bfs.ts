@@ -97,7 +97,7 @@ export const animateBFS = (
         newGrid[row] = newRow;                   // replace the row
         return newGrid;
       });
-    }, 10 * i);
+    }, 15 * i);
   });
 };
 

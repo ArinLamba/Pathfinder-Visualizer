@@ -11,17 +11,19 @@ export const dfs = ({
   grid,
   startPos,
   endPos,
-} : Props) => {
+} : Props) : Position[] => {
 
-  if(!startPos || !endPos) return;
+  if(!startPos || !endPos) return [];
   
   const [startRow, startCol] = startPos;
   const [endRow, endCol] = endPos!;
 
   let stopPropogation: boolean = false;
+  const dfsPath: Position[] = [];
 
   function dfsTraversal(row: number, col: number) {
     grid[row][col].isVisited = true;
+    dfsPath.push([row,col]);
     if(row === endRow && col === endCol){
       stopPropogation = true;
       return;
@@ -41,5 +43,22 @@ export const dfs = ({
     }
   }
   dfsTraversal(startRow, startCol);
-  return;
+  return dfsPath;
+};
+
+export const animateDFS = (
+  dfsPath: Position[],
+  setGrid: React.Dispatch<React.SetStateAction<NodeAttributes[][]>>
+) => {
+  dfsPath.forEach(([row, col], i) => {
+    setTimeout(() => {
+      setGrid((prevGrid) => {
+        const newGrid = [...prevGrid];           // clone outer array
+        const newRow = [...newGrid[row]];        // clone the specific row
+        newRow[col] = { ...newRow[col], isVisited: true }; // clone the cell
+        newGrid[row] = newRow;                   // replace the row
+        return newGrid;
+      });
+    }, 15 * i);
+  });
 };

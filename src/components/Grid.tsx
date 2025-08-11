@@ -4,7 +4,7 @@ import type { AlgoSelection, ModeSelection } from "../types";
 import { Node } from "../components/Node";
 
 import { animateBFS, animatePath, bfs, getPath } from "../algorithms/bfs";
-import { dfs } from "../algorithms/dfs";
+import { animateDFS, dfs } from "../algorithms/dfs";
 
 import { generateGrid } from "../utils/generateGrid";
 import { addWalls, cloneGrid, handleEnd, handleStart } from "../algorithms/gameHandlers";
@@ -33,6 +33,7 @@ export const Grid = ({ mode, algo, resetFlag, inputDisabled } : Props) => {
 
 
   const handleClick = (row: number, col: number) => {
+    if(mode === null || inputDisabled) return;
     // function to add walls they should be added by default no button is required to toggle them
     // write your function here 
     if(mode === "wall") {
@@ -40,7 +41,6 @@ export const Grid = ({ mode, algo, resetFlag, inputDisabled } : Props) => {
       return;
     }
     // end function here
-    if(mode === null || inputDisabled) return;
     
     const newGrid = cloneGrid(grid);
     if(newGrid[row][col].isVisited) return;
@@ -62,16 +62,22 @@ export const Grid = ({ mode, algo, resetFlag, inputDisabled } : Props) => {
       const {newGrid, bfsPath} = bfs({ grid, startPos, endPos });
       animateBFS(bfsPath, setGrid);
       const path = getPath(endPos, newGrid);
-
+      
+      // wait for bfs path to complete
       setTimeout(() => {
         animatePath(path, setGrid);
-      },10 * bfsPath.length);
+      },15 * bfsPath.length);
       return;
     }
     else if(algo === "DFS") {
       const newGrid = cloneGrid(grid);
-      dfs({ grid: newGrid, startPos, endPos});
-      setGrid(newGrid);
+      const dfsPath = dfs({ grid: newGrid, startPos, endPos});
+      animateDFS(dfsPath, setGrid);
+
+      // wait for dfs to complete
+      setTimeout(() => {
+        animatePath(dfsPath, setGrid);
+      }, 15 * dfsPath.length);
       return;
     }
     
@@ -103,6 +109,7 @@ export const Grid = ({ mode, algo, resetFlag, inputDisabled } : Props) => {
                   handleClick(i,j);
                 }}
                 onMouseEnter={() => {
+                  if(inputDisabled) return;
                   if(isMouseDown && mode === "wall") {
                     toggleWall(i, j);
                   }
