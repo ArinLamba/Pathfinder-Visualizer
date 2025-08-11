@@ -4,6 +4,7 @@ import { type AlgoSelection, type ModeSelection } from "../types";
 
 import { Controls } from "../components/Controls";
 import { Grid } from "../components/Grid";
+import { Instructions } from "../components/Instructions";
 
 export const Home = () => {
   
@@ -29,8 +30,15 @@ export const Home = () => {
         setInputDisabled={setInputDisabled}
         setAlgo={setAlgo}
       />
-      <div className="m-9 inset-0">
-        <Grid mode={mode} algo={algo} resetFlag={resetFlag} inputDisabled={inputDisabled} />
+      <Instructions />
+      <div className="m-4 inset-0">
+        <Grid 
+          mode={mode} 
+          algo={algo} 
+          resetFlag={resetFlag} 
+          inputDisabled={inputDisabled}
+          setInputDisabled={setInputDisabled}  
+        />
       </div>
     </div>
   );

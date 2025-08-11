@@ -59,6 +59,6 @@ export const animateDFS = (
         newGrid[row] = newRow;                   // replace the row
         return newGrid;
       });
-    }, 15 * i);
+    }, 20 * i);
   });
 };
