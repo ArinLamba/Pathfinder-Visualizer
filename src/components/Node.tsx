@@ -28,7 +28,7 @@ export const Node = React.memo(({ node, onToggleWall, onMouseEnter } : Props) =>
       onMouseEnter={onMouseEnter}
       >
       {isStart ? <ArrowRight size={24} /> : ""}
-      {isEnd ? <Target size={24} /> : ""}
+      {isEnd ? <Target size={24}/> : ""}
     </button>
   );
 });
