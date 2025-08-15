@@ -12,6 +12,7 @@ export const Home = () => {
   const [algo, setAlgo] = useState<AlgoSelection>(null);
   const [inputDisabled, setInputDisabled] = useState(false);
   const [resetFlag, setResetFlag] = useState(false); // toggled to reset grid
+  const [isRunning, setIsRunning] = useState(false);
 
   const handleReset = () => {
     setResetFlag(prev => !prev);
@@ -22,23 +23,29 @@ export const Home = () => {
 
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen mb-2 bg-neutral-900">
       <Controls 
         mode={mode}
         setMode={setMode}
         onReset={handleReset}
         setInputDisabled={setInputDisabled}
         setAlgo={setAlgo}
+        isRunning={isRunning}
+        setIsRunning={setIsRunning}
       />
       <Instructions />
-      <div className="m-4 inset-0">
-        <Grid 
-          mode={mode} 
-          algo={algo} 
-          resetFlag={resetFlag} 
-          inputDisabled={inputDisabled}
-          setInputDisabled={setInputDisabled}  
-        />
+      <div className="m-6 p-2 rounded-2xl overflow-x-auto bg-neutral-800">
+        <div className="flex justify-center">
+          <Grid 
+            mode={mode} 
+            algo={algo} 
+            resetFlag={resetFlag} 
+            inputDisabled={inputDisabled}
+            setInputDisabled={setInputDisabled}
+            isRunning={isRunning}
+            setIsRunning={setIsRunning}
+          />
+        </div>
       </div>
     </div>
   );

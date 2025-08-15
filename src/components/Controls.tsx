@@ -10,6 +10,8 @@ type Props = {
   onReset: () => void;
   setInputDisabled: (input: boolean) => void;
   setAlgo: (algo: AlgoSelection) => void;
+  isRunning: boolean;
+  setIsRunning: (state: boolean) => void;
 }
 
 export const Controls = ({ 
@@ -17,7 +19,9 @@ export const Controls = ({
   setMode, 
   onReset, 
   setInputDisabled,
-  setAlgo 
+  setAlgo,
+  isRunning,
+  setIsRunning
 }: Props) => {
   const [selectedAlgo, setSelectedAlgo] = useState<AlgoSelection>(null);
 
@@ -25,17 +29,18 @@ export const Controls = ({
   const isStartActive = mode === "start";
   const isEndActive = mode === "end";
 
-  const baseClass = "text-gray-300 hover:text-white px-4 py-2 border border-gray-600 rounded-md transition";
+  const baseClass = "text-gray-300 hover:text-white px-4 py-2 border border-gray-600 rounded-md transition disabled:cursor-not-allowed";
 
   // For Start Button
-  const startBtnClass = baseClass + (isStartActive ? " bg-fuchsia-600 text-white" : " text-gray-300");
+  const startBtnClass = baseClass + (isStartActive ? " bg-fuchsia-600 text-white" : " bg-neutral-800 text-gray-300");
 
   // For End Button
-  const endBtnClass = baseClass + (isEndActive ? " bg-fuchsia-600 text-white" : " text-gray-300");
+  const endBtnClass = baseClass + (isEndActive ? " bg-fuchsia-600 text-white" : " bg-neutral-800 text-gray-300");
 
 
   const handleVisualize = () => {
     if(!selectedAlgo) return;
+    setIsRunning(true);
     setAlgo(selectedAlgo);
     setMode("wall");
     // TODO: thinking of adding auto reset the grid except the wall cells in case of user added more walls and then compute again the algo
@@ -54,15 +59,14 @@ export const Controls = ({
   };
 
   const handleSelect = (e: any) => {
-    // setInputDisabled(false);
     setSelectedAlgo(e.target.value as AlgoSelection);
   };
 
 
   return (
-    <header className="w-full px-6 py-4 bg-gray-900 shadow-md">
+    <header className="w-full px-6 py-4 bg-neutral-900 shadow-md text-neutral-100">
       <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
-        <h1 className="text-2xl font-bold text-white">
+        <h1 className="text-2xl md:text-3xl font-semibold">
           🧭 Pathfinding Visualizer
         </h1>
 
@@ -72,6 +76,7 @@ export const Controls = ({
             <select
               value={selectedAlgo || ''}
               onChange={(e) => handleSelect(e)}
+              
               className="appearance-none w-full bg-gray-800 border border-gray-700 text-white text-sm rounded-lg focus:ring-emerald-500 focus:border-emerald-500 block px-4 py-2"
             >
               <option value="" disabled>
@@ -92,6 +97,7 @@ export const Controls = ({
           <button 
             className={startBtnClass}
             onClick={handleStart}
+            disabled={isRunning}
           >
             {isStartActive ? "Cancel Start" : "Set Start"}
           </button>
@@ -99,20 +105,22 @@ export const Controls = ({
           <button 
             className={endBtnClass}
             onClick={handleEnd}
+            disabled={isRunning}
           >
             {isEndActive ? "Cancel End" : "Set End"}
           </button>
           {/* Visualize Button */}
           <button 
-            className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-md transition"
+            className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md transition"
             onClick={handleVisualize}
+            disabled={isRunning}
           >
             {selectedAlgo ? `Visualize ${selectedAlgo}!` : 'Select an Algorithm'}
           </button>
 
           {/* Reset Button */}
           <button 
-            className={baseClass}
+            className={baseClass + " bg-neutral-800"}
             onClick={onReset}
           >
             Reset
