@@ -1,10 +1,10 @@
-export const BOARD_ROWS = 24;
-export const BOARD_COLS = 59;
+export const BOARD_ROWS = 26;
+export const BOARD_COLS = 68;
 
-export const START_ROW = 10;
-export const START_COL = 14;
-export const END_ROW = 10;
-export const END_COL = 41;
+export const START_ROW = 14;
+export const START_COL = 20;
+export const END_ROW = 14;
+export const END_COL = 50;
 
 
 export const directions = [

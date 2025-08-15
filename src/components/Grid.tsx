@@ -16,16 +16,17 @@ type Props = {
   resetFlag: boolean; // used to trigger grid reset
   inputDisabled: boolean;
   setInputDisabled: (input: boolean) => void;
+  isRunning: boolean;
+  setIsRunning: (state: boolean) => void;
 }
 
-export const Grid = ({ mode, algo, resetFlag, inputDisabled, setInputDisabled } : Props) => {
+export const Grid = ({ mode, algo, resetFlag, inputDisabled, setInputDisabled, isRunning, setIsRunning } : Props) => {
   
   const [grid, setGrid] = useState(generateGrid());
   const [startPos, setStartPos] = useState<[number,number] >([START_ROW, START_COL]);
   const [endPos, setEndPos] = useState<[number,number] >([END_ROW, END_COL]);
   const [isMouseDown, setIsMouseDown] = useState(false);
-
-
+  
   const toggleWall = (row:number, col:number) => {
     if(grid[row][col].isStart || grid[row][col].isEnd) return;
     const newGrid = cloneGrid(grid);
@@ -35,6 +36,8 @@ export const Grid = ({ mode, algo, resetFlag, inputDisabled, setInputDisabled } 
 
 
   const handleClick = (row: number, col: number) => {
+    console.log(row,col);
+    
     if(mode === null || inputDisabled) return;
     // function to add walls they should be added by default no button is required to toggle them
     // write your function here 
@@ -73,11 +76,11 @@ export const Grid = ({ mode, algo, resetFlag, inputDisabled, setInputDisabled } 
       setTimeout(() => {
         animatePath(path, setGrid);
         setInputDisabled(false);
+        setIsRunning(false)
       },15 * bfsPath.length);
 
       return;
     }
-
 
     else if(algo === "DFS") {
       const newGrid = cloneGrid(grid);
@@ -91,6 +94,7 @@ export const Grid = ({ mode, algo, resetFlag, inputDisabled, setInputDisabled } 
       setTimeout(() => {
         animatePath(dfsPath, setGrid);
         setInputDisabled(false);
+        setIsRunning(false);
       }, 20 * dfsPath.length);
 
       return;
@@ -101,20 +105,22 @@ export const Grid = ({ mode, algo, resetFlag, inputDisabled, setInputDisabled } 
   
   // Whenever resetFlag changes, reset the grid
   useEffect(() => {
+    
+    if(isRunning) return;
     setGrid(generateGrid());
     setStartPos([START_ROW,START_COL]);
     setEndPos([END_ROW,END_COL]);
   }, [resetFlag]);
 
   return (
-    <div className="">
+    <div className="flex justify-center p-2">
       <div 
         onMouseLeave={() => setIsMouseDown(false)}
         onMouseUp={() => setIsMouseDown(false)}
-        className=""
+        className="inline-block"
       >
         {grid.map((row, i) => 
-          <div key={i} className="flex max-w-fit bg-white">
+          <div key={i} className="grid" style={{ gridTemplateColumns: `repeat(${row.length}, minmax(0, 1fr))` }}>
             {row.map((cell, j) => 
               <Node
                 key={`${i}-${j}`}

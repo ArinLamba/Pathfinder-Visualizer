@@ -14,12 +14,13 @@ export const Node = React.memo(({ node, onToggleWall, onMouseEnter } : Props) =>
 
   const { isStart, isEnd, isVisited, isWall, isPath } = node;
 
-  let className = "md:w-7 md:h-7 h-5 w-5 text-2xl flex items-center justify-evenly border-[0.1px] rounde border-black cursor-default";
-  if(isStart || isPath) className += " bg-yellow-500";
+  let className = "aspect-square h-full rounded-sm flex items-center justify-center border-[0.1px] border-neutral-800 cursor-default";
+  if(isStart) className += " bg-yellow-500";
   else if(isEnd) className += " bg-red-600";
-  else if(isVisited) className += " bg-[#CC00FF]";
-  else if(isWall) className += " bg-gray-700";
-  else className += " bg-white hover:bg-slate-500 hover:scale-125 hover:shadow-[4px_4px_0px_rgba(0,0,0,0.5)] transition-transform ease-in-out";
+  else if(isPath) className += " animate-pathHighlight";
+  else if(isVisited) className += " animate-Visit";
+  else if(isWall) className += " animate-wallBuild";
+  else className += " bg-neutral-950 hover:bg-neutral-600 hover:scale-125 transition-transform ease-in-out";
   
   return (
     <button 
@@ -27,8 +28,8 @@ export const Node = React.memo(({ node, onToggleWall, onMouseEnter } : Props) =>
       onMouseDown={onToggleWall}
       onMouseEnter={onMouseEnter}
       >
-      {isStart ? <ArrowRight size={24} /> : ""}
-      {isEnd ? <Target size={24}/> : ""}
+      {isStart ? <ArrowRight className="aspect-square" /> : ""}
+      {isEnd ? <Target className="aspect-square"/> : ""}
     </button>
   );
 });
