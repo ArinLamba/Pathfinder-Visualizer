@@ -2,17 +2,26 @@ import React from "react";
 
 import { ArrowRight, Target } from "lucide-react";
 
-import type { NodeAttributes } from "../types";
+import type { ModeSelection, NodeAttributes, Position } from "../types";
 
 type Props = {
   node: NodeAttributes;
-  onToggleWall: () => void;
+  onMouseDown: () => void;
   onMouseEnter: () => void;
-}
+  onMouseUp: () => void;
+  mode: ModeSelection;
+  startPos: Position;
+  endPos: Position;
+};
 
-export const Node = React.memo(({ node, onToggleWall, onMouseEnter } : Props) => {
+export const Node = React.memo(({ node, onMouseDown, onMouseEnter, onMouseUp, mode, startPos, endPos } : Props) => {
 
-  const { isStart, isEnd, isVisited, isWall, isPath } = node;
+  const { row, col, isVisited, isWall, isPath } = node;
+  const isStart = row === startPos[0] && col === startPos[1];
+  const isEnd = row === endPos[0] && col === endPos[1];
+  const isDraggingStart = mode === "draggingStart" && isStart;
+  const isDraggingEnd = mode === "draggingEnd" && isEnd;
+
 
   let className = "aspect-square h-full rounded-sm flex items-center justify-center border-[0.1px] border-neutral-800 cursor-default";
   if(isStart) className += " bg-yellow-500";
@@ -21,12 +30,16 @@ export const Node = React.memo(({ node, onToggleWall, onMouseEnter } : Props) =>
   else if(isVisited) className += " animate-Visit";
   else if(isWall) className += " animate-wallBuild";
   else className += " bg-neutral-950 hover:bg-neutral-600 hover:scale-125 transition-transform ease-in-out";
-  
+
+  if(isDraggingStart) className += " scale-110 ring-2 ring-green-600 shadow-lg shadow-green-500/40";
+  if(isDraggingEnd) className += " scale-110 ring-2 ring-red-400 shadow-lg shadow-red-500/40";
+
   return (
     <button 
       className={className}
-      onMouseDown={onToggleWall}
+      onMouseDown={onMouseDown}
       onMouseEnter={onMouseEnter}
+      onMouseUp={onMouseUp}
       >
       {isStart ? <ArrowRight className="aspect-square" /> : ""}
       {isEnd ? <Target className="aspect-square"/> : ""}

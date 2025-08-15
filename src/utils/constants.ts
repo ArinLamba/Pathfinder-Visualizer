@@ -1,10 +1,10 @@
 export const BOARD_ROWS = 26;
 export const BOARD_COLS = 68;
 
-export const START_ROW = 14;
-export const START_COL = 20;
-export const END_ROW = 14;
-export const END_COL = 50;
+export const START_ROW = Math.floor(BOARD_ROWS / 2);
+export const START_COL = Math.floor(BOARD_COLS / 4);
+export const END_ROW = Math.floor(BOARD_ROWS / 2);
+export const END_COL = 3 * START_COL;
 
 
 export const directions = [

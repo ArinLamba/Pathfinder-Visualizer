@@ -10,13 +10,12 @@ export const Home = () => {
   
   const [mode, setMode] = useState<ModeSelection>("wall");
   const [algo, setAlgo] = useState<AlgoSelection>(null);
-  const [inputDisabled, setInputDisabled] = useState(false);
   const [resetFlag, setResetFlag] = useState(false); // toggled to reset grid
   const [isRunning, setIsRunning] = useState(false);
 
   const handleReset = () => {
     setResetFlag(prev => !prev);
-    setInputDisabled(false);
+    setIsRunning(false);
     setMode('wall');
     setAlgo(null);
   };
@@ -24,11 +23,9 @@ export const Home = () => {
 
   return (
     <div className="min-h-screen mb-2 bg-neutral-900">
-      <Controls 
-        mode={mode}
+      <Controls
         setMode={setMode}
         onReset={handleReset}
-        setInputDisabled={setInputDisabled}
         setAlgo={setAlgo}
         isRunning={isRunning}
         setIsRunning={setIsRunning}
@@ -38,10 +35,9 @@ export const Home = () => {
         <div className="flex justify-center">
           <Grid 
             mode={mode} 
+            setMode={setMode}
             algo={algo} 
             resetFlag={resetFlag} 
-            inputDisabled={inputDisabled}
-            setInputDisabled={setInputDisabled}
             isRunning={isRunning}
             setIsRunning={setIsRunning}
           />

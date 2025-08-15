@@ -5,15 +5,15 @@ export default {
     extend: {
       keyframes: {
         Visit: {
-          "0%": { backgroundColor: "#1e293b", transform: "scale(1)" },
-          "33%": { backgroundColor: "#4f46e5", transform: "scale(0.9)" },
-          "67%": { backgroundColor: "#4f46e5", transform: "scale(1.1)" },
+          "0%": { backgroundColor: "#1e293b", transform: "scale(0.4)" },
+          "33%": { backgroundColor: "#4f46e5", transform: "scale(0.8)" },
+          "67%": { backgroundColor: "#4f46e5", transform: "scale(1.2)" },
           "100%": { backgroundColor: "#4f46e5", transform: "scale(1)" },
         },
         pathHighlight: {
-          "0%": { backgroundColor: "#836d0c", transform: "scale(1.3)" },
-          "32%": { backgroundColor: "#dfa400", transform: "scale(1.2)" },
-          "50%": { backgroundColor: "#f3d500", transform: "scale(1.1)" },
+          "0%": { backgroundColor: "#dfa400", transform: "scale(1)", ring: "red" },
+          "32%": { backgroundColor: "#dfa400", transform: "scale(1.)" },
+          "67%": { backgroundColor: "#f3d500", transform: "scale(1.2)" },
           "100%": { backgroundColor: "#facc15", transform: "scale(1)"},
         },
         wallBuild: {
@@ -24,7 +24,7 @@ export default {
         },
       },
       animation: {
-        Visit: "Visit 0.3s ease-out forwards",
+        Visit: "Visit 0.3s ease-out  forwards",
         pathHighlight: "pathHighlight 0.5s ease-out forwards",
         wallBuild: "wallBuild 0.3s ease-in-out forwards",
       },

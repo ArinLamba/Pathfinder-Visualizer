@@ -5,37 +5,23 @@ import { algorithms } from '../utils/constants';
 
 
 type Props = {
-  mode: ModeSelection;
   setMode: (state: ModeSelection) => void;
   onReset: () => void;
-  setInputDisabled: (input: boolean) => void;
   setAlgo: (algo: AlgoSelection) => void;
   isRunning: boolean;
   setIsRunning: (state: boolean) => void;
 }
 
 export const Controls = ({ 
-  mode, 
   setMode, 
   onReset, 
-  setInputDisabled,
   setAlgo,
   isRunning,
   setIsRunning
 }: Props) => {
   const [selectedAlgo, setSelectedAlgo] = useState<AlgoSelection>(null);
 
-  // Inside your component
-  const isStartActive = mode === "start";
-  const isEndActive = mode === "end";
-
-  const baseClass = "text-gray-300 hover:text-white px-4 py-2 border border-gray-600 rounded-md transition disabled:cursor-not-allowed";
-
-  // For Start Button
-  const startBtnClass = baseClass + (isStartActive ? " bg-fuchsia-600 text-white" : " bg-neutral-800 text-gray-300");
-
-  // For End Button
-  const endBtnClass = baseClass + (isEndActive ? " bg-fuchsia-600 text-white" : " bg-neutral-800 text-gray-300");
+  const baseClass = "text-gray-300 hover:text-white px-4 py-2 border border-gray-600 rounded-md transition";
 
 
   const handleVisualize = () => {
@@ -45,18 +31,6 @@ export const Controls = ({
     setMode("wall");
     // TODO: thinking of adding auto reset the grid except the wall cells in case of user added more walls and then compute again the algo
   }
-
-  const handleStart = () => {
-    setMode(isStartActive ? "wall" : "start");
-    setInputDisabled(false);
-    setAlgo(null);
-  };
-
-  const handleEnd = () => {
-    setMode(isEndActive ? "wall" : "end");
-    setInputDisabled(false);
-    setAlgo(null);
-  };
 
   const handleSelect = (e: any) => {
     setSelectedAlgo(e.target.value as AlgoSelection);
@@ -92,23 +66,6 @@ export const Controls = ({
               ▼
             </div>
           </div>
-
-          {/* Set Start Button */}
-          <button 
-            className={startBtnClass}
-            onClick={handleStart}
-            disabled={isRunning}
-          >
-            {isStartActive ? "Cancel Start" : "Set Start"}
-          </button>
-          {/* Set End Button */}
-          <button 
-            className={endBtnClass}
-            onClick={handleEnd}
-            disabled={isRunning}
-          >
-            {isEndActive ? "Cancel End" : "Set End"}
-          </button>
           {/* Visualize Button */}
           <button 
             className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md transition"
@@ -122,6 +79,7 @@ export const Controls = ({
           <button 
             className={baseClass + " bg-neutral-800"}
             onClick={onReset}
+            disabled={isRunning}
           >
             Reset
           </button>

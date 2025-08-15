@@ -7,59 +7,71 @@ import { animateBFS, animatePath, bfs, getPath } from "../algorithms/bfs";
 import { animateDFS, dfs } from "../algorithms/dfs";
 
 import { generateGrid } from "../utils/generateGrid";
-import { addWalls, cloneGrid, handleEnd, handleStart } from "../algorithms/gameHandlers";
+import { addWalls, cloneGrid } from "../algorithms/gameHandlers";
 import { END_COL, END_ROW, START_COL, START_ROW } from "../utils/constants";
 
 type Props = {
   mode: ModeSelection;
+  setMode: (mode: ModeSelection) => void;
   algo: AlgoSelection;
   resetFlag: boolean; // used to trigger grid reset
-  inputDisabled: boolean;
-  setInputDisabled: (input: boolean) => void;
   isRunning: boolean;
-  setIsRunning: (state: boolean) => void;
+  setIsRunning: (input: boolean) => void;
 }
 
-export const Grid = ({ mode, algo, resetFlag, inputDisabled, setInputDisabled, isRunning, setIsRunning } : Props) => {
+export const Grid = ({ mode, setMode, algo, resetFlag, isRunning, setIsRunning } : Props) => {
   
   const [grid, setGrid] = useState(generateGrid());
-  const [startPos, setStartPos] = useState<[number,number] >([START_ROW, START_COL]);
-  const [endPos, setEndPos] = useState<[number,number] >([END_ROW, END_COL]);
+  const [startPos, setStartPos] = useState<[number,number]>([START_ROW, START_COL]);
+  const [endPos, setEndPos] = useState<[number,number]>([END_ROW, END_COL]);
   const [isMouseDown, setIsMouseDown] = useState(false);
+
   
   const toggleWall = (row:number, col:number) => {
-    if(grid[row][col].isStart || grid[row][col].isEnd) return;
+    if(grid[row][col].isStart || grid[row][col].isEnd || isRunning) return;
     const newGrid = cloneGrid(grid);
     addWalls({grid: newGrid, row, col});
     setGrid(newGrid);
   };
 
+  const handleMouseEnter = (row: number, col: number) => {
+    if(isRunning || row === startPos[0] && col === startPos[1] || row === endPos[0] && col === endPos[1]) return;
 
-  const handleClick = (row: number, col: number) => {
-    console.log(row,col);
+    const cell = grid[row][col];
     
-    if(mode === null || inputDisabled) return;
-    // function to add walls they should be added by default no button is required to toggle them
-    // write your function here 
-    if(mode === "wall") {
+    if(isMouseDown && mode === "draggingStart") {
+      if(cell.isWall || cell.isEnd) return;
+      setStartPos([row,col]);
+      return;
+    }
+    if(isMouseDown && mode === "draggingEnd") {
+      if(cell.isWall || cell.isStart) return;
+      setEndPos([row,col]);
+      return;
+    }
+    if(isMouseDown && mode === "wall") {
       toggleWall(row, col);
       return;
     }
-    // end function here
-    
-    const newGrid = cloneGrid(grid);
-    if(newGrid[row][col].isVisited) return;
-
-    // function to handle start and end button 
-    if(mode === "start") {
-      handleStart({startPos, grid: newGrid, row, col, setStartPos});
-    } else if(mode === "end") {
-      handleEnd({endPos, grid: newGrid, row, col, setEndPos});
-    }
-    // end function here
-    setGrid(newGrid);
-    
   };
+
+  const handleMouseDown = (row: number, col: number) => {
+    setIsMouseDown(true);
+    if(row === startPos[0] && col === startPos[1]) {
+      setMode("draggingStart");
+      return;
+    }
+    if(row === endPos[0] && col === endPos[1]) {
+      setMode("draggingEnd");
+      return;
+    }
+    if(mode === "wall") {
+      toggleWall(row,col);
+      return;
+    }
+  };
+
+
   
   // BFS shortest path 
   useEffect(() => {
@@ -68,15 +80,14 @@ export const Grid = ({ mode, algo, resetFlag, inputDisabled, setInputDisabled, i
       const {newGrid, bfsPath} = bfs({ grid, startPos, endPos });
       const path = getPath(endPos, newGrid);
       // disabled while animation running
-      setInputDisabled(true);
+      setIsRunning(true);
 
       animateBFS(bfsPath, setGrid);
       
       // wait for bfs path to complete
       setTimeout(() => {
         animatePath(path, setGrid);
-        setInputDisabled(false);
-        setIsRunning(false)
+        setIsRunning(false);
       },15 * bfsPath.length);
 
       return;
@@ -87,13 +98,12 @@ export const Grid = ({ mode, algo, resetFlag, inputDisabled, setInputDisabled, i
       const dfsPath = dfs({ grid: newGrid, startPos, endPos});
 
       // input is disabled while path is animating
-      setInputDisabled(true);
+      setIsRunning(true);
       animateDFS(dfsPath, setGrid);
 
       // wait for dfs to complete
       setTimeout(() => {
         animatePath(dfsPath, setGrid);
-        setInputDisabled(false);
         setIsRunning(false);
       }, 20 * dfsPath.length);
 
@@ -115,7 +125,7 @@ export const Grid = ({ mode, algo, resetFlag, inputDisabled, setInputDisabled, i
   return (
     <div className="flex justify-center p-2">
       <div 
-        onMouseLeave={() => setIsMouseDown(false)}
+        // onMouseLeave={() => setIsMouseDown(false)}
         onMouseUp={() => setIsMouseDown(false)}
         className="inline-block"
       >
@@ -125,16 +135,12 @@ export const Grid = ({ mode, algo, resetFlag, inputDisabled, setInputDisabled, i
               <Node
                 key={`${i}-${j}`}
                 node={cell}
-                onToggleWall={() => { 
-                  setIsMouseDown(true);
-                  handleClick(i,j);
-                }}
-                onMouseEnter={() => {
-                  if(inputDisabled) return;
-                  if(isMouseDown && mode === "wall") {
-                    toggleWall(i, j);
-                  }
-                }}
+                onMouseDown={() => handleMouseDown(i, j)}
+                onMouseEnter={() => handleMouseEnter(i,j)}
+                onMouseUp={() => setMode("wall")}
+                mode={mode}
+                startPos={startPos}
+                endPos={endPos}
               />
             )}
           </div>

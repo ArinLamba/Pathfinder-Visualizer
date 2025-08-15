@@ -4,7 +4,7 @@ export const Instructions = () => {
   const legendItems = [
     { icon: <ArrowRight size={20} className="text-black" />, bg: "#f3d500", label: "Start Node" },
     { icon: <Target size={20} className="text-black" />, bg: "#dc2626", label: "Target Node" },
-    { bg: "#581c87", label: "Wall Node" },
+    { bg: "#581c87", label: "Wall Node", subtitle:"Hold and Drag to draw walls" },
     { bg: "#f3d500", label: "Shortest Path Node" },
     { bg: "#4f46e5", label: "Visited Node" },
     { bg: "#0a0a0a", label: "Unvisited Node" },
@@ -21,6 +21,7 @@ export const Instructions = () => {
             {item.icon || null}
           </div>
           <p className="text-neutral-200">{item.label}</p>
+          {/* <span>{item.subtitle || null}</span> */}
         </div>
       ))}
     </div>
