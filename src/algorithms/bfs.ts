@@ -1,29 +1,22 @@
 import type React from "react";
 import type { NodeAttributes, Position } from "../types"
 import { directions, isValid } from "../utils/constants";
-import { cloneGrid } from "./gameHandlers";
 import { generateEmptyGrid } from "../utils/generateGrid";
 
-type BfsResult = {
-  newGrid: NodeAttributes[][];
-  bfsPath: Position[];
-};
-
 type Props = {
-  grid: NodeAttributes[][];
+  newGrid: NodeAttributes[][];
   startPos: Position;
   endPos: Position;
 };
 
 export const bfs = ({
-  grid,
+  newGrid,
   startPos,
   endPos,
-}: Props) : BfsResult => {
+}: Props) : Position[] => {
 
-  const newGrid = cloneGrid(grid);
   
-  // to keep track of the vistied nodes on separete node
+  // to keep track of the vistied nodes on separete grid
   const visitedGrid = generateEmptyGrid();
   // to animate the bfs path
   const bfsPath: Position[] = [];
@@ -34,9 +27,9 @@ export const bfs = ({
   
   const queue: Position[] = [];
   queue.push([startRow, startCol]);
+  visitedGrid[startRow][startCol].isVisited = true;
   const cell = newGrid[startRow][startCol];
   cell.parent = null;
-  visitedGrid[startRow][startCol].isVisited = true;
   // 
   bfsPath.push([startRow, startCol]);
 
@@ -45,8 +38,8 @@ export const bfs = ({
     const [row, col] = queue[head++]
 
     if(row === endRow && col === endCol) {
-      //TODO: add something or return smallest path
-      return {newGrid, bfsPath};
+      // return grid with parent and bfs path
+      return bfsPath;
     }
 
     // into four directions 
@@ -64,7 +57,7 @@ export const bfs = ({
       bfsPath.push([nrow, ncol]);
     }
   }
-  return {newGrid, bfsPath};
+  return  bfsPath;
 };
 
 export const getPath = (endPos: Position, grid: NodeAttributes[][]) : Position[] =>  {
@@ -88,32 +81,39 @@ export const animateBFS = (
   bfsPath: Position[],
   setGrid: React.Dispatch<React.SetStateAction<NodeAttributes[][]>>
 ) => {
-  bfsPath.forEach(([row, col], i) => {
-    setTimeout(() => {
-      setGrid((prevGrid) => {
-        const newGrid = [...prevGrid];           // clone outer array
-        const newRow = [...newGrid[row]];        // clone the specific row
-        newRow[col] = { ...newRow[col], isVisited: true }; // clone the cell
-        newGrid[row] = newRow;                   // replace the row
-        return newGrid;
-      });
-    }, 15 * i);
+  return new Promise<void>(reslove => {
+    bfsPath.forEach(([row, col], i) => {
+      setTimeout(() => {
+        setGrid((prevGrid) => {
+          const newGrid = [...prevGrid];           // clone outer array
+          const newRow = [...newGrid[row]];        // clone the specific row
+          newRow[col] = { ...newRow[col], isVisited: true }; // clone the cell
+          newGrid[row] = newRow;                   // replace the row
+          return newGrid;
+        });
+
+        if(i === bfsPath.length - 1) reslove();
+      }, 15 * i);
+    })
   });
 };
 
 
 export const animatePath = (path: Position[] ,setGrid: React.Dispatch<React.SetStateAction<NodeAttributes[][]>>) => {
 
-  path.forEach(([row,col], i) => {
-    setTimeout(() => {
-      setGrid((prevGrid) => {
-        const newGrid = [...prevGrid];           // clone outer array
-        const newRow = [...newGrid[row]];        // clone the specific row
-        newRow[col] = { ...newRow[col], isPath: true }; // clone the cell
-        newGrid[row] = newRow;                   // replace the row
-        return newGrid;
-      });
-    },30 * i );
-    
+  return new Promise<void>(resolve => {
+    path.forEach(([row,col], i) => {
+      setTimeout(() => {
+        setGrid((prevGrid) => {
+          const newGrid = [...prevGrid];           // clone outer array
+          const newRow = [...newGrid[row]];        // clone the specific row
+          newRow[col] = { ...newRow[col], isPath: true }; // clone the cell
+          newGrid[row] = newRow;                   // replace the row
+          return newGrid;
+        });
+
+        if(i === path.length - 1) resolve();
+      },30 * i );
+    })
   })
 };

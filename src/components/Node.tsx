@@ -21,14 +21,15 @@ export const Node = React.memo(({ node, onMouseDown, onMouseEnter, onMouseUp, mo
   const isEnd = row === endPos[0] && col === endPos[1];
   const isDraggingStart = mode === "draggingStart" && isStart;
   const isDraggingEnd = mode === "draggingEnd" && isEnd;
+  const isHolding = mode === "draggingStart" || mode === "draggingEnd";
 
 
   let className = "aspect-square h-full rounded-sm flex items-center justify-center border-[0.1px] border-neutral-800 cursor-default";
   if(isStart) className += " bg-yellow-500";
   else if(isEnd) className += " bg-red-600";
+  else if(isWall) className += " animate-wallBuild";
   else if(isPath) className += " animate-pathHighlight";
   else if(isVisited) className += " animate-Visit";
-  else if(isWall) className += " animate-wallBuild";
   else className += " bg-neutral-950 hover:bg-neutral-600 hover:scale-125 transition-transform ease-in-out";
 
   if(isDraggingStart) className += " scale-110 ring-2 ring-green-600 shadow-lg shadow-green-500/40";
@@ -36,7 +37,10 @@ export const Node = React.memo(({ node, onMouseDown, onMouseEnter, onMouseUp, mo
 
   return (
     <button 
-      className={className}
+      className={`
+        ${className}
+        ${isHolding && (isStart || isEnd) ? "animate-pulseScale" : ""}
+      `}
       onMouseDown={onMouseDown}
       onMouseEnter={onMouseEnter}
       onMouseUp={onMouseUp}

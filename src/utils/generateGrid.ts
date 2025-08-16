@@ -1,3 +1,4 @@
+import type { NodeAttributes } from "../types";
 import { 
   BOARD_COLS, 
   BOARD_ROWS, 
@@ -32,5 +33,15 @@ export const generateEmptyGrid = () => {
       isWall: false,
       isVisited: false,
     }))
+  );
+};
+
+export const clearVisitedAndPath = (grid: NodeAttributes[][]) => {
+  return (
+    grid.map(row => (
+      row.map(cell => (
+        {...cell, isVisited: false, isPath: false}
+      ))
+    ))
   );
 };

@@ -1,5 +1,5 @@
 import type { NodeAttributes, Position } from "../types"
-import { directions, isValid } from "../utils/constants";
+import { BOARD_COLS, BOARD_ROWS, directions, isValid } from "../utils/constants";
 
 type Props = {
   grid: NodeAttributes[][];
@@ -13,16 +13,16 @@ export const dfs = ({
   endPos,
 } : Props) : Position[] => {
 
-  if(!startPos || !endPos) return [];
-  
+  const visited: boolean[][] = Array.from({ length: BOARD_ROWS}, () => Array.from({ length: BOARD_COLS } , () => false));
+
   const [startRow, startCol] = startPos;
-  const [endRow, endCol] = endPos!;
+  const [endRow, endCol] = endPos;
 
   let stopPropogation: boolean = false;
   const dfsPath: Position[] = [];
 
   function dfsTraversal(row: number, col: number) {
-    grid[row][col].isVisited = true;
+    visited[row][col]= true;
     dfsPath.push([row,col]);
     if(row === endRow && col === endCol){
       stopPropogation = true;
@@ -37,7 +37,7 @@ export const dfs = ({
 
       if(!isValid(nrow,ncol)) continue;
       const neighbour = grid[nrow][ncol];
-      if(neighbour.isVisited || neighbour.isWall) continue;
+      if(visited[nrow][ncol] || neighbour.isWall) continue;
 
       dfsTraversal(nrow, ncol);
     }
@@ -50,15 +50,20 @@ export const animateDFS = (
   dfsPath: Position[],
   setGrid: React.Dispatch<React.SetStateAction<NodeAttributes[][]>>
 ) => {
-  dfsPath.forEach(([row, col], i) => {
-    setTimeout(() => {
-      setGrid((prevGrid) => {
-        const newGrid = [...prevGrid];           // clone outer array
-        const newRow = [...newGrid[row]];        // clone the specific row
-        newRow[col] = { ...newRow[col], isVisited: true }; // clone the cell
-        newGrid[row] = newRow;                   // replace the row
-        return newGrid;
-      });
-    }, 20 * i);
-  });
+  return new Promise<void>(resolve => {
+
+    dfsPath.forEach(([row, col], i) => {
+      setTimeout(() => {
+        setGrid((prevGrid) => {
+          const newGrid = [...prevGrid];           // clone outer array
+          const newRow = [...newGrid[row]];        // clone the specific row
+          newRow[col] = { ...newRow[col], isVisited: true }; // clone the cell
+          newGrid[row] = newRow;                   // replace the row
+          return newGrid;
+        });
+
+        if(i === dfsPath.length - 1) resolve();
+      }, 20 * i);
+    });
+  })
 };

@@ -11,7 +11,7 @@ export const Instructions = () => {
   ];
 
   return (
-    <div className="mx-5 pt-4 sticky top-0 z-50 flex flex-wrap md:flex-row gap-4 md:gap-x-12 justify-center items-center text-neutral-100 text-lg">
+    <div className="mx-5 pt-4 flex flex-wrap md:flex-row gap-4 md:gap-x-12 justify-center items-center text-neutral-100 text-lg">
       {legendItems.map((item, idx) => (
         <div key={idx} className="flex items-center gap-x-3">
           <div
