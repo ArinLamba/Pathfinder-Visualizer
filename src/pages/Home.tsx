@@ -1,11 +1,11 @@
 import { useState } from "react";
 
-import { type AlgoSelection, type ModeSelection } from "../types";
+import { type AlgoSelection, type ModeSelection } from "../lib/types";
 
 import { Controls } from "../components/Controls";
 import { Grid } from "../components/Grid";
 import { Instructions } from "../components/Instructions";
-import { generateGrid } from "../utils/generateGrid";
+import { generateGrid } from "../lib/utils/generateGrid";
 
 export const Home = () => {
   
@@ -32,7 +32,6 @@ export const Home = () => {
         onReset={handleReset}
         setAlgo={setAlgo}
         isRunning={isRunning}
-        setIsRunning={setIsRunning}
         setVisualizerTrigger={setVisualizerTrigger}
       />
       <Instructions />

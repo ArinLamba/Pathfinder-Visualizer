@@ -18,6 +18,7 @@ export const generateGrid = () => {
       isEnd: i === END_ROW && j === END_COL,
       isWall: false,
       isVisited: false,
+      weight: 1,
     }))
   );
 };
@@ -32,6 +33,7 @@ export const generateEmptyGrid = () => {
       isEnd: false,
       isWall: false,
       isVisited: false,
+      weight: 1,
     }))
   );
 };

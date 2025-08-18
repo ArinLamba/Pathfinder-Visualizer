@@ -2,7 +2,7 @@ import React from "react";
 
 import { ArrowRight, Target } from "lucide-react";
 
-import type { ModeSelection, NodeAttributes, Position } from "../types";
+import type { ModeSelection, NodeAttributes, Position } from "../lib/types";
 
 type Props = {
   node: NodeAttributes;

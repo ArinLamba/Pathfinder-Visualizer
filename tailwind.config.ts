@@ -5,9 +5,9 @@ export default {
     extend: {
       keyframes: {
         Visit: {
-          "0%": { backgroundColor: "#1e293b", transform: "scale(0.4)" },
-          "33%": { backgroundColor: "#4f46e5", transform: "scale(0.8)" },
-          "67%": { backgroundColor: "#4f46e5", transform: "scale(1.2)" },
+          "0%": { backgroundColor: "#f3d500", transform: "scale(0.4)" },
+          "33%": { backgroundColor: "#1e29", transform: "scale(0.8)" },
+          "67%": { backgroundColor: "#4f46", transform: "scale(1.2)" },
           "100%": { backgroundColor: "#4f46e5", transform: "scale(1)" },
         },
         pathHighlight: {

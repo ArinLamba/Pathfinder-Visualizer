@@ -1,5 +1,5 @@
-import type { NodeAttributes, Position } from "../types"
-import { BOARD_COLS, BOARD_ROWS, directions, isValid } from "../utils/constants";
+import type { NodeAttributes, Position } from "../lib/types"
+import { BOARD_COLS, BOARD_ROWS, directions, isValid } from "../lib/utils/constants";
 
 type Props = {
   grid: NodeAttributes[][];
@@ -44,26 +44,4 @@ export const dfs = ({
   }
   dfsTraversal(startRow, startCol);
   return dfsPath;
-};
-
-export const animateDFS = (
-  dfsPath: Position[],
-  setGrid: React.Dispatch<React.SetStateAction<NodeAttributes[][]>>
-) => {
-  return new Promise<void>(resolve => {
-
-    dfsPath.forEach(([row, col], i) => {
-      setTimeout(() => {
-        setGrid((prevGrid) => {
-          const newGrid = [...prevGrid];           // clone outer array
-          const newRow = [...newGrid[row]];        // clone the specific row
-          newRow[col] = { ...newRow[col], isVisited: true }; // clone the cell
-          newGrid[row] = newRow;                   // replace the row
-          return newGrid;
-        });
-
-        if(i === dfsPath.length - 1) resolve();
-      }, 20 * i);
-    });
-  })
 };

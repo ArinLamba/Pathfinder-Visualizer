@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import type { AlgoSelection, NodeAttributes } from '../types';
+import type { AlgoSelection, NodeAttributes } from '../lib/types';
 
-import { algorithms } from '../utils/constants';
-import { clearVisitedAndPath } from '../utils/generateGrid';
+import { algorithms } from '../lib/utils/constants';
+import { clearVisitedAndPath } from '../lib/utils/generateGrid';
 
 
 type Props = {
@@ -11,7 +11,6 @@ type Props = {
   onReset: () => void;
   setAlgo: (algo: AlgoSelection) => void;
   isRunning: boolean;
-  setIsRunning: (state: boolean) => void;
   setVisualizerTrigger: (num: React.SetStateAction<number>) => void;
 };
 
@@ -21,7 +20,6 @@ export const Controls = ({
   onReset, 
   setAlgo,
   isRunning,
-  setIsRunning,
   setVisualizerTrigger
 }: Props) => {
   const [selectedAlgo, setSelectedAlgo] = useState<AlgoSelection>(null);
@@ -35,7 +33,6 @@ export const Controls = ({
 
     setVisualizerTrigger(prev => prev + 1);
     setAlgo(selectedAlgo);
-    setIsRunning(true);
     
   };
 

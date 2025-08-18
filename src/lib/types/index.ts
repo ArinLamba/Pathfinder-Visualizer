@@ -5,11 +5,12 @@ export type NodeAttributes = {
   isEnd: boolean;
   isWall: boolean;
   isVisited: boolean;
+  weight: number;
   isPath?: boolean;
   parent?: [number, number] | null;
 };
 export type ModeSelection = "wall" | "draggingStart" | "draggingEnd";
-export type AlgoSelection = "BFS" | "DFS" | "DIJAKSTRA" | "A*" | null;
+export type AlgoSelection = "BFS" | "DFS" | "DIJKSTRA" | "A*" | null;
 
 export type Position = [number, number];
 

@@ -1,15 +1,22 @@
 import type React from "react";
 import { useEffect, useState } from "react";
-import { type AlgoSelection, type ModeSelection, type NodeAttributes } from "../types";
+import { type AlgoSelection, type ModeSelection, type NodeAttributes } from "../lib/types";
 
 import { Node } from "../components/Node";
 
-import { animateBFS, animatePath, bfs, getPath } from "../algorithms/bfs";
-import { animateDFS, dfs } from "../algorithms/dfs";
+import { bfs } from "../algorithms/bfs";
+import { dfs } from "../algorithms/dfs";
 
-import { generateGrid } from "../utils/generateGrid";
-import { addWalls, cloneGrid } from "../algorithms/handlers";
-import { END_COL, END_ROW, START_COL, START_ROW } from "../utils/constants";
+import { generateGrid } from "../lib/utils/generateGrid";
+import { addWalls, cloneGrid } from "../lib/utils/handlers";
+import { END_COL, END_ROW, START_COL, START_ROW } from "../lib/utils/constants";
+
+import { animateBFS } from "../animations/animateBFS";
+import { animateDFS } from "../animations/animateDFS";
+import { animatePath } from "../animations/animatePath";
+import { dijkstra } from "../algorithms/dijkstra";
+import { animateDijkstra } from "../animations/animateDijkstra";
+import { getPath } from "../lib/utils/getPath";
 
 type Props = {
   grid: NodeAttributes[][];
@@ -77,22 +84,36 @@ export const Grid = ({ grid, setGrid, mode, setMode, algo, resetFlag, isRunning,
     if(algo === "BFS") {
       const run = async () => {
         setIsRunning(true);
-        const newGrid = cloneGrid(grid)
-        const bfsPath = bfs({ newGrid, startPos, endPos });
+        const newGrid = cloneGrid(grid);
+        const visitedNodes = bfs({ newGrid, startPos, endPos });
         const shortestPath = getPath(endPos, newGrid);
-        await animateBFS(bfsPath, setGrid);
+        await animateBFS(visitedNodes, setGrid);
         await animatePath(shortestPath, setGrid);
         setIsRunning(false);
       }
       run();
       return;
     }
-    else if(algo === "DFS") {
+    if(algo === "DFS") {
       const run = async () => {
         setIsRunning(true);
         const dfsPath = dfs({ grid, startPos, endPos });
         await animateDFS(dfsPath, setGrid);
         await animatePath(dfsPath, setGrid);
+        setIsRunning(false);
+      }
+      run();
+      return;
+    }
+
+    if(algo === "DIJKSTRA") {
+      const run = async () => {
+        setIsRunning(true);
+        const newGrid = cloneGrid(grid);
+        const visitedNodes = dijkstra({newGrid, startPos, endPos});
+        const shortestPath = getPath(endPos, newGrid);
+        await animateDijkstra(visitedNodes, setGrid);
+        await animatePath(shortestPath, setGrid);
         setIsRunning(false);
       }
       run();

@@ -22,4 +22,4 @@ export const isValid = (row: number, col: number) : boolean => {
   return row >= 0 && col >= 0 && row < BOARD_ROWS && col < BOARD_COLS;
 };
 
-export const algorithms = ['BFS', 'DFS', 'DIJKASTRA', 'A*'] as const;
+export const algorithms = ['BFS', 'DFS', 'DIJKSTRA', 'A*'] as const;
