@@ -2,7 +2,7 @@ import type React from "react";
 import { useEffect, useState } from "react";
 import { type AlgoSelection, type ModeSelection, type NodeAttributes, type ObstacleSelection } from "@/lib/types";
 
-import { Node } from "@/pages/components/Node";
+import { Node } from "@/components/Node";
 
 import { bfs } from "@/algorithms/bfs";
 import { dfs } from "@/algorithms/dfs";

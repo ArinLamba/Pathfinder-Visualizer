@@ -26,11 +26,11 @@ export const Node = React.memo(({ node, onMouseDown, onMouseEnter, mode, startPo
   let className = "aspect-square h-full flex items-center justify-center border-[0.1px] border-neutral-800 cursor-default";
   if(isStart) className += " bg-yellow-500";
   else if(isEnd) className += " bg-red-600";
+  else if(isPath) className += " animate-pathHighlight";
   else if(isWater) className += " animate-waterCell";
   else if(isGrass) className += " animate-grassCell";
   else if(isMountain) className += " animate-mountainCell";
   else if(isWall) className += " animate-wallCell";
-  else if(isPath) className += " animate-pathHighlight";
   else if(isVisited) className += " animate-visitedCell";
   else className += " bg-neutral-950 hover:bg-neutral-600 hover:scale-125 transition-transform ease-in-out";
 

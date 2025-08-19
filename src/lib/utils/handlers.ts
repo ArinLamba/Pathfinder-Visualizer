@@ -18,7 +18,7 @@ export const addWalls = ({
     const newGrid = [...prevGrid];
     const newRow = [...newGrid[row]];
     const node = newRow[col];
-    newRow[col] = { ...newRow[col], isWall: !node.isWall, weight: 99};
+    newRow[col] = { ...newRow[col], isWall: !node.isWall};
     newGrid[row] = newRow;
     return newGrid;
   })
