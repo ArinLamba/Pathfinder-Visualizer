@@ -1,5 +1,5 @@
-import type { NodeAttributes, Position } from "../lib/types"
-import { BOARD_COLS, BOARD_ROWS, directions, isValid } from "../lib/utils/constants";
+import type { NodeAttributes, Position } from "@/lib/types"
+import { BOARD_COLS, BOARD_ROWS, directions, isValid } from "@/lib/utils/constants";
 
 type Props = {
   grid: NodeAttributes[][];

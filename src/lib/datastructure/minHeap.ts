@@ -1,4 +1,4 @@
-import { BOARD_ROWS, BOARD_COLS } from "../utils/constants";
+import { BOARD_ROWS, BOARD_COLS } from "@/lib/utils/constants";
 
 const TOTAL_SIZE = BOARD_ROWS * BOARD_COLS;
 

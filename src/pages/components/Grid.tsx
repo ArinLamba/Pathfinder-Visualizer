@@ -1,22 +1,22 @@
 import type React from "react";
 import { useEffect, useState } from "react";
-import { type AlgoSelection, type ModeSelection, type NodeAttributes } from "../lib/types";
+import { type AlgoSelection, type ModeSelection, type NodeAttributes, type ObstacleSelection } from "@/lib/types";
 
-import { Node } from "../components/Node";
+import { Node } from "@/pages/components/Node";
 
-import { bfs } from "../algorithms/bfs";
-import { dfs } from "../algorithms/dfs";
+import { bfs } from "@/algorithms/bfs";
+import { dfs } from "@/algorithms/dfs";
 
-import { generateGrid } from "../lib/utils/generateGrid";
-import { addWalls, cloneGrid } from "../lib/utils/handlers";
-import { END_COL, END_ROW, START_COL, START_ROW } from "../lib/utils/constants";
+import { generateGrid } from "@/lib/utils/generateGrid";
+import { addGrass, addMountain, addWalls, addWater, cloneGrid } from "@/lib/utils/handlers";
+import { END_COL, END_ROW, START_COL, START_ROW } from "@/lib/utils/constants";
 
-import { animateBFS } from "../animations/animateBFS";
-import { animateDFS } from "../animations/animateDFS";
-import { animatePath } from "../animations/animatePath";
-import { dijkstra } from "../algorithms/dijkstra";
-import { animateDijkstra } from "../animations/animateDijkstra";
-import { getPath } from "../lib/utils/getPath";
+import { animateBFS } from "@/animations/animateBFS";
+import { animateDFS } from "@/animations/animateDFS";
+import { animatePath } from "@/animations/animatePath";
+import { dijkstra } from "@/algorithms/dijkstra";
+import { animateDijkstra } from "@/animations/animateDijkstra";
+import { getPath } from "@/lib/utils/getPath";
 
 type Props = {
   grid: NodeAttributes[][];
@@ -28,9 +28,10 @@ type Props = {
   isRunning: boolean;
   setIsRunning: (input: boolean) => void;
   visualizerTrigger: number;
+  obstacle: ObstacleSelection;
 }
 
-export const Grid = ({ grid, setGrid, mode, setMode, algo, resetFlag, isRunning, setIsRunning, visualizerTrigger } : Props) => {
+export const Grid = ({ grid, setGrid, mode, setMode, algo, resetFlag, isRunning, setIsRunning, visualizerTrigger, obstacle } : Props) => {
   
   const [startPos, setStartPos] = useState<[number,number]>([START_ROW, START_COL]);
   const [endPos, setEndPos] = useState<[number,number]>([END_ROW, END_COL]);
@@ -38,9 +39,23 @@ export const Grid = ({ grid, setGrid, mode, setMode, algo, resetFlag, isRunning,
 
   const toggleWall = (row:number, col:number) => {
     if(grid[row][col].isStart || grid[row][col].isEnd || isRunning) return;
-    const newGrid = cloneGrid(grid);
-    addWalls({grid: newGrid, row, col});
-    setGrid(newGrid);
+    addWalls({row, col, setGrid})
+  };
+
+  const toggleGrass = (row: number, col: number) => {
+    if(grid[row][col].isStart || grid[row][col].isEnd || isRunning) return;
+    addGrass({row, col, setGrid});
+
+  };
+  const toggleWater = (row: number, col: number) => {
+    if(grid[row][col].isStart || grid[row][col].isEnd || isRunning) return;
+    addWater({row, col, setGrid});
+
+  };
+  const toggleMountain = (row: number, col: number) => {
+    if(grid[row][col].isStart || grid[row][col].isEnd || isRunning) return;
+    addMountain({row, col, setGrid});
+
   };
 
   const handleMouseEnter = (row: number, col: number) => {
@@ -58,8 +73,20 @@ export const Grid = ({ grid, setGrid, mode, setMode, algo, resetFlag, isRunning,
       setEndPos([row,col]);
       return;
     }
-    if(isMouseDown && mode === "wall") {
+    if(isMouseDown && obstacle === "Wall") {
       toggleWall(row, col);
+      return;
+    }
+    if(isMouseDown && obstacle === "Grass") {
+      toggleGrass(row, col);
+      return;
+    }
+    if(isMouseDown && obstacle === "Water") {
+      toggleWater(row,col);
+      return;
+    }
+    if(isMouseDown && obstacle === "Mountain") {
+      toggleMountain(row,col);
       return;
     }
   };
@@ -74,10 +101,11 @@ export const Grid = ({ grid, setGrid, mode, setMode, algo, resetFlag, isRunning,
       setMode("draggingEnd");
       return;
     }
-    if(mode === "wall") {
-      toggleWall(row,col);
-      return;
-    }
+    // Only toggle cells if not dragging
+    if(obstacle === "Wall") toggleWall(row, col);
+    if(obstacle === "Grass") toggleGrass(row, col);
+    if(obstacle === "Water") toggleWater(row, col);
+    if(obstacle === "Mountain") toggleMountain(row, col);
   };
   
   useEffect(() => {  
@@ -128,12 +156,13 @@ export const Grid = ({ grid, setGrid, mode, setMode, algo, resetFlag, isRunning,
     setGrid(generateGrid());
     setStartPos([START_ROW,START_COL]);
     setEndPos([END_ROW,END_COL]);
+    setIsMouseDown(false);
   }, [resetFlag]);
 
   return (
     <div className="flex justify-center p-2">
       <div 
-        onMouseUp={() => setIsMouseDown(false)}
+        onMouseUp={() => {setIsMouseDown(false); setMode(null)}}
         className="inline-block"
       >
         {grid.map((row, i) => 
@@ -144,7 +173,6 @@ export const Grid = ({ grid, setGrid, mode, setMode, algo, resetFlag, isRunning,
                 node={cell}
                 onMouseDown={() => handleMouseDown(i, j)}
                 onMouseEnter={() => handleMouseEnter(i,j)}
-                onMouseUp={() => setMode("wall")} // TODO: set previous mode (later)
                 mode={mode}
                 startPos={startPos}
                 endPos={endPos}

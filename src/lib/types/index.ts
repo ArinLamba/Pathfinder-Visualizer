@@ -1,16 +1,22 @@
+
+
 export type NodeAttributes = {
   row: number;
   col: number;
   isStart: boolean;
   isEnd: boolean;
-  isWall: boolean;
   isVisited: boolean;
+  isWall: boolean;
+  isGrass: boolean;
+  isWater: boolean;
+  isMountain: boolean;
   weight: number;
   isPath?: boolean;
   parent?: [number, number] | null;
 };
-export type ModeSelection = "wall" | "draggingStart" | "draggingEnd";
+export type ModeSelection = "draggingStart" | "draggingEnd" | null;
 export type AlgoSelection = "BFS" | "DFS" | "DIJKSTRA" | "A*" | null;
+export type ObstacleSelection = "Wall" | "Grass" | "Water" | "Mountain" | null;
 
 export type Position = [number, number];
 

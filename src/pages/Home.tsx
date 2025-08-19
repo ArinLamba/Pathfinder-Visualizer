@@ -1,16 +1,17 @@
 import { useState } from "react";
 
-import { type AlgoSelection, type ModeSelection } from "../lib/types";
+import { generateGrid } from "@/lib/utils/generateGrid";
+import { type ObstacleSelection, type AlgoSelection, type ModeSelection } from "@/lib/types";
 
-import { Controls } from "../components/Controls";
-import { Grid } from "../components/Grid";
-import { Instructions } from "../components/Instructions";
-import { generateGrid } from "../lib/utils/generateGrid";
+import { Grid } from "@/pages/components/Grid";
+import { Controls } from "@/pages/components/Controls";
+import { Instructions } from "@/pages/components/Instructions";
 
 export const Home = () => {
   
   const [grid, setGrid] = useState(generateGrid());
-  const [mode, setMode] = useState<ModeSelection>("wall");
+  const [mode, setMode] = useState<ModeSelection>(null);
+  const [obstacle, setObstacle] = useState<ObstacleSelection>("Wall");
   const [visualizerTrigger, setVisualizerTrigger] = useState(0);
   const [algo, setAlgo] = useState<AlgoSelection>(null);
   const [resetFlag, setResetFlag] = useState(false); // toggled to reset grid
@@ -19,8 +20,9 @@ export const Home = () => {
   const handleReset = () => {
     setResetFlag(prev => !prev);
     setIsRunning(false);
-    setMode('wall');
+    setObstacle('Wall');
     setAlgo(null);
+    setVisualizerTrigger(0);
   };
 
 
@@ -33,6 +35,7 @@ export const Home = () => {
         setAlgo={setAlgo}
         isRunning={isRunning}
         setVisualizerTrigger={setVisualizerTrigger}
+        setObstacle={setObstacle}
       />
       <Instructions />
       <div className="m-6 p-2 rounded-2xl overflow-x-auto bg-neutral-800">
@@ -47,6 +50,7 @@ export const Home = () => {
             isRunning={isRunning}
             setIsRunning={setIsRunning}
             visualizerTrigger={visualizerTrigger}
+            obstacle={obstacle}
           />
         </div>
       </div>

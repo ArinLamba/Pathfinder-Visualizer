@@ -1,5 +1,8 @@
-import type { HandleEndProps, HandleStartProps, NodeAttributes } from "../types"
-type AddWallsProps = Pick<HandleStartProps, "grid" | "row" | "col">;
+import type { HandleEndProps, HandleStartProps, NodeAttributes } from "@/lib/types"
+
+type ObstacleProps = Pick<HandleStartProps, "row" | "col"> & {
+  setGrid: React.Dispatch<React.SetStateAction<NodeAttributes[][]>>;
+};
 
 export const cloneGrid = (grid: NodeAttributes[][]) => {
   return grid.map(row => row.map(node => ({...node})));
@@ -7,12 +10,75 @@ export const cloneGrid = (grid: NodeAttributes[][]) => {
 
 
 export const addWalls = ({
-  grid,
   row,
-  col
-}: AddWallsProps) => {
-  const node = grid[row][col];
-  node.isWall = !node.isWall
+  col,
+  setGrid
+}: ObstacleProps) => {
+  setGrid((prevGrid) => {
+    const newGrid = [...prevGrid];
+    const newRow = [...newGrid[row]];
+    const node = newRow[col];
+    newRow[col] = { ...newRow[col], isWall: !node.isWall, weight: 99};
+    newGrid[row] = newRow;
+    return newGrid;
+  })
+};
+
+export const addGrass = ({
+  row,
+  col,
+  setGrid
+}: ObstacleProps) => {
+  setGrid((prevGrid) => {
+    const newGrid = [...prevGrid];
+    const newRow = [...newGrid[row]];
+    const node = newRow[col];
+    
+    newRow[col] = node.isGrass ? 
+      {...newRow[col], isGrass: false, weight: 1} : 
+      {...newRow[col], isGrass: true, weight: 3};
+    
+    newGrid[row] = newRow;
+    return newGrid;
+  })
+};
+
+export const addWater = ({
+  row,
+  col,
+  setGrid
+}: ObstacleProps) => {
+  setGrid((prevGrid) => {
+    const newGrid = [...prevGrid];
+    const newRow = [...newGrid[row]];
+    const node = newRow[col];
+    
+    newRow[col] = node.isWater ? 
+      {...newRow[col], isWater: false, weight: 1} : 
+      {...newRow[col], isWater: true, weight: 6};
+    
+    newGrid[row] = newRow;
+    return newGrid;
+  })
+};
+
+export const addMountain = ({
+  row,
+  col,
+  setGrid
+}: ObstacleProps) => {
+  setGrid((prevGrid) => {
+    const newGrid = [...prevGrid];
+    const newRow = [...newGrid[row]];
+    const node = newRow[col];
+    
+    newRow[col] = node.isMountain ? 
+      {...newRow[col], isMountain: false, weight: 1} : 
+      {...newRow[col], isMountain: true, weight: 9};
+    
+    newGrid[row] = newRow;
+    return newGrid;
+  })
 };
 
 export const handleStart = ({grid, row ,col, startPos,setStartPos}: HandleStartProps) => {

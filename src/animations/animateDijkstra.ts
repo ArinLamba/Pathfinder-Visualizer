@@ -1,4 +1,4 @@
-import type { NodeAttributes, Position } from "../lib/types";
+import type { NodeAttributes, Position } from "@/lib/types";
 
 export const animateDijkstra = (
   visitedNodes: Position[],

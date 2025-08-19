@@ -1,4 +1,4 @@
-import type { NodeAttributes, Position } from "../lib/types";
+import type { NodeAttributes, Position } from "@/lib/types";
 
 export const animatePath = (path: Position[], setGrid: React.Dispatch<React.SetStateAction<NodeAttributes[][]>>) => {
 

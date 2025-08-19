@@ -1,4 +1,4 @@
-import type { NodeAttributes, Position } from "../types";
+import type { NodeAttributes, Position } from "@/lib/types";
 
 export const getPath = (endPos: Position, grid: NodeAttributes[][]) : Position[] =>  {
   

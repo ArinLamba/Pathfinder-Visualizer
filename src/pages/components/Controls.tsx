@@ -1,8 +1,10 @@
 import { useState } from 'react';
-import type { AlgoSelection, NodeAttributes } from '../lib/types';
 
-import { algorithms } from '../lib/utils/constants';
-import { clearVisitedAndPath } from '../lib/utils/generateGrid';
+import type { AlgoSelection, NodeAttributes, ObstacleSelection } from '@/lib/types';
+import { algorithms } from '@/lib/utils/constants';
+import { clearVisitedAndPath } from '@/lib/utils/generateGrid';
+
+import { WeightSelection } from './WeightSelection';
 
 
 type Props = {
@@ -12,6 +14,7 @@ type Props = {
   setAlgo: (algo: AlgoSelection) => void;
   isRunning: boolean;
   setVisualizerTrigger: (num: React.SetStateAction<number>) => void;
+  setObstacle: (obstacle: ObstacleSelection) => void;
 };
 
 export const Controls = ({ 
@@ -20,12 +23,16 @@ export const Controls = ({
   onReset, 
   setAlgo,
   isRunning,
-  setVisualizerTrigger
+  setVisualizerTrigger,
+  setObstacle,
 }: Props) => {
   const [selectedAlgo, setSelectedAlgo] = useState<AlgoSelection>(null);
 
   const baseClass = "text-neutral-100 hover:text-white px-4 py-2 text-md border border-gray-600 rounded-md transition";
 
+  if(selectedAlgo !== "DIJKSTRA") {
+    setObstacle("Wall");
+  }
   const handleVisualize = () => {
     if(!selectedAlgo || isRunning) return;
     const newGrid = clearVisitedAndPath(grid);
@@ -36,7 +43,7 @@ export const Controls = ({
     
   };
 
-  const handleSelect = (e: any) => {
+  const handleChamge = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedAlgo(e.target.value as AlgoSelection);
   };
 
@@ -54,11 +61,14 @@ export const Controls = ({
         </h1>
 
         <div className="flex items-center gap-4 flex-wrap">
+          <div className="w-44 relative inline-block">
+            {selectedAlgo === "DIJKSTRA" && <WeightSelection setObstacle={setObstacle}/>}
+          </div>
           {/* Custom Select */}
           <div className="relative inline-block w-44 ">
             <select
               value={selectedAlgo || ''}
-              onChange={(e) => handleSelect(e)}
+              onChange={(e) => handleChamge(e)}
               
               className="appearance-none w-full bg-gray-800 border border-gray-700 text-white text-md rounded-lg focus:ring-emerald-500 focus:border-emerald-500 block px-4 py-2"
             >
