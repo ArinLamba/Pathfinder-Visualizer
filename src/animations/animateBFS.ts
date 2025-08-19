@@ -10,7 +10,7 @@ export const animateBFS = (
         setGrid((prevGrid) => {
           const newGrid = [...prevGrid];           // clone outer array
           const newRow = [...newGrid[row]];        // clone the specific row
-          newRow[col] = { ...newRow[col], isVisited: true,isAnimating: true }; // clone the cell
+          newRow[col] = { ...newRow[col], isVisited: true }; // clone the cell
           newGrid[row] = newRow;                   // replace the row
           return newGrid;
         });
