@@ -6,44 +6,49 @@ export default {
   	extend: {
   		keyframes: {
 				visitedCell: {
-					'0%': { backgroundColor: '#f59e0b', transform: 'scale(0.4)',}, // amber-400
-					'33%': { backgroundColor: '#f59e0b', transform: 'scale(0.8)' }, // amber-400
-					'67%': { backgroundColor: '#a855f7', transform: 'scale(1.1)' }, // amber-500
-					'100%': { backgroundColor: '#9333ea', transform: 'scale(1)' }   // amber-300
+					'0%':   { backgroundColor: '#f59e0b', transform: 'scale(0.4)' }, // amber start
+					'33%':  { backgroundColor: '#f59e0b', transform: 'scale(0.8)' },
+					'67%':  { backgroundColor: '#a855f7', transform: 'scale(1.1)' }, // purple pop
+					'100%': { backgroundColor: '#9333ea', transform: 'scale(1)' }    // cyan end
 				},
 
+        flashWeighted: {
+          "0%": 	{ backgroundColor: "#ef4444" },   // yellow-400 (flash start)
+          "100%": { backgroundColor: "#9333ea" }, // blue-500 (final visited color)
+        },
+
 				waterCell: {
-					'0%': { backgroundColor: '#06b6d4', transform: 'scale(0.4)' }, // cyan-500
-					'33%': { backgroundColor: '#06b6d4', transform: 'scale(0.8)' }, // cyan-500
-					'67%': { backgroundColor: '#0891b2', transform: 'scale(1.1)' }, // cyan-600
-					'100%': { backgroundColor: '#22d3ee', transform: 'scale(1)' }   // cyan-400 (bright pop)
+					'0%':   { backgroundColor: '#06b6d4', transform: 'scale(0.4)' }, // bright cyan
+					'33%':  { backgroundColor: '#06b6d4', transform: 'scale(0.8)' },
+					'67%':  { backgroundColor: '#0891b2', transform: 'scale(1.1)' }, // deep cyan
+					'100%': { backgroundColor: '#1d4ed8', transform: 'scale(1)' }    // strong blue
 				},
 
 				wallCell: {
-					'0%': { backgroundColor: '#f87171', transform: 'scale(0.4)' },  // red-400
-					'33%': { backgroundColor: '#f87171', transform: 'scale(0.8)' },  // red-400
-					'67%': { backgroundColor: '#dc2626', transform: 'scale(1.1)' }, // red-600
-					'100%': { backgroundColor: '#ef4444', transform: 'scale(1)' }, // red-500
+					'0%':   { backgroundColor: '#d4d4d8', transform: 'scale(0.4)' }, // zinc-300 (light gray, pops on black bg)
+					'33%':  { backgroundColor: '#a1a1aa', transform: 'scale(0.8)' }, // zinc-400
+					'67%':  { backgroundColor: '#71717a', transform: 'scale(1.1)' }, // zinc-500
+					'100%': { backgroundColor: '#52525b', transform: 'scale(1)' }    // zinc-600 (dark gray, not black)
 				},
 
 				grassCell: {
-					'0%': { backgroundColor: '#84cc16', transform: 'scale(0.4)' }, // lime-500
-					'33%': { backgroundColor: '#84cc16', transform: 'scale(0.8)' }, // lime-500
-					'67%': { backgroundColor: '#65a30d', transform: 'scale(1.1)' }, // lime-600
-					'100%': { backgroundColor: '#a3e635', transform: 'scale(1)' }   // lime-400
+					'0%':   { backgroundColor: '#bbf7d0', transform: 'scale(0.4)' }, // green-200
+					'33%':  { backgroundColor: '#86efac', transform: 'scale(0.8)' }, // green-300
+					'67%':  { backgroundColor: '#22c55e', transform: 'scale(1.1)' }, // green-500
+					'100%': { backgroundColor: '#15803d', transform: 'scale(1)' }    // green-700 (lush)
 				},
 
 				mountainCell: {
-					'0%': { backgroundColor: '#8b5cf6', transform: 'scale(0.4)' }, // violet-500
-					'33%': { backgroundColor: '#8b5cf6', transform: 'scale(0.8)' }, // violet-500
-					'67%': { backgroundColor: '#7c3aed', transform: 'scale(1.1)' }, // violet-600
-					'100%': { backgroundColor: '#a78bfa', transform: 'scale(1)' }   // violet-400
+					'0%':   { backgroundColor: '#d6a673', transform: 'scale(0.4)' }, // light brown
+					'33%':  { backgroundColor: '#d6a673', transform: 'scale(0.8)' },
+					'67%':  { backgroundColor: '#b07c5d', transform: 'scale(1.1)' }, // rocky brown
+					'100%': { backgroundColor: '#8b5e3c', transform: 'scale(1)' }    // deep earthy
 				},
 
 				pathHighlight: {
-					'0%': { backgroundColor: '#f59e0b', transform: 'scale(0.8)' },
-					'33%': { backgroundColor: '#f59e0b', transform: 'scale(1)' },
-					'50%': { backgroundColor: '#facc15', transform: 'scale(1.2)' },
+					'0%': 	{ backgroundColor: '#f59e0b', transform: 'scale(0.8)' },
+					'33%': 	{ backgroundColor: '#f59e0b', transform: 'scale(1)' },
+					'50%': 	{ backgroundColor: '#facc15', transform: 'scale(1.2)' },
 					'100%': { backgroundColor: '#fbbf24', transform: 'scale(1)' },
 				},
 
@@ -58,11 +63,13 @@ export default {
   		},
 			animation: {
 				pathHighlight: 'pathHighlight 0.6s ease-in-out forwards',
-				waterCell: 'waterCell 0.3s ease-in-out forwards',
-				wallCell: 'wallCell 0.3s ease-in-out forwards',
-				grassCell: 'grassCell 0.3s ease-in-out forwards',
-				mountainCell: 'mountainCell 0.3s ease-in-out forwards',
+				waterCell: 'waterCell 0.5s ease-in-out forwards',
+				wallCell: 'wallCell 0.4s ease-in-out forwards',
+				grassCell: 'grassCell 0.5s ease-in-out forwards',
+				mountainCell: 'mountainCell 0.5s ease-in-out forwards',
 				visitedCell: 'visitedCell 1.6s ease-in-out forwards',
+				weightedVisitedCell: 'weightedVisitedCell 1.6s ease-in-out forwards',
+				flashWeighted: "flashWeighted 0.4s ease-out forwards",
 				pulseScale: 'pulseScale 1.5s ease-out infinite',
 			},
 

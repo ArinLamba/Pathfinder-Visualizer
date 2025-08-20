@@ -4,19 +4,20 @@ export const animateDijkstra = (
   visitedNodes: Position[],
   setGrid: React.Dispatch<React.SetStateAction<NodeAttributes[][]>>
 ) => {
-  return new Promise<void>(reslove => {
+  return new Promise<void>((resolve) => {
     visitedNodes.forEach(([row, col], i) => {
       setTimeout(() => {
         setGrid((prevGrid) => {
-          const newGrid = [...prevGrid];           // clone outer array
-          const newRow = [...newGrid[row]];        // clone the specific row
-          newRow[col] = { ...newRow[col], isVisited: true }; // clone the cell
-          newGrid[row] = newRow;                   // replace the row
+          const newGrid = [...prevGrid];
+          const newRow = [...newGrid[row]];
+          // Mark visited
+          const cell = { ...newRow[col], isVisited: true };
+          newRow[col] = cell;
+          newGrid[row] = newRow;
           return newGrid;
         });
-
-        if(i === visitedNodes.length - 1) reslove();
+        if (i === visitedNodes.length - 1) resolve();
       }, 15 * i);
-    })
+    });
   });
 };

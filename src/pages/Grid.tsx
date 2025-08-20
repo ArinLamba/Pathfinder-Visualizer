@@ -2,7 +2,7 @@ import type React from "react";
 import { useEffect, useState } from "react";
 import { type AlgoSelection, type ModeSelection, type NodeAttributes, type ObstacleSelection } from "@/lib/types";
 
-import { Node } from "@/components/Node";
+import { Node } from "@/pages/Node";
 
 import { bfs } from "@/algorithms/bfs";
 import { dfs } from "@/algorithms/dfs";
@@ -108,9 +108,10 @@ export const Grid = ({ grid, setGrid, mode, setMode, algo, resetFlag, isRunning,
     if(obstacle === "Mountain") toggleMountain(row, col);
   };
   
-  useEffect(() => {  
-    if(algo === "BFS") {
-      const run = async () => {
+  useEffect(() => {
+    const run = async () => {
+
+      if(algo === "BFS") {
         setIsRunning(true);
         const newGrid = cloneGrid(grid);
         const visitedNodes = bfs({ newGrid, startPos, endPos });
@@ -118,24 +119,17 @@ export const Grid = ({ grid, setGrid, mode, setMode, algo, resetFlag, isRunning,
         await animateBFS(visitedNodes, setGrid);
         await animatePath(shortestPath, setGrid);
         setIsRunning(false);
+        return;
       }
-      run();
-      return;
-    }
-    if(algo === "DFS") {
-      const run = async () => {
+      if(algo === "DFS") {
         setIsRunning(true);
         const dfsPath = dfs({ grid, startPos, endPos });
         await animateDFS(dfsPath, setGrid);
         await animatePath(dfsPath, setGrid);
         setIsRunning(false);
+        return;
       }
-      run();
-      return;
-    }
-
-    if(algo === "DIJKSTRA") {
-      const run = async () => {
+      if(algo === "DIJKSTRA") {
         setIsRunning(true);
         const newGrid = cloneGrid(grid);
         const visitedNodes = dijkstra({newGrid, startPos, endPos});
@@ -143,10 +137,10 @@ export const Grid = ({ grid, setGrid, mode, setMode, algo, resetFlag, isRunning,
         await animateDijkstra(visitedNodes, setGrid);
         await animatePath(shortestPath, setGrid);
         setIsRunning(false);
+        return;
       }
-      run();
-      return;
     }
+    run();
     
   }, [visualizerTrigger]);
   

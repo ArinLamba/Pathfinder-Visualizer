@@ -46,8 +46,8 @@ export const Node = React.memo(({ node, onMouseDown, onMouseEnter, mode, startPo
         onMouseDown={onMouseDown}
         onMouseEnter={onMouseEnter}
       >
-      {isStart ? <ArrowRight className="aspect-square" /> : ""}
-      {isEnd ? <Target className="aspect-square"/> : ""}
+      {isStart ? <ArrowRight className=" aspect-square" /> : ""}
+      {isEnd ? <Target className=" aspect-square"/> : ""}
     </button>
   );
 });

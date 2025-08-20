@@ -1,12 +1,12 @@
 import { useState } from 'react';
 
 import type { AlgoSelection, NodeAttributes, ObstacleSelection } from '@/lib/types';
-import { clearVisitedAndPath } from '@/lib/utils/generateGrid';
+import { clearVisitedAndPath, clearWallsAndWeight } from '@/lib/utils/generateGrid';
 
 import { WeightSelection } from './WeightSelection';
 import { SelectAlgo } from './SelectAlgo';
 import { Button } from './ui/button';
-import { Info } from 'lucide-react';
+import { Information } from './Information';
 
 
 type Props = {
@@ -40,10 +40,20 @@ export const Controls = ({
     
   };
 
-  const handleReset = () => {
+  const handleClearBoard = () => {
     setVisualizerTrigger(0);
     setSelectedAlgo(null);
     onReset();
+  };
+
+  const handleClearPath = () => {
+    const newGrid = clearVisitedAndPath(grid);
+    setGrid(newGrid);
+  };
+
+  const handleClearWallsWeights = () => {
+    const newGrid = clearWallsAndWeight(grid);
+    setGrid(newGrid);
   };
 
   return (
@@ -51,7 +61,7 @@ export const Controls = ({
       <div className="lg:max-w-[1420px] w-full mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
         <h1 className="text-2xl font-semibold flex items-center gap-x-3 flex-shrink-0">
           🧭 Pathfinding Visualizer
-          <Info className="text-cyan-600 hover:cursor-pointer hover:text-cyan-400 transition delay-75 size-6"/>
+          <Information />
         </h1>
 
         <div className="flex items-center gap-4 flex-wrap">
@@ -83,14 +93,23 @@ export const Controls = ({
           {/* Reset Button */}
           <Button variant="ghost"
             disabled={isRunning}
-            onClick={handleReset}
+            onClick={handleClearBoard}
           >
             Clear Board
           </Button>
-          <Button variant={"ghost"} disabled={isRunning}>
+          <Button 
+            variant={"ghost"}
+            disabled={isRunning}
+            onClick={handleClearWallsWeights}
+          >
             Clear Walls & Weights
           </Button>
-          <Button variant={"ghost"} disabled={isRunning}>
+
+          <Button 
+            variant={"ghost"} 
+            disabled={isRunning}
+            onClick={handleClearPath}
+          >
             Clear Path
           </Button>
 

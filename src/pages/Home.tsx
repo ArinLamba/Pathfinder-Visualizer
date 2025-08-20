@@ -3,7 +3,7 @@ import { useState } from "react";
 import { generateGrid } from "@/lib/utils/generateGrid";
 import { type ObstacleSelection, type AlgoSelection, type ModeSelection } from "@/lib/types";
 
-import { Grid } from "@/components/Grid";
+import { Grid } from "@/pages/Grid";
 import { Controls } from "@/components/Controls";
 import { Instructions } from "@/components/Instructions";
 
