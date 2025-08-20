@@ -16,7 +16,7 @@ export const animateBFS = (
         });
 
         if(i === visitedNodes.length - 1) reslove();
-      }, 15 * i);
+      }, 12 * i);
     })
   });
 };

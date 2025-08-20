@@ -23,3 +23,9 @@ export const isValid = (row: number, col: number) : boolean => {
 };
 
 export const algorithms = ['BFS', 'DFS', 'DIJKSTRA', 'A*'] as const;
+export const obstacles = [
+  { title: "Wall", weight: "99", color: "bg-purple-800" },
+  { title: "Grass", weight: "3", color: "bg-emerald-500"},
+  { title: "Water", weight: "5", color: "bg-blue-500" },
+  { title: "Mountain", weight: "8", color: "bg-slate-400"},
+] as const;

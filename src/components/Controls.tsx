@@ -1,10 +1,12 @@
 import { useState } from 'react';
 
 import type { AlgoSelection, NodeAttributes, ObstacleSelection } from '@/lib/types';
-import { algorithms } from '@/lib/utils/constants';
 import { clearVisitedAndPath } from '@/lib/utils/generateGrid';
 
 import { WeightSelection } from './WeightSelection';
+import { SelectAlgo } from './SelectAlgo';
+import { Button } from './ui/button';
+import { Info } from 'lucide-react';
 
 
 type Props = {
@@ -28,11 +30,6 @@ export const Controls = ({
 }: Props) => {
   const [selectedAlgo, setSelectedAlgo] = useState<AlgoSelection>(null);
 
-  const baseClass = "text-neutral-100 hover:text-white px-4 py-2 text-md border border-gray-600 rounded-md transition";
-
-  if(selectedAlgo !== "DIJKSTRA") {
-    setObstacle("Wall");
-  }
   const handleVisualize = () => {
     if(!selectedAlgo || isRunning) return;
     const newGrid = clearVisitedAndPath(grid);
@@ -43,10 +40,6 @@ export const Controls = ({
     
   };
 
-  const handleChamge = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedAlgo(e.target.value as AlgoSelection);
-  };
-
   const handleReset = () => {
     setVisualizerTrigger(0);
     setSelectedAlgo(null);
@@ -54,54 +47,53 @@ export const Controls = ({
   };
 
   return (
-    <header className="w-full sticky top-0 z-50 px-6 py-4 bg-neutral-900 shadow-md text-neutral-100">
-      <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
-        <h1 className="text-2xl md:text-3xl font-semibold">
+    <header className="w-full sticky top-0 z-50 px-4 py-2 bg-neutral-900 shadow-md text-neutral-100">
+      <div className="lg:max-w-[1420px] w-full mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+        <h1 className="text-2xl font-semibold flex items-center gap-x-3 flex-shrink-0">
           🧭 Pathfinding Visualizer
+          <Info className="text-cyan-600 hover:cursor-pointer hover:text-cyan-400 transition delay-75 size-6"/>
         </h1>
 
         <div className="flex items-center gap-4 flex-wrap">
           <div className="w-44 relative inline-block">
-            {selectedAlgo === "DIJKSTRA" && <WeightSelection setObstacle={setObstacle}/>}
+            {<WeightSelection 
+              selectedAlgo={selectedAlgo} 
+              setObstacle={setObstacle}
+            />}
           </div>
+
           {/* Custom Select */}
-          <div className="relative inline-block w-44 ">
-            <select
-              value={selectedAlgo || ''}
-              onChange={(e) => handleChamge(e)}
-              
-              className="appearance-none w-full bg-gray-800 border border-gray-700 text-white text-md rounded-lg focus:ring-emerald-500 focus:border-emerald-500 block px-4 py-2"
-            >
-              <option value="" disabled>
-                Select Algorithm
-              </option>
-              {algorithms.map((algo) => (
-                <option key={algo} value={algo}>
-                  {algo}
-                </option>
-              ))}
-            </select>
-            <div className="pointer-events-none absolute inset-y-0 right-0 mr-2 flex items-center px-2 text-gray-400">
-              ▼
-            </div>
+          <div className="relative inline-block w-44">
+            <SelectAlgo 
+              selectedAlgo={selectedAlgo} 
+              setSelectedAlgo={setSelectedAlgo}
+            />
           </div>
+          
           {/* Visualize Button */}
-          <button 
-            className="bg-indigo-600 hover:bg-indigo-700 text-neutral-100 text-md px-4 py-2 rounded-md transition"
+          <Button
+            variant={"visualize"}
+            className="tracking-wide rounded"
             disabled={isRunning}
             onClick={handleVisualize}
           >
             {selectedAlgo ? `Visualize ${selectedAlgo}!` : 'Select an Algorithm'}
-          </button>
+          </Button>
 
           {/* Reset Button */}
-          <button 
-            className={baseClass + " bg-neutral-800"}
+          <Button variant="ghost"
             disabled={isRunning}
             onClick={handleReset}
           >
-            Reset
-          </button>
+            Clear Board
+          </Button>
+          <Button variant={"ghost"} disabled={isRunning}>
+            Clear Walls & Weights
+          </Button>
+          <Button variant={"ghost"} disabled={isRunning}>
+            Clear Path
+          </Button>
+
         </div>
       </div>
     </header>

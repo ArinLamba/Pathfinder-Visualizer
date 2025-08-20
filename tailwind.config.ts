@@ -6,7 +6,7 @@ export default {
   	extend: {
   		keyframes: {
 				visitedCell: {
-					'0%': { backgroundColor: '#f59e0b', transform: 'scale(0.4)' }, // amber-400
+					'0%': { backgroundColor: '#f59e0b', transform: 'scale(0.4)',}, // amber-400
 					'33%': { backgroundColor: '#f59e0b', transform: 'scale(0.8)' }, // amber-400
 					'67%': { backgroundColor: '#a855f7', transform: 'scale(1.1)' }, // amber-500
 					'100%': { backgroundColor: '#9333ea', transform: 'scale(1)' }   // amber-300
