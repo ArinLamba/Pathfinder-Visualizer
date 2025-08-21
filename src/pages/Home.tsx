@@ -17,6 +17,7 @@ export const Home = () => {
   const [resetFlag, setResetFlag] = useState(false); // toggled to reset grid
   const [isRunning, setIsRunning] = useState(false);
   
+  
   const handleReset = () => {
     setResetFlag(prev => !prev);
     setIsRunning(false);

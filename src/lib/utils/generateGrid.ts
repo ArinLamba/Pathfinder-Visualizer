@@ -44,11 +44,22 @@ export const clearVisitedAndPath = (grid: NodeAttributes[][]) => {
     ))
   );
 };
+
 export const clearWallsAndWeight = (grid: NodeAttributes[][]) => {
   return (
     grid.map(row => (
       row.map(cell => (
-        {...cell, isWall: false, isGrass: false, isMountain: false, isWater: false, isVisited: false}
+        {...cell, isWall: false, isGrass: false, isMountain: false, isWater: false, isVisited: false, isPath: false, weight: 1}
+      ))
+    ))
+  );
+};
+
+export const clearTerrains = (grid: NodeAttributes[][]) => {
+  return (
+    grid.map(row => (
+      row.map(cell => (
+        {...cell, isGrass: false, isMountain: false, isWater: false, isVisited: false, isPath: false, weight: 1}
       ))
     ))
   );

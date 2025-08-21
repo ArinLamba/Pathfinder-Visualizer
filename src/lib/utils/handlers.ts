@@ -1,4 +1,5 @@
 import type { HandleEndProps, HandleStartProps, NodeAttributes } from "@/lib/types"
+import { DEFAULT_WEIGHT, FIXED_WEIGHT } from "./constants";
 
 type ObstacleProps = Pick<HandleStartProps, "row" | "col"> & {
   setGrid: React.Dispatch<React.SetStateAction<NodeAttributes[][]>>;
@@ -35,7 +36,7 @@ export const addGrass = ({
     const node = newRow[col];
     
     newRow[col] = node.isGrass ? 
-      {...newRow[col], isGrass: false, weight: 1} : 
+      {...newRow[col], isGrass: false, weight: DEFAULT_WEIGHT} : 
       {...newRow[col], isGrass: true, weight: 3};
     
     newGrid[row] = newRow;
@@ -54,7 +55,7 @@ export const addWater = ({
     const node = newRow[col];
     
     newRow[col] = node.isWater ? 
-      {...newRow[col], isWater: false, weight: 1} : 
+      {...newRow[col], isWater: false, weight: DEFAULT_WEIGHT} : 
       {...newRow[col], isWater: true, weight: 6};
     
     newGrid[row] = newRow;
@@ -73,9 +74,26 @@ export const addMountain = ({
     const node = newRow[col];
     
     newRow[col] = node.isMountain ? 
-      {...newRow[col], isMountain: false, weight: 1} : 
+      {...newRow[col], isMountain: false, weight: DEFAULT_WEIGHT} : 
       {...newRow[col], isMountain: true, weight: 9};
     
+    newGrid[row] = newRow;
+    return newGrid;
+  })
+};
+
+export const addFixedWeights = ({
+  row,
+  col,
+  setGrid
+}: ObstacleProps) => {
+  setGrid((prevGrid) => {
+    const newGrid = [...prevGrid];
+    const newRow = [...newGrid[row]];
+    const node = newRow[col];
+    
+    newRow[col] = node.weight === 15 ? {...node, weight: DEFAULT_WEIGHT} : {... node, weight: FIXED_WEIGHT};
+
     newGrid[row] = newRow;
     return newGrid;
   })
