@@ -6,6 +6,7 @@ import { type ObstacleSelection, type AlgoSelection, type ModeSelection } from "
 import { Grid } from "@/pages/Grid";
 import { Controls } from "@/components/Controls";
 import { Instructions } from "@/components/Instructions";
+import { Message } from "@/components/Message";
 
 export const Home = () => {
   
@@ -16,7 +17,7 @@ export const Home = () => {
   const [algo, setAlgo] = useState<AlgoSelection>(null);
   const [resetFlag, setResetFlag] = useState(false); // toggled to reset grid
   const [isRunning, setIsRunning] = useState(false);
-  
+
   
   const handleReset = () => {
     setResetFlag(prev => !prev);
@@ -39,7 +40,8 @@ export const Home = () => {
         setObstacle={setObstacle}
       />
       <Instructions />
-      <div className="m-6 p-2 rounded-2xl overflow-x-auto bg-neutral-800">
+      <Message />
+      <div className="mx-6 my-2 p-2 rounded-2xl overflow-x-auto bg-neutral-800">
         <div className="flex justify-center">
           <Grid
             grid={grid}

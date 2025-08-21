@@ -92,7 +92,7 @@ export const addFixedWeights = ({
     const newRow = [...newGrid[row]];
     const node = newRow[col];
     
-    newRow[col] = node.weight === 15 ? {...node, weight: DEFAULT_WEIGHT} : {... node, weight: FIXED_WEIGHT};
+    newRow[col] = node.weight === FIXED_WEIGHT ? {...node, weight: DEFAULT_WEIGHT} : {... node, weight: FIXED_WEIGHT};
 
     newGrid[row] = newRow;
     return newGrid;

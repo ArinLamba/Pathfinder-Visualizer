@@ -62,7 +62,7 @@ export const Controls = ({
   };
 
   return (
-    <header className="w-full sticky top-0 z-50 px-4 py-2 bg-neutral-900 dark:bg-white shadow-md text-neutral-100">
+    <header className="w-full z-50 px-4 py-2 bg-neutral-900 dark:bg-white shadow-md text-neutral-100">
       <div className="lg:max-w-[1420px] w-full mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
         <h1 className="text-2xl font-semibold flex items-center gap-x-3 flex-shrink-0">
           🧭 Pathfinding Visualizer
