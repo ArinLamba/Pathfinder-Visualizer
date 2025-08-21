@@ -6,6 +6,8 @@ export const START_COL = Math.floor(BOARD_COLS / 4);
 export const END_ROW = Math.floor(BOARD_ROWS / 2);
 export const END_COL = 3 * START_COL;
 
+export const DEFAULT_WEIGHT = 1;
+export const FIXED_WEIGHT = 15;
 
 export const directions = [
   [-1, 0],  // up

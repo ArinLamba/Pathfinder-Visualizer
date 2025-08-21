@@ -8,7 +8,7 @@ import { bfs } from "@/algorithms/bfs";
 import { dfs } from "@/algorithms/dfs";
 
 import { generateGrid } from "@/lib/utils/generateGrid";
-import { addGrass, addMountain, addWalls, addWater, cloneGrid } from "@/lib/utils/handlers";
+import { addFixedWeights, addGrass, addMountain, addWalls, addWater, cloneGrid } from "@/lib/utils/handlers";
 import { END_COL, END_ROW, START_COL, START_ROW } from "@/lib/utils/constants";
 
 import { animateBFS } from "@/animations/animateBFS";
@@ -36,6 +36,7 @@ export const Grid = ({ grid, setGrid, mode, setMode, algo, resetFlag, isRunning,
   const [startPos, setStartPos] = useState<[number,number]>([START_ROW, START_COL]);
   const [endPos, setEndPos] = useState<[number,number]>([END_ROW, END_COL]);
   const [isMouseDown, setIsMouseDown] = useState(false);
+  const [isKeyDown, setIsKeyDown] = useState(false);
 
   const toggleWall = (row:number, col:number) => {
     if(grid[row][col].isStart || grid[row][col].isEnd || isRunning) return;
@@ -58,36 +59,47 @@ export const Grid = ({ grid, setGrid, mode, setMode, algo, resetFlag, isRunning,
 
   };
 
+  const toggleFixedWeight = (row: number, col: number) => {
+    if(grid[row][col].isStart || grid[row][col].isEnd || isRunning) return;
+    addFixedWeights({row, col, setGrid});
+  }
+
   const handleMouseEnter = (row: number, col: number) => {
     if(isRunning || row === startPos[0] && col === startPos[1] || row === endPos[0] && col === endPos[1]) return;
 
     const cell = grid[row][col];
     
     if(isMouseDown && mode === "draggingStart") {
-      if(cell.isWall || cell.isEnd) return;
+      if(cell.isEnd) return;
       setStartPos([row,col]);
       return;
     }
     if(isMouseDown && mode === "draggingEnd") {
-      if(cell.isWall || cell.isStart) return;
+      if(cell.isStart) return;
       setEndPos([row,col]);
       return;
     }
-    if(isMouseDown && obstacle === "Wall") {
-      toggleWall(row, col);
+
+    if(isMouseDown && isKeyDown) {
+      toggleFixedWeight(row, col);
       return;
     }
-    if(isMouseDown && obstacle === "Grass") {
-      toggleGrass(row, col);
-      return;
-    }
-    if(isMouseDown && obstacle === "Water") {
-      toggleWater(row,col);
-      return;
-    }
-    if(isMouseDown && obstacle === "Mountain") {
-      toggleMountain(row,col);
-      return;
+
+    if(isMouseDown && !isKeyDown) {
+      switch (obstacle) {
+        case "Wall":
+          toggleWall(row,col);
+          break;
+        case "Grass":
+          toggleGrass(row, col);
+          break;
+        case "Water":
+          toggleWater(row,col);
+          break;
+        case "Mountain":
+          toggleMountain(row,col);
+          break;
+      }
     }
   };
 
@@ -99,6 +111,11 @@ export const Grid = ({ grid, setGrid, mode, setMode, algo, resetFlag, isRunning,
     }
     if(row === endPos[0] && col === endPos[1]) {
       setMode("draggingEnd");
+      return;
+    }
+
+    if(isKeyDown) {
+      toggleFixedWeight(row, col);
       return;
     }
     // Only toggle cells if not dragging
@@ -156,7 +173,8 @@ export const Grid = ({ grid, setGrid, mode, setMode, algo, resetFlag, isRunning,
   return (
     <div className="flex justify-center p-2">
       <div 
-        onMouseUp={() => {setIsMouseDown(false); setMode(null)}}
+        onMouseUp={() => {setIsMouseDown(false); setMode(null), setIsKeyDown(false)}}
+        onKeyUp={() => setIsKeyDown(false)}
         className="inline-block"
       >
         {grid.map((row, i) => 
@@ -167,6 +185,7 @@ export const Grid = ({ grid, setGrid, mode, setMode, algo, resetFlag, isRunning,
                 node={cell}
                 onMouseDown={() => handleMouseDown(i, j)}
                 onMouseEnter={() => handleMouseEnter(i,j)}
+                onKeyDown={(e) => { e.key === "w" && setIsKeyDown(true)}}
                 mode={mode}
                 startPos={startPos}
                 endPos={endPos}

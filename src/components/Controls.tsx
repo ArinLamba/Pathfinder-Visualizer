@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 import type { AlgoSelection, NodeAttributes, ObstacleSelection } from '@/lib/types';
-import { clearVisitedAndPath, clearWallsAndWeight } from '@/lib/utils/generateGrid';
+import { clearTerrains, clearVisitedAndPath, clearWallsAndWeight } from '@/lib/utils/generateGrid';
 
 import { WeightSelection } from './WeightSelection';
 import { SelectAlgo } from './SelectAlgo';
@@ -32,8 +32,14 @@ export const Controls = ({
 
   const handleVisualize = () => {
     if(!selectedAlgo || isRunning) return;
-    const newGrid = clearVisitedAndPath(grid);
-    setGrid(newGrid);
+
+    if(selectedAlgo !== "DIJKSTRA") {
+      const newGrid = clearTerrains(grid);
+      setGrid(newGrid);
+    }else {
+      const newGrid = clearVisitedAndPath(grid);
+      setGrid(newGrid);
+    }
 
     setVisualizerTrigger(prev => prev + 1);
     setAlgo(selectedAlgo);
@@ -41,7 +47,6 @@ export const Controls = ({
   };
 
   const handleClearBoard = () => {
-    setVisualizerTrigger(0);
     setSelectedAlgo(null);
     onReset();
   };
@@ -57,7 +62,7 @@ export const Controls = ({
   };
 
   return (
-    <header className="w-full sticky top-0 z-50 px-4 py-2 bg-neutral-900 shadow-md text-neutral-100">
+    <header className="w-full z-50 px-4 py-2 bg-neutral-900 dark:bg-white shadow-md text-neutral-100">
       <div className="lg:max-w-[1420px] w-full mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
         <h1 className="text-2xl font-semibold flex items-center gap-x-3 flex-shrink-0">
           🧭 Pathfinding Visualizer

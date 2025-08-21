@@ -25,10 +25,10 @@ export default {
 				},
 
 				wallCell: {
-					'0%':   { backgroundColor: '#d4d4d8', transform: 'scale(0.4)' }, // zinc-300 (light gray, pops on black bg)
-					'33%':  { backgroundColor: '#a1a1aa', transform: 'scale(0.8)' }, // zinc-400
-					'67%':  { backgroundColor: '#71717a', transform: 'scale(1.1)' }, // zinc-500
-					'100%': { backgroundColor: '#52525b', transform: 'scale(1)' }    // zinc-600 (dark gray, not black)
+					'0%':   { backgroundColor: '#52525b', transform: 'scale(0.4)' }, // zinc-300 (light gray, pops on black bg)
+					'33%':  { backgroundColor: '#71717a', transform: 'scale(0.8)' }, // zinc-400
+					'67%':  { backgroundColor: '#a1a1aa', transform: 'scale(1.1)' }, // zinc-500
+					'100%': { backgroundColor: '#d4d4d8', transform: 'scale(1)' }    // zinc-600 (dark gray, not black)
 				},
 
 				grassCell: {
@@ -43,6 +43,12 @@ export default {
 					'33%':  { backgroundColor: '#d6a673', transform: 'scale(0.8)' },
 					'67%':  { backgroundColor: '#b07c5d', transform: 'scale(1.1)' }, // rocky brown
 					'100%': { backgroundColor: '#8b5e3c', transform: 'scale(1)' }    // deep earthy
+				},
+				weightedVisitedCell: {
+					'0%':   { transform: 'scale(0.4)' }, // light brown
+					'33%':  { transform: 'scale(0.8)' },
+					'67%':  { transform: 'scale(1.2)' }, // rocky brown
+					'100%': { transform: 'scale(1)' }    // deep earthy
 				},
 
 				pathHighlight: {
@@ -68,7 +74,7 @@ export default {
 				grassCell: 'grassCell 0.5s ease-in-out forwards',
 				mountainCell: 'mountainCell 0.5s ease-in-out forwards',
 				visitedCell: 'visitedCell 1.6s ease-in-out forwards',
-				weightedVisitedCell: 'weightedVisitedCell 1.6s ease-in-out forwards',
+				weightedVisitedCell: 'weightedVisitedCell 0.5s ease-in-out forwards',
 				flashWeighted: "flashWeighted 0.4s ease-out forwards",
 				pulseScale: 'pulseScale 1.5s ease-out infinite',
 			},

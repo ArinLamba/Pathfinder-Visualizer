@@ -1,6 +1,6 @@
 import React from "react";
 
-import { ArrowRight, Target } from "lucide-react";
+import { ArrowRight, Target, Weight } from "lucide-react";
 
 import type { ModeSelection, NodeAttributes, Position } from "@/lib/types";
 
@@ -11,11 +11,12 @@ type Props = {
   mode: ModeSelection;
   startPos: Position;
   endPos: Position;
+  onKeyDown: (e: React.KeyboardEvent) => void;
 };
 
-export const Node = React.memo(({ node, onMouseDown, onMouseEnter, mode, startPos, endPos } : Props) => {
+export const Node = React.memo(({ node, onMouseDown, onMouseEnter, mode, startPos, endPos, onKeyDown } : Props) => {
 
-  const { row, col, isVisited, isWall, isPath, isGrass, isWater, isMountain } = node;
+  const { row, col, isVisited, isWall, isPath, isGrass, isWater, isMountain, weight } = node;
   const isStart = row === startPos[0] && col === startPos[1];
   const isEnd = row === endPos[0] && col === endPos[1]; 
   const isDraggingStart = mode === "draggingStart" && isStart;
@@ -27,6 +28,7 @@ export const Node = React.memo(({ node, onMouseDown, onMouseEnter, mode, startPo
   if(isStart) className += " bg-yellow-500";
   else if(isEnd) className += " bg-red-600";
   else if(isPath) className += " animate-pathHighlight";
+  else if(weight === 15) className += " animate-weightedVisitedCell text-white bg-neutral-900";
   else if(isWater) className += " animate-waterCell";
   else if(isGrass) className += " animate-grassCell";
   else if(isMountain) className += " animate-mountainCell";
@@ -45,9 +47,11 @@ export const Node = React.memo(({ node, onMouseDown, onMouseEnter, mode, startPo
       `}
         onMouseDown={onMouseDown}
         onMouseEnter={onMouseEnter}
+        onKeyDown={onKeyDown}
       >
       {isStart ? <ArrowRight className=" aspect-square" /> : ""}
       {isEnd ? <Target className=" aspect-square"/> : ""}
+      {weight === 15 ? <Weight className=" aspect-square"/> : ""}
     </button>
   );
 });
