@@ -16,7 +16,7 @@ export type NodeAttributes = {
 };
 export type ModeSelection = "draggingStart" | "draggingEnd" | null;
 export type AlgoSelection = "BFS" | "DFS" | "DIJKSTRA" | "A*" | null;
-export type ObstacleSelection = "Wall" | "Grass" | "Water" | "Mountain";
+export type ObstacleSelection = "Wall" | "Grass" | "Water" | "Mountain" | null;
 
 export type Position = [number, number];
 
