@@ -73,7 +73,7 @@ export const Controls = ({
       {/* Side bar goes here if ever needed in future */}
       <div className="lg:max-w-[1600px] w-full mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
         <h1 className="text-2xl font-semibold flex items-center gap-x-3 flex-shrink-0">
-          <img src="./logo.png" alt="logo" className='size-5'/> Pathfinding Visualizer
+          <img src="/logo.png" alt="logo" className='size-5'/> Pathfinding Visualizer
           <Tutorial />
         </h1>
         <div className="flex items-center gap-4 flex-wrap">
