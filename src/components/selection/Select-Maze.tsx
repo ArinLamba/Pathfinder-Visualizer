@@ -13,27 +13,38 @@ import { Button } from "../ui/button"
 
 import { ChevronDown } from "lucide-react"
 import { recursiveDivision } from "@/algorithms/mazes/recursive-division";
+import { animateMaze } from "@/animations/animateMaze";
+import { generateGrid } from "@/lib/utils/generateGrid";
+import { useRunning } from "@/store/use-running";
 
 type Props = {
-  grid: GridType;
   setGrid: (grid: React.SetStateAction<GridType>) => void;
 };
 
-export const SelectMaze = ({ grid, setGrid }: Props) => {
+export const SelectMaze = ({ setGrid }: Props) => {
 
   const [selectedMaze, setSelectedMaze] = useState<MazeSelection>(null);
+  const [mazeTrigger, setMazeTrigger] = useState(0);
+
+  const isRunning = useRunning(state => state.isRunning);
 
   useEffect(() => {
-    switch (selectedMaze) {
-      case "Recursive Division":
-        const newGrid = recursiveDivision(grid);
-        setGrid(newGrid);
-        break;
-    
-      default:
-        break;
+    if(isRunning) return;
+    const run = async () => {
+
+      switch (selectedMaze) {
+        case "Recursive Division":
+          setGrid(generateGrid());
+          const mazeConstructionPath = recursiveDivision();
+          await animateMaze(mazeConstructionPath, setGrid);
+          break;
+        
+        default:
+          break;
+      }
     }
-  },[selectedMaze]);
+    run();
+  },[mazeTrigger]);
 
   return (
     <DropdownMenu>
@@ -43,7 +54,8 @@ export const SelectMaze = ({ grid, setGrid }: Props) => {
       >
         <Button 
           variant="secondary"
-          className="w-full dark:text-neutral-100 dark:bg-neutral-800 rounded shadow-sm bg-trnasparent dark:border-b dark:border-b-indigo-400 hover:bg-black/5 dark:hover:bg-zinc-700/50 transition"
+          disabled={isRunning}
+          className="w-full dark:text-neutral-100  dark:bg-neutral-800 rounded shadow-sm bg-trnasparent dark:border-b dark:border-b-indigo-400 hover:bg-black/5 dark:hover:bg-zinc-700/50 transition"
         >
           {selectedMaze ? selectedMaze : "Maze and Patterns"}
           <ChevronDown className="w-5 h-4 ml-auto"/>
@@ -54,7 +66,7 @@ export const SelectMaze = ({ grid, setGrid }: Props) => {
 
           <DropdownMenuItem
             className="dark:text-indigo-500 px-3 py-2 text-sm cursor-pointer "
-            onSelect={() => setSelectedMaze(maze as MazeSelection)}
+            onSelect={() => {setSelectedMaze(maze as MazeSelection); setMazeTrigger(prev => prev + 1)}}
           >
             {maze}
           </DropdownMenuItem>

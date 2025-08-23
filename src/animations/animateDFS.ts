@@ -1,8 +1,8 @@
-import type { NodeAttributes, Position } from "@/lib/types";
+import type { GridType, Position } from "@/lib/types";
 
 export const animateDFS = (
   dfsPath: Position[],
-  setGrid: React.Dispatch<React.SetStateAction<NodeAttributes[][]>>
+  setGrid: React.Dispatch<React.SetStateAction<GridType>>
 ) => {
   return new Promise<void>(resolve => {
 

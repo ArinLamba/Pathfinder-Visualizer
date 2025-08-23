@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import type { AlgoSelection, GridType, ObstacleSelection } from '@/lib/types';
+import type { AlgoSelection, GridType } from '@/lib/types';
 import { clearTerrains, clearVisitedAndPath, clearWallsAndWeight } from '@/lib/utils/generateGrid';
 
 import { WeightSelection } from './selection/Select-Weight';
@@ -11,29 +11,30 @@ import { SelectMaze } from './selection/Select-Maze';
 import { ModeToggle } from './ui/mode-toggle';
 import { Tutorial } from './Tutorial';
 
+import { useRunning } from "@/store/use-running"
+import { useAlgorithm } from '@/store/use-algorithm';
+import { useObstacle } from '@/store/use-obstacle';
+
 
 type Props = {
   grid: GridType;
   setGrid: (grid: React.SetStateAction<GridType>) => void;
   onReset: () => void;
-  setAlgo: (algo: AlgoSelection) => void;
-  isRunning: boolean;
   setVisualizerTrigger: (num: React.SetStateAction<number>) => void;
-  setObstacle: (obstacle: ObstacleSelection) => void;
 };
 
 export const Controls = ({ 
   grid,
   setGrid,
   onReset, 
-  setAlgo,
-  isRunning,
   setVisualizerTrigger,
-  setObstacle,
 }: Props) => {
 
   const [selectedAlgo, setSelectedAlgo] = useState<AlgoSelection>(null);
 
+  const isRunning = useRunning((state) => state.isRunning);
+  const setAlgo = useAlgorithm((state) => state.setAlgo);
+  const setObstacle = useObstacle(state => state.setObstacle);
 
   const handleVisualize = () => {
     if(!selectedAlgo || isRunning) return;
@@ -53,6 +54,7 @@ export const Controls = ({
 
   const handleClearBoard = () => {
     setSelectedAlgo(null);
+    setAlgo(null);
     onReset();
   };
 
@@ -79,7 +81,7 @@ export const Controls = ({
           
           {/* Custom Maze Select */}
           <div className="relative inline-block w-44">
-            <SelectMaze grid={grid} setGrid={setGrid}/>
+            <SelectMaze setGrid={setGrid}/>
           </div>
           
           {/* Weight Selection */}

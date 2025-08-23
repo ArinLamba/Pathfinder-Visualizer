@@ -1,10 +1,10 @@
 
-import type { NodeAttributes, Position } from "@/lib/types"
+import type { GridType, Position } from "@/lib/types"
 import { directions, isValid } from "@/lib/utils/constants";
 import { generateEmptyGrid } from "@/lib/utils/generateGrid";
 
 type Props = {
-  newGrid: NodeAttributes[][];
+  newGrid: GridType;
   startPos: Position;
   endPos: Position;
 };

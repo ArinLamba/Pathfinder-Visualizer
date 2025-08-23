@@ -1,8 +1,8 @@
-import type { NodeAttributes, Position } from "@/lib/types"
+import type { GridType, Position } from "@/lib/types"
 import { BOARD_COLS, BOARD_ROWS, directions, isValid } from "@/lib/utils/constants";
 
 type Props = {
-  grid: NodeAttributes[][];
+  grid: GridType;
   startPos: Position;
   endPos: Position;
 };

@@ -33,7 +33,7 @@ export const Node = React.memo(({ node, onMouseDown, onMouseEnter, mode, startPo
   else if(isGrass) className += " animate-grassCell";
   else if(isMountain) className += " animate-mountainCell";
   else if(isWall) className += " dark:animate-wallCell animate-LightWallCell";
-  else if(isVisited) className += " dark:animate-visitedCell animate-LightVisitedCell";
+  else if(isVisited) className += " dark:animate-visitedCell animate-LightVisitedCell bg-white";
   else className += " dark:bg-neutral-950  bg-white dark:hover:bg-neutral-800 hover:bg-white/10 transition ease-in-out";
 
   if(isDraggingStart) className += " scale-110 ring-1 ring-green-600 shadow-lg shadow-green-500/40";

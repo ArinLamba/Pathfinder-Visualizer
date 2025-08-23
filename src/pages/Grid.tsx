@@ -1,6 +1,8 @@
 import type React from "react";
 import { useEffect, useState } from "react";
-import { type AlgoSelection, type GridType, type ModeSelection, type ObstacleSelection } from "@/lib/types";
+import { useRunning } from "@/store/use-running";
+
+import { type GridType, type ModeSelection, type ObstacleSelection } from "@/lib/types";
 
 import { Node } from "@/pages/Node";
 
@@ -14,29 +16,30 @@ import { END_COL, END_ROW, START_COL, START_ROW } from "@/lib/utils/constants";
 import { animateBFS } from "@/animations/animateBFS";
 import { animateDFS } from "@/animations/animateDFS";
 import { animatePath } from "@/animations/animatePath";
-import { dijkstra } from "@/algorithms/dijkstra";
 import { animateDijkstra } from "@/animations/animateDijkstra";
+
+import { dijkstra } from "@/algorithms/dijkstra";
 import { getPath } from "@/lib/utils/getPath";
+import { useAlgorithm } from "@/store/use-algorithm";
 
 type Props = {
   grid: GridType;
   setGrid: (grid: React.SetStateAction<GridType>) => void;
-  mode: ModeSelection;
-  setMode: (mode: ModeSelection) => void;
-  algo: AlgoSelection;
   resetFlag: boolean; // used to trigger grid reset
-  isRunning: boolean;
-  setIsRunning: (input: boolean) => void;
   visualizerTrigger: number;
   obstacle: ObstacleSelection;
 }
 
-export const Grid = ({ grid, setGrid, mode, setMode, algo, resetFlag, isRunning, setIsRunning, visualizerTrigger, obstacle } : Props) => {
+export const Grid = ({ grid, setGrid, resetFlag, visualizerTrigger, obstacle } : Props) => {
   
   const [startPos, setStartPos] = useState<[number,number]>([START_ROW, START_COL]);
   const [endPos, setEndPos] = useState<[number,number]>([END_ROW, END_COL]);
   const [isMouseDown, setIsMouseDown] = useState(false);
   const [isKeyDown, setIsKeyDown] = useState(false);
+  const [mode, setMode] = useState<ModeSelection>(null);
+
+  const { isRunning, setIsRunning } = useRunning();
+  const algo = useAlgorithm(state => state.algo);
 
   const toggleWall = (row:number, col:number) => {
     if(grid[row][col].isStart || grid[row][col].isEnd || isRunning) return;

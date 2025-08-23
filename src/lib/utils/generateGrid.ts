@@ -1,4 +1,4 @@
-import type { NodeAttributes } from "@/lib/types";
+import type { GridType } from "@/lib/types";
 import { 
   BOARD_COLS, 
   BOARD_ROWS, 
@@ -35,7 +35,7 @@ export const generateEmptyGrid = () => {
   );
 };
 
-export const clearVisitedAndPath = (grid: NodeAttributes[][]) => {
+export const clearVisitedAndPath = (grid: GridType) => {
   return (
     grid.map(row => (
       row.map(cell => (
@@ -45,7 +45,7 @@ export const clearVisitedAndPath = (grid: NodeAttributes[][]) => {
   );
 };
 
-export const clearWallsAndWeight = (grid: NodeAttributes[][]) => {
+export const clearWallsAndWeight = (grid: GridType) => {
   return (
     grid.map(row => (
       row.map(cell => (
@@ -55,7 +55,7 @@ export const clearWallsAndWeight = (grid: NodeAttributes[][]) => {
   );
 };
 
-export const clearTerrains = (grid: NodeAttributes[][]) => {
+export const clearTerrains = (grid: GridType) => {
   return (
     grid.map(row => (
       row.map(cell => (

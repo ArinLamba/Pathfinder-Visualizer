@@ -1,29 +1,27 @@
 import { useState } from "react";
 
 import { generateGrid } from "@/lib/utils/generateGrid";
-import { type ObstacleSelection, type AlgoSelection, type ModeSelection } from "@/lib/types";
+import { type ObstacleSelection } from "@/lib/types";
 
 import { Grid } from "@/pages/Grid";
 import { Controls } from "@/components/Controls";
 import { Instructions } from "@/components/Instructions";
 import { Message } from "@/components/Message";
+import { useRunning } from "@/store/use-running";
 
 export const Home = () => {
   
   const [grid, setGrid] = useState(generateGrid());
-  const [mode, setMode] = useState<ModeSelection>(null);
   const [obstacle, setObstacle] = useState<ObstacleSelection>("Wall");
   const [visualizerTrigger, setVisualizerTrigger] = useState(0);
-  const [algo, setAlgo] = useState<AlgoSelection>(null);
   const [resetFlag, setResetFlag] = useState(false); // toggled to reset grid
-  const [isRunning, setIsRunning] = useState(false);
 
-  
+  const setIsRunning = useRunning((state) => state.setIsRunning);
+
   const handleReset = () => {
     setResetFlag(prev => !prev);
     setIsRunning(false);
     setObstacle('Wall');
-    setAlgo(null);
     setVisualizerTrigger(0);
   };
 
@@ -34,10 +32,7 @@ export const Home = () => {
         grid={grid}
         setGrid={setGrid}
         onReset={handleReset}
-        setAlgo={setAlgo}
-        isRunning={isRunning}
         setVisualizerTrigger={setVisualizerTrigger}
-        setObstacle={setObstacle}
       />
       <Instructions />
       <Message />
@@ -46,12 +41,7 @@ export const Home = () => {
           <Grid
             grid={grid}
             setGrid={setGrid}
-            mode={mode} 
-            setMode={setMode}
-            algo={algo} 
             resetFlag={resetFlag} 
-            isRunning={isRunning}
-            setIsRunning={setIsRunning}
             visualizerTrigger={visualizerTrigger}
             obstacle={obstacle}
           />

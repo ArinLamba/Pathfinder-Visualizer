@@ -1,8 +1,8 @@
-import type { NodeAttributes, Position } from "@/lib/types";
+import type { GridType, Position } from "@/lib/types";
 
 export const animateBFS = (
   visitedNodes: Position[],
-  setGrid: React.Dispatch<React.SetStateAction<NodeAttributes[][]>>
+  setGrid: React.Dispatch<React.SetStateAction<GridType>>
 ) => {
   return new Promise<void>(reslove => {
     visitedNodes.forEach(([row, col], i) => {

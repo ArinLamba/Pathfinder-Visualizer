@@ -1,16 +1,16 @@
-import type { GridType } from "@/lib/types";
+import type { Position } from "@/lib/types";
 import { BOARD_ROWS, BOARD_COLS } from "../../lib/utils/constants";
-import { cloneGrid } from "@/lib/utils/handlers";
 
-export const recursiveDivision = (grid: GridType): GridType => {
-  const newGrid = cloneGrid(grid);
-  addBorder(newGrid);
-  divide(newGrid, 1, BOARD_ROWS - 2, 1, BOARD_COLS - 2, chooseOrientation(BOARD_ROWS - 2, BOARD_COLS - 2));
-  return newGrid;
+
+const mazeContructionPath: Position[] = [];
+
+export const recursiveDivision = (): Position[] => {
+  addBorder();
+  divide(1, BOARD_ROWS - 2, 1, BOARD_COLS - 2, chooseOrientation(BOARD_ROWS - 2, BOARD_COLS - 2));
+  return mazeContructionPath;
 };
 
 const divide = (
-  grid: GridType,
   rowStart: number,
   rowEnd: number,
   colStart: number,
@@ -29,11 +29,11 @@ const divide = (
 
     for (let col = colStart; col <= colEnd; col++) {
       if (col === passageCol) continue;
-      grid[wallRow][col].isWall = true;
+      mazeContructionPath.push([wallRow, col]);
     }
 
-    divide(grid, rowStart, wallRow - 1, colStart, colEnd, false);
-    divide(grid, wallRow + 1, rowEnd, colStart, colEnd, false);
+    divide(rowStart, wallRow - 1, colStart, colEnd, false);
+    divide(wallRow + 1, rowEnd, colStart, colEnd, false);
 
   } else {
     if (colEnd - colStart < 2) return;
@@ -45,26 +45,36 @@ const divide = (
 
     for (let row = rowStart; row <= rowEnd; row++) {
       if (row === passageRow) continue;
-      grid[row][wallCol].isWall = true;
+      mazeContructionPath.push([row,wallCol]);
     }
 
-    divide(grid, rowStart, rowEnd, colStart, wallCol - 1, true);
-    divide(grid, rowStart, rowEnd, wallCol + 1, colEnd, true);
+    divide(rowStart, rowEnd, colStart, wallCol - 1, true);
+    divide(rowStart, rowEnd, wallCol + 1, colEnd, true);
   }
 };
 
-const addBorder = (grid: GridType) => {
+const addBorder = () => {
   for (let r = 0; r < BOARD_ROWS; r++) {
-    grid[r][0].isWall = true;
-    grid[r][BOARD_COLS - 1].isWall = true;
+    mazeContructionPath.push([r,0])
+    mazeContructionPath.push([r, BOARD_COLS -1])
+
   }
   for (let c = 0; c < BOARD_COLS; c++) {
-    grid[0][c].isWall = true;
-    grid[BOARD_ROWS - 1][c].isWall = true;
+    mazeContructionPath.push([0, c]);
+    mazeContructionPath.push([BOARD_ROWS - 1, c]);
   }
+
+  return mazeContructionPath;
 };
 
-const chooseOrientation = (height: number, width: number): boolean => height >= width;
+const chooseOrientation = (height: number, width: number): boolean => {
+  // If one dimension is much larger, bias towards cutting that dimension.
+  if (height < width) return false;  // vertical
+  if (width < height) return true;   // horizontal
+  // If equal, pick randomly
+  return Math.random() < 0.5;
+};
+
 
 const randomEven = (min: number, max: number): number => {
   const evens = [];

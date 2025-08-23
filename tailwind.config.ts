@@ -6,14 +6,14 @@ export default {
   	extend: {
   		keyframes: {
 				visitedCell: {
-					'0%':   { backgroundColor: '#f59e0b', transform: 'scale(0.4)' }, // amber start
-					'33%':  { backgroundColor: '#f59e0b', transform: 'scale(0.8)' },
-					'67%':  { backgroundColor: '#a855f7', transform: 'scale(1.1)' }, // purple pop
-					'100%': { backgroundColor: '#9333ea', transform: 'scale(1)' }    // cyan end
+					'0%':   { backgroundColor: '#ef4444', transform: 'scale(0.4)', borderRadius: "50%"}, // amber start
+					'50%':  { backgroundColor: '#1d4ed8', transform: 'scale(0.8)',  },
+					'75%':  { backgroundColor: '#a855f7', transform: 'scale(1.1)', }, // purple pop
+					'100%': { backgroundColor: '#9333ea', transform: 'scale(1)', }    // cyan end
 				},
 
         flashWeighted: {
-          "0%": 	{ backgroundColor: "#ef4444" },   // yellow-400 (flash start)
+          "0%": 	{ backgroundColor: "#ef4444", },   // yellow-400 (flash start)
           "100%": { backgroundColor: "#9333ea" }, // blue-500 (final visited color)
         },
 
@@ -68,17 +68,18 @@ export default {
   			},
 
 
-	        LightVisitedCell: {
-          '0%':   { backgroundColor: '#15803d', transform: 'scale(0.4)' },
-          '33%':  { backgroundColor: '#22c55e', transform: 'scale(0.8)' },
-          '67%':  { backgroundColor: '#a855f7', transform: 'scale(1.1)' },
+	      	LightVisitedCell: {
+          '0%':   { backgroundColor: '#15803d', transform: 'scale(0.4)', borderRadius: "100%" },
+          '50%':  { backgroundColor: '#06b6d4', transform: 'scale(0.8)' },
+          '75%':  { backgroundColor: '#0891b2', transform: 'scale(1.1)' },
           '100%': { backgroundColor: '#9333ea', transform: 'scale(1)' },
         },
 
 				LightWallCell: {
-					'0%':   { backgroundColor: '#B6B6B6', transform: 'scale(0.4)' },
-					'33%':  { backgroundColor: '#6E6E6E', transform: 'scale(0.8)' },
-					'67%':  { backgroundColor: '#252525', transform: 'scale(1.1)' },
+					'0%':   { backgroundColor: '#0D0D0D', transform: 'scale(0.6)' },
+					'25%':  { backgroundColor: '#0D0D0D', transform: 'scale(0.8)' },
+					'50%':  { backgroundColor: '#0D0D0D', transform: 'scale(1)' },
+					'75%':  { backgroundColor: '#0D0D0D', transform: 'scale(1.2)' },
 					'100%': { backgroundColor: '#0D0D0D', transform: 'scale(1)' }    
 				},
   		},
@@ -94,7 +95,7 @@ export default {
 				flashWeighted: "flashWeighted 0.4s ease-out forwards",
 				pulseScale: 'pulseScale 1.5s ease-out infinite',
 
-				LightWallCell: 'LightWallCell 0.4s ease-in-out forwards',
+				LightWallCell: 'LightWallCell 0.2s ease-in-out forwards',
 				LightVisitedCell: 'LightVisitedCell 1.6s ease-in-out forwards',
 			},
 
