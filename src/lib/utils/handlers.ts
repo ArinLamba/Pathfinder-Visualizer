@@ -99,16 +99,16 @@ export const addFixedWeights = ({
   })
 };
 
-export const handleStart = ({grid, row ,col, startPos,setStartPos}: HandleStartProps) => {
+export const handleStart = ({grid, row ,col, startPos, setStartPos}: HandleStartProps) => {
   const [prevRow, prevCol] = startPos;
-  grid[row][col].isStart = true;
+  grid[row][col] = {...grid[row][col], isStart: true, isWall: false, isGrass: false, isMountain: false, isVisited: false, isWater: false}
   grid[prevRow][prevCol].isStart = false;
   setStartPos([row,col]);
 };
 
 export const handleEnd = ({grid, row ,col, endPos, setEndPos}: HandleEndProps) => {
   const [prevRow, prevCol] = endPos;
-  grid[row][col].isEnd = true;
+  grid[row][col] = {...grid[row][col], isEnd: true, isWall: false, isGrass: false, isMountain: false, isVisited: false, isWater: false}
   grid[prevRow][prevCol].isEnd = false;
   setEndPos([row,col]);
 };

@@ -29,7 +29,7 @@ export const Home = () => {
 
 
   return (
-    <div className="min-h-screen mb-2 bg-neutral-900">
+    <div className="min-h-screen mb-2 dark:bg-neutral-900">
       <Controls
         grid={grid}
         setGrid={setGrid}
@@ -41,7 +41,7 @@ export const Home = () => {
       />
       <Instructions />
       <Message />
-      <div className="mx-6 my-2 p-2 rounded-2xl overflow-x-auto bg-neutral-800">
+      <div className="mx-6 my-2 p-2 rounded-lg overflow-x-auto dark:bg-neutral-800 bg-[#E7E7E7] border border-white/20">
         <div className="flex justify-center">
           <Grid
             grid={grid}

@@ -24,20 +24,20 @@ export const Node = React.memo(({ node, onMouseDown, onMouseEnter, mode, startPo
   const isHolding = mode === "draggingStart" || mode === "draggingEnd";
 
   
-  let className = "aspect-square h-full flex items-center justify-center border-[0.1px] border-neutral-800 cursor-default";
+  let className = "aspect-square h-full flex items-center justify-center border-[0.1px] border-sky-300/60 dark:border-neutral-800 cursor-default";
   if(isStart) className += " bg-yellow-500";
   else if(isEnd) className += " bg-red-600";
   else if(isPath) className += " animate-pathHighlight";
-  else if(weight === 15) className += " animate-weightedVisitedCell text-white bg-neutral-900";
+  else if(weight === 15) className += " animate-weightedVisitedCell dark:text-white bg-background";
   else if(isWater) className += " animate-waterCell";
   else if(isGrass) className += " animate-grassCell";
   else if(isMountain) className += " animate-mountainCell";
-  else if(isWall) className += " animate-wallCell";
-  else if(isVisited) className += " animate-visitedCell";
-  else className += " bg-neutral-950 hover:bg-neutral-600 hover:scale-125 transition-transform ease-in-out";
+  else if(isWall) className += " dark:animate-wallCell animate-LightWallCell";
+  else if(isVisited) className += " dark:animate-visitedCell animate-LightVisitedCell";
+  else className += " dark:bg-neutral-950  bg-white hover:bg-neutral-600 hover:scale-125 transition-transform ease-in-out";
 
-  if(isDraggingStart) className += " scale-110 ring-2 ring-green-600 shadow-lg shadow-green-500/40";
-  if(isDraggingEnd) className += " scale-110 ring-2 ring-red-400 shadow-lg shadow-red-500/40";
+  if(isDraggingStart) className += " scale-110 ring-1 ring-green-600 shadow-lg shadow-green-500/40";
+  if(isDraggingEnd) className += " scale-110 ring-1 ring-red-400 shadow-lg shadow-red-500/40";
   
   return (
     <button 
@@ -49,8 +49,8 @@ export const Node = React.memo(({ node, onMouseDown, onMouseEnter, mode, startPo
         onMouseEnter={onMouseEnter}
         onKeyDown={onKeyDown}
       >
-      {isStart ? <ArrowRight className=" aspect-square" /> : ""}
-      {isEnd ? <Target className=" aspect-square"/> : ""}
+      {isStart ? <ArrowRight className=" aspect-square" color="black" /> : ""}
+      {isEnd ? <Target className=" aspect-square" color="black"/> : ""}
       {weight === 15 ? <Weight className=" aspect-square"/> : ""}
     </button>
   );

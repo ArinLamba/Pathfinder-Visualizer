@@ -65,8 +65,24 @@ export default {
   				'50%': {
   					transform: 'scale(0.8)'
   				}
-  			}
+  			},
+
+
+	        LightVisitedCell: {
+          '0%':   { backgroundColor: '#15803d', transform: 'scale(0.4)' },
+          '33%':  { backgroundColor: '#22c55e', transform: 'scale(0.8)' },
+          '67%':  { backgroundColor: '#a855f7', transform: 'scale(1.1)' },
+          '100%': { backgroundColor: '#9333ea', transform: 'scale(1)' },
+        },
+
+				LightWallCell: {
+					'0%':  { backgroundColor: '#6E6E6E', transform: 'scale(0.4)' },
+					'33%':   { backgroundColor: '#B6B6B6', transform: 'scale(0.8)' },
+					'67%':  { backgroundColor: '#252525', transform: 'scale(1.1)' },
+					'100%': { backgroundColor: '#0D0D0D', transform: 'scale(1)' }    
+				},
   		},
+
 			animation: {
 				pathHighlight: 'pathHighlight 0.6s ease-in-out forwards',
 				waterCell: 'waterCell 0.5s ease-in-out forwards',
@@ -77,6 +93,9 @@ export default {
 				weightedVisitedCell: 'weightedVisitedCell 0.5s ease-in-out forwards',
 				flashWeighted: "flashWeighted 0.4s ease-out forwards",
 				pulseScale: 'pulseScale 1.5s ease-out infinite',
+
+				LightWallCell: 'LightWallCell 0.4s ease-in-out forwards',
+				LightVisitedCell: 'LightVisitedCell 1.6s ease-in-out forwards',
 			},
 
   		borderRadius: {

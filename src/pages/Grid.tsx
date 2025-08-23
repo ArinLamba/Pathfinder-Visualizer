@@ -1,6 +1,6 @@
 import type React from "react";
 import { useEffect, useState } from "react";
-import { type AlgoSelection, type ModeSelection, type NodeAttributes, type ObstacleSelection } from "@/lib/types";
+import { type AlgoSelection, type GridType, type ModeSelection, type ObstacleSelection } from "@/lib/types";
 
 import { Node } from "@/pages/Node";
 
@@ -19,8 +19,8 @@ import { animateDijkstra } from "@/animations/animateDijkstra";
 import { getPath } from "@/lib/utils/getPath";
 
 type Props = {
-  grid: NodeAttributes[][];
-  setGrid: (grid: React.SetStateAction<NodeAttributes[][]>) => void;
+  grid: GridType;
+  setGrid: (grid: React.SetStateAction<GridType>) => void;
   mode: ModeSelection;
   setMode: (mode: ModeSelection) => void;
   algo: AlgoSelection;
@@ -68,14 +68,37 @@ export const Grid = ({ grid, setGrid, mode, setMode, algo, resetFlag, isRunning,
     if(isRunning || row === startPos[0] && col === startPos[1] || row === endPos[0] && col === endPos[1]) return;
 
     const cell = grid[row][col];
+    // const cellIsTerran = cell.isWall || cell.isGrass || cell.isMountain || cell.isWater || cell.weight === 15;
     
     if(isMouseDown && mode === "draggingStart") {
       if(cell.isEnd) return;
+      //TODO: kal ye karna hai alag function mai kyuki walls pr gdbd hori hai vo fir chali jati hai agar ek bar un par start ya end aagya
+
+      // if(cellIsTerran) {
+      //   setGrid((prevGrid) => {
+      //     const newGrid = [...prevGrid];
+      //     const newRow = [...newGrid[row]];
+      //     newRow[col] = {... newRow[col], isStart: true, isWater: false, isWall: false, isGrass: false, isMountain: false};
+      //     newGrid[row] = newRow;
+      //     return newGrid;
+      //   })
+      // }
       setStartPos([row,col]);
       return;
     }
     if(isMouseDown && mode === "draggingEnd") {
       if(cell.isStart) return;
+      //TODO: kal ye karna hai alag function mai kyuki walls pr gdbd hori hai vo fir chali jati hai agar ek bar un par start ya end aagya
+
+      // if(cellIsTerran) {
+      //   setGrid((prevGrid) => {
+      //     const newGrid = [...prevGrid];
+      //     const newRow = [...newGrid[row]];
+      //     newRow[col] = {... newRow[col], isEnd: true, isWater: false, isWall: false, isGrass: false, isMountain: false};
+      //     newGrid[row] = newRow;
+      //     return newGrid;
+      //   })
+      // }
       setEndPos([row,col]);
       return;
     }

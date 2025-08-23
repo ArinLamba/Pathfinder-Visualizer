@@ -10,7 +10,7 @@ import {
   DropdownMenuTrigger 
 } from "@/components/ui/dropdown-menu";
 import { obstacles } from "@/lib/utils/constants";
-import { Button } from "./ui/button";
+import { Button } from "../ui/button";
 
 type Props = {
   selectedAlgo: AlgoSelection;
@@ -24,7 +24,7 @@ export const WeightSelection = ({ setObstacle, selectedAlgo }: Props) => {
 
   useEffect(() => {
     if (disabled) {
-      setSelectedWeight("Wall");  // reset to wall when algo changes
+      setSelectedWeight(null);  // reset to null when algo changes
       setObstacle("Wall");
     }
   }, [selectedAlgo]);
@@ -44,21 +44,21 @@ export const WeightSelection = ({ setObstacle, selectedAlgo }: Props) => {
       >
         <Button
           variant="secondary"
-          className={`w-full text-neutral-100 rounded font-semibold tracking-wider border-b border-b-indigo-700 transition
-            ${disabled ? "opacity-50 cursor-not-allowed" : "hover:bg-zinc-700/50"} 
+          className={`w-full dark:text-neutral-100 dark:bg-neutral-800 rounded shadow-sm bg-transparent dark:border-b dark:border-b-indigo-400 transition
+            ${disabled ? "opacity-50 cursor-not-allowed" : "hover:bg-black/5 dark:hover:bg-zinc-700/50"} 
             transition`}
             disabled={disabled}
         >
-          {selectedWeight ? selectedWeight : "Wall"}
+          {selectedWeight ? selectedWeight : "Weight"}
           <ChevronDown className="w-5 h-5 ml-auto"/>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="start" className="w-44 text-xs bg-black space-y-[2px] font-medium border-white/20 border-2 border-t-0">
+      <DropdownMenuContent className="w-44 text-xs space-y-[2px] font-medium border-white/20 border-2 border-t-0">
         
         {obstacles.map((obstacle) => (
           
           <DropdownMenuItem 
-          className="text-indigo-400 px-3 py-2 text-sm tracking-wider cursor-pointer focus:bg-neutral-900 focus:text-indigo-500"
+          className="dark:text-indigo-400 px-3 py-2 text-sm tracking-wider cursor-pointer"
           onSelect={() => handleChange(obstacle.title as ObstacleSelection)}
           >
             {obstacle.title}

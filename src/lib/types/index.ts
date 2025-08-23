@@ -1,5 +1,4 @@
 
-
 export type NodeAttributes = {
   row: number;
   col: number;
@@ -14,9 +13,12 @@ export type NodeAttributes = {
   isPath?: boolean;
   parent?: [number, number] | null;
 };
+
+export type GridType = NodeAttributes[][];
 export type ModeSelection = "draggingStart" | "draggingEnd" | null;
 export type AlgoSelection = "BFS" | "DFS" | "DIJKSTRA" | "A*" | null;
 export type ObstacleSelection = "Wall" | "Grass" | "Water" | "Mountain" | null;
+export type MazeSelection = "Recursive Division" | null;
 
 export type Position = [number, number];
 

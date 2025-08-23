@@ -6,8 +6,8 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "./ui/dropdown-menu"
-import { Button } from "./ui/button"
+} from "../ui/dropdown-menu"
+import { Button } from "../ui/button"
 
 import { ChevronDown } from "lucide-react"
 
@@ -28,16 +28,16 @@ export function SelectAlgo({ selectedAlgo, setSelectedAlgo }: Props) {
       >
         <Button 
           variant="secondary" 
-          className="w-full text-neutral-100 rounded font-semibold tracking-wider border-b border-b-indigo-700 transition"
+          className="w-full dark:text-neutral-100 bg-transparent dark:bg-neutral-800 rounded dark:border-b dark:hover-bg-zinc-700/50 hover:bg-black/5 dark:border-b-indigo-400 transition"
         >
           {selectedAlgo ? `${selectedAlgo}` : 'Select Algorithm'}
           <ChevronDown className="w-5 h-4 ml-auto"/>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-44 text-xs bg-black space-y-[2px] font-medium border-white/20 border-2 border-t-0" align="start">
+      <DropdownMenuContent className="w-44 text-xs space-y-[2px] font-medium dark:border-white/20 shadow-md border-2 border-t-0" align="start">
         {algorithms.map((algorithm) => (
           <DropdownMenuItem
-            className="text-indigo-500 px-3 py-2 text-sm tracking-wider cursor-pointer focus:bg-neutral-800 focus:text-indigo-300"
+            className="dark:text-indigo-500 px-3 py-2 text-sm cursor-pointer"
             onSelect={() => setSelectedAlgo(algorithm)}
           >
             {algorithm}

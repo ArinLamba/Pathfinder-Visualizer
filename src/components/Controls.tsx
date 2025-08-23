@@ -1,17 +1,20 @@
 import { useState } from 'react';
 
-import type { AlgoSelection, NodeAttributes, ObstacleSelection } from '@/lib/types';
+import type { AlgoSelection, GridType, ObstacleSelection } from '@/lib/types';
 import { clearTerrains, clearVisitedAndPath, clearWallsAndWeight } from '@/lib/utils/generateGrid';
 
-import { WeightSelection } from './WeightSelection';
-import { SelectAlgo } from './SelectAlgo';
+import { WeightSelection } from './selection/Select-Weight';
+import { SelectAlgo } from './selection/Select-Algo';
 import { Button } from './ui/button';
-import { Information } from './Information';
+
+import { SelectMaze } from './selection/Select-Maze';
+import { ModeToggle } from './ui/mode-toggle';
+import { Tutorial } from './Tutorial';
 
 
 type Props = {
-  grid: NodeAttributes[][];
-  setGrid: (grid: React.SetStateAction<NodeAttributes[][]>) => void;
+  grid: GridType;
+  setGrid: (grid: React.SetStateAction<GridType>) => void;
   onReset: () => void;
   setAlgo: (algo: AlgoSelection) => void;
   isRunning: boolean;
@@ -28,7 +31,9 @@ export const Controls = ({
   setVisualizerTrigger,
   setObstacle,
 }: Props) => {
+
   const [selectedAlgo, setSelectedAlgo] = useState<AlgoSelection>(null);
+
 
   const handleVisualize = () => {
     if(!selectedAlgo || isRunning) return;
@@ -62,14 +67,21 @@ export const Controls = ({
   };
 
   return (
-    <header className="w-full z-50 px-4 py-2 bg-neutral-900 shadow-md text-neutral-100">
-      <div className="lg:max-w-[1420px] w-full mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+    <header className="w-full z-50 px-4 py-2 shadow-md dark:text-neutral-100 bg-zinc-50 dark:bg-neutral-900">
+      <div className="lg:max-w-[1600px] w-full mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
         <h1 className="text-2xl font-semibold flex items-center gap-x-3 flex-shrink-0">
-          🧭 Pathfinding Visualizer
-          <Information />
+          <img src="./logo.png" alt="logo" className='size-5'/> Pathfinding Visualizer
+          <Tutorial />
         </h1>
-
         <div className="flex items-center gap-4 flex-wrap">
+          <ModeToggle />
+          
+          {/* Custom Maze Select */}
+          <div className="relative inline-block w-44">
+            <SelectMaze grid={grid} setGrid={setGrid}/>
+          </div>
+          
+          {/* Weight Selection */}
           <div className="w-44 relative inline-block">
             {<WeightSelection 
               selectedAlgo={selectedAlgo} 
@@ -77,7 +89,7 @@ export const Controls = ({
             />}
           </div>
 
-          {/* Custom Select */}
+          {/* Custom Algorithm Select */}
           <div className="relative inline-block w-44">
             <SelectAlgo 
               selectedAlgo={selectedAlgo} 
