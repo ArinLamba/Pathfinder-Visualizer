@@ -76,8 +76,8 @@ export default {
         },
 
 				LightWallCell: {
-					'0%':  { backgroundColor: '#6E6E6E', transform: 'scale(0.4)' },
-					'33%':   { backgroundColor: '#B6B6B6', transform: 'scale(0.8)' },
+					'0%':   { backgroundColor: '#B6B6B6', transform: 'scale(0.4)' },
+					'33%':  { backgroundColor: '#6E6E6E', transform: 'scale(0.8)' },
 					'67%':  { backgroundColor: '#252525', transform: 'scale(1.1)' },
 					'100%': { backgroundColor: '#0D0D0D', transform: 'scale(1)' }    
 				},

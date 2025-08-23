@@ -1,8 +1,9 @@
 import type { GridType } from "@/lib/types";
 import { BOARD_ROWS, BOARD_COLS } from "../../lib/utils/constants";
+import { cloneGrid } from "@/lib/utils/handlers";
 
 export const recursiveDivision = (grid: GridType): GridType => {
-  const newGrid = deepCopyGrid(grid);
+  const newGrid = cloneGrid(grid);
   addBorder(newGrid);
   divide(newGrid, 1, BOARD_ROWS - 2, 1, BOARD_COLS - 2, chooseOrientation(BOARD_ROWS - 2, BOARD_COLS - 2));
   return newGrid;
@@ -76,5 +77,3 @@ const randomOdd = (min: number, max: number): number => {
   for (let i = min; i <= max; i++) if (i % 2 === 1) odds.push(i);
   return odds[Math.floor(Math.random() * odds.length)];
 };
-
-const deepCopyGrid = (grid: GridType): GridType => grid.map(row => row.map(cell => ({ ...cell })));

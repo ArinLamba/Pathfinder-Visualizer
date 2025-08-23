@@ -1,5 +1,5 @@
 export const BOARD_ROWS = 26;
-export const BOARD_COLS = 68;
+export const BOARD_COLS = 70;
 
 export const START_ROW = Math.floor(BOARD_ROWS / 2);
 export const START_COL = Math.floor(BOARD_COLS / 4);
