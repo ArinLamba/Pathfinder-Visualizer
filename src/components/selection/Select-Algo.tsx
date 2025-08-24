@@ -17,8 +17,8 @@ type Props = {
   setSelectedAlgo: (algo: AlgoSelection) => void;
 }
 
-export function SelectAlgo({ selectedAlgo, setSelectedAlgo }: Props) {
-
+export function SelectAlgo({ setSelectedAlgo }: Props) {
+  
 
   return (
     <DropdownMenu>
@@ -30,11 +30,11 @@ export function SelectAlgo({ selectedAlgo, setSelectedAlgo }: Props) {
           variant="secondary" 
           className="w-full dark:text-neutral-100 bg-transparent dark:bg-neutral-800 rounded dark:border-b dark:hover-bg-zinc-700/50 hover:bg-black/5 dark:border-b-indigo-400 transition"
         >
-          {selectedAlgo ? `${selectedAlgo}` : 'Select Algorithm'}
+          Algorithm
           <ChevronDown className="w-5 h-4 ml-auto"/>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-44 text-xs space-y-[2px] font-medium dark:border-white/20 shadow-md border-2 border-t-0" align="start">
+      <DropdownMenuContent className="w-44 space-y-[2px] dark:border-white/20 shadow-md border-2 border-t-0" align="start">
         {algorithms.map((algorithm) => (
           <DropdownMenuItem
             className="dark:text-indigo-500 px-3 py-2 text-sm cursor-pointer"

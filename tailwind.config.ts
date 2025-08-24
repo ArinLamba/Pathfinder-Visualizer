@@ -6,7 +6,8 @@ export default {
   	extend: {
   		keyframes: {
 				visitedCell: {
-					'0%':   { backgroundColor: '#ef4444', transform: 'scale(0.4)', borderRadius: "50%"}, // amber start
+					'0%':   { backgroundColor: '#facc15', transform: 'scale(0.5)', borderRadius: "95%"}, // amber start
+					'1%':   { backgroundColor: '#ef4444', transform: 'scale(0.4)', borderRadius: "100%"}, // amber start
 					'50%':  { backgroundColor: '#1d4ed8', transform: 'scale(0.8)',  },
 					'75%':  { backgroundColor: '#a855f7', transform: 'scale(1.1)', }, // purple pop
 					'100%': { backgroundColor: '#9333ea', transform: 'scale(1)', }    // cyan end
@@ -68,7 +69,7 @@ export default {
   			},
 
 
-	      	LightVisitedCell: {
+	      LightVisitedCell: {
           '0%':   { backgroundColor: '#15803d', transform: 'scale(0.4)', borderRadius: "100%" },
           '50%':  { backgroundColor: '#06b6d4', transform: 'scale(0.8)' },
           '75%':  { backgroundColor: '#0891b2', transform: 'scale(1.1)' },

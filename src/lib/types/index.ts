@@ -16,7 +16,7 @@ export type NodeAttributes = {
 
 export type GridType = NodeAttributes[][];
 export type ModeSelection = "draggingStart" | "draggingEnd" | null;
-export type AlgoSelection = "BFS" | "DFS" | "DIJKSTRA" | "A*" | null;
+export type AlgoSelection = "BFS" | "DFS" | "DIJKSTRA" | "Greedy Best-First-Search" | "A*" | null;
 export type ObstacleSelection = "Wall" | "Grass" | "Water" | "Mountain" | null;
 export type MazeSelection = "Recursive Division" | null;
 

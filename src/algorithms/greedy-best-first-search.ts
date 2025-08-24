@@ -12,7 +12,7 @@ type Props = {
 };
 
 
-export const astar = ({
+export const greedyBFS = ({
   newGrid,
   startPos,
   endPos,
@@ -64,7 +64,7 @@ export const astar = ({
       
       const newG = tempGrid[row][col].g + neighbour.weight;   // dist is the old g it is just a fancy name for distance
       const newH = calculateHeuristic(nrow, ncol, endRow, endCol);
-      const newF = newG + newH;
+      const newF = newH;
 
       const { f } = tempGrid[nrow][ncol];
 
