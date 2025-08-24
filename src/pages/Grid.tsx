@@ -2,7 +2,7 @@ import type React from "react";
 import { useEffect, useState } from "react";
 import { useRunning } from "@/store/use-running";
 
-import { type GridType, type ModeSelection, type ObstacleSelection } from "@/lib/types";
+import { type GridType, type ModeSelection } from "@/lib/types";
 
 import { Node } from "@/pages/Node";
 
@@ -25,16 +25,16 @@ import { astar } from "@/algorithms/astar";
 import { animateAstar } from "@/animations/animateASTAR";
 import { greedyBFS } from "@/algorithms/greedy-best-first-search";
 import { animateGreedy } from "@/animations/animateGreedy";
+import { useObstacle } from "@/store/use-obstacle";
 
 type Props = {
   grid: GridType;
   setGrid: (grid: React.SetStateAction<GridType>) => void;
   resetFlag: boolean; // used to trigger grid reset
   visualizerTrigger: number;
-  obstacle: ObstacleSelection;
 }
 
-export const Grid = ({ grid, setGrid, resetFlag, visualizerTrigger, obstacle } : Props) => {
+export const Grid = ({ grid, setGrid, resetFlag, visualizerTrigger } : Props) => {
   
   const [startPos, setStartPos] = useState<[number,number]>([START_ROW, START_COL]);
   const [endPos, setEndPos] = useState<[number,number]>([END_ROW, END_COL]);
@@ -43,6 +43,7 @@ export const Grid = ({ grid, setGrid, resetFlag, visualizerTrigger, obstacle } :
   const [mode, setMode] = useState<ModeSelection>(null);
 
   const { isRunning, setIsRunning } = useRunning();
+  const obstacle = useObstacle(state => state.obstacle);
   const algo = useAlgorithm(state => state.algo);
 
   const toggleWall = (row:number, col:number) => {

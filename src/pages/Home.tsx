@@ -1,22 +1,22 @@
 import { useState } from "react";
 
 import { generateGrid } from "@/lib/utils/generateGrid";
-import { type ObstacleSelection } from "@/lib/types";
 
 import { Grid } from "@/pages/Grid";
 import { Controls } from "@/components/Controls";
 import { Instructions } from "@/components/Instructions";
 import { Message } from "@/components/Message";
 import { useRunning } from "@/store/use-running";
+import { useObstacle } from "@/store/use-obstacle";
 
 export const Home = () => {
   
   const [grid, setGrid] = useState(generateGrid());
-  const [obstacle, setObstacle] = useState<ObstacleSelection>("Wall");
   const [visualizerTrigger, setVisualizerTrigger] = useState(0);
   const [resetFlag, setResetFlag] = useState(false); // toggled to reset grid
 
   const setIsRunning = useRunning((state) => state.setIsRunning);
+  const setObstacle = useObstacle(state => state.setObstacle);
 
   const handleReset = () => {
     setResetFlag(prev => !prev);
@@ -43,7 +43,6 @@ export const Home = () => {
             setGrid={setGrid}
             resetFlag={resetFlag} 
             visualizerTrigger={visualizerTrigger}
-            obstacle={obstacle}
           />
         </div>
       </div>

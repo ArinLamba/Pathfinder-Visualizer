@@ -43,12 +43,12 @@ export const greedyBFS = ({
     if(visited[row][col]) continue;
     visited[row][col] = true;
     visitedNodes.push([row, col]);
-
+    
     if(row === endRow && col === endCol) {
       // TODO: Return Path of Visited Nodes
       return visitedNodes;
     }
-
+    
     for(const [dx, dy] of directions) {
       const nrow = row + dx;
       const ncol = col + dy;
@@ -56,7 +56,7 @@ export const greedyBFS = ({
       if(!isValid(nrow, ncol) || visited[nrow][ncol]) continue;
       const neighbour = newGrid[nrow][ncol];
       if(neighbour.isWall) continue;
-
+      
       // check conditions before proceeding further
       // new G will be weight + distance till now ( dist )
       // new H will be calculateHvalue ( Manhatan distance for us -> 4 directions)
@@ -65,20 +65,19 @@ export const greedyBFS = ({
       const newG = tempGrid[row][col].g + neighbour.weight;   // dist is the old g it is just a fancy name for distance
       const newH = calculateHeuristic(nrow, ncol, endRow, endCol);
       const newF = newH;
-
+      
       const { f } = tempGrid[nrow][ncol];
-
+      
       if(f === Infinity || newF < f) {
         queue.add([newF, nrow, ncol]);
         tempGrid[nrow][ncol] = {... tempGrid[nrow][ncol], f: newF, g: newG, h: newH};
         neighbour.parent = [row, col];
-
+        
       }
-
     }
 
   }
-  return [];
+  return visitedNodes;
 
 };
 

@@ -60,5 +60,5 @@ export const dijkstra = ({
       }
     }
   }
-  return [];
+  return visitedNodes;
 };

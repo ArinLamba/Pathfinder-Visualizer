@@ -13,7 +13,6 @@ import { Tutorial } from './Tutorial';
 
 import { useRunning } from "@/store/use-running"
 import { useAlgorithm } from '@/store/use-algorithm';
-import { useObstacle } from '@/store/use-obstacle';
 
 
 type Props = {
@@ -34,16 +33,20 @@ export const Controls = ({
 
   const isRunning = useRunning((state) => state.isRunning);
   const setAlgo = useAlgorithm((state) => state.setAlgo);
-  const setObstacle = useObstacle(state => state.setObstacle);
 
   const handleVisualize = () => {
     if(!selectedAlgo || isRunning) return;
 
-    if(selectedAlgo !== "DIJKSTRA") {
-      const newGrid = clearTerrains(grid);
+    const isWeighted = 
+      selectedAlgo === "A*" || 
+      selectedAlgo === "DIJKSTRA" || 
+      selectedAlgo === "Greedy Best-First-Search";
+      
+    if(isWeighted) {
+      const newGrid = clearVisitedAndPath(grid);
       setGrid(newGrid);
     }else {
-      const newGrid = clearVisitedAndPath(grid);
+      const newGrid = clearTerrains(grid);
       setGrid(newGrid);
     }
 
@@ -87,8 +90,7 @@ export const Controls = ({
           {/* Weight Selection */}
           <div className="w-44 relative inline-block">
             {<WeightSelection 
-              selectedAlgo={selectedAlgo} 
-              setObstacle={setObstacle}
+              selectedAlgo={selectedAlgo}
             />}
           </div>
 

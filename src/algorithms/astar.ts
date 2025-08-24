@@ -78,7 +78,7 @@ export const astar = ({
     }
 
   }
-  return [];
+  return visitedNodes;
 
 };
 
