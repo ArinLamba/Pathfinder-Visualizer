@@ -71,7 +71,7 @@ export const Controls = ({
   return (
     <header className="w-full flex z-50 px-4 py-2 shadow-md dark:text-neutral-100 bg-zinc-50 dark:bg-neutral-900">
       {/* Side bar goes here if ever needed in future */}
-      <div className="lg:max-w-[1600px] w-full mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+      <div className="lg:max-w-[1650px] w-full mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
         <h1 className="text-2xl font-semibold flex items-center gap-x-3 flex-shrink-0">
           <img src="/Logo.png" alt="logo" className='size-5'/> Pathfinding Visualizer
           <Tutorial />

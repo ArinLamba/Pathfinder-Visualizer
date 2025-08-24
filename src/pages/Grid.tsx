@@ -23,6 +23,8 @@ import { getPath } from "@/lib/utils/getPath";
 import { useAlgorithm } from "@/store/use-algorithm";
 import { astar } from "@/algorithms/astar";
 import { animateAstar } from "@/animations/animateASTAR";
+import { greedyBFS } from "@/algorithms/greedy-best-first-search";
+import { animateGreedy } from "@/animations/animateGreedy";
 
 type Props = {
   grid: GridType;
@@ -183,6 +185,16 @@ export const Grid = ({ grid, setGrid, resetFlag, visualizerTrigger, obstacle } :
         await animatePath(shortestPath, setGrid);
         setIsRunning(false);
         return;
+      }
+
+      if(algo === "Greedy Best-First-Search") {
+        setIsRunning(true);
+        const newGrid = cloneGrid(grid);
+        const visitedNodes = greedyBFS({ newGrid, startPos, endPos });
+        const shortestPath = getPath(endPos, newGrid);
+        await animateGreedy(visitedNodes, setGrid);
+        await animatePath(shortestPath, setGrid);
+        setIsRunning(false);
       }
 
       if(algo === "A*") {

@@ -13,6 +13,5 @@ export const getPath = (endPos: Position, grid: NodeAttributes[][]) : Position[]
     const [pr, pc] = current.parent;
     current = grid[pr][pc];
   }
-
   return path.reverse();
 };
