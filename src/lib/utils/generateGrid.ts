@@ -31,6 +31,9 @@ export const generateEmptyGrid = () => {
   return Array.from({length: BOARD_ROWS}, () =>
     Array.from({length: BOARD_COLS}, () => ({
       isVisited: false,
+      f: Infinity,
+      g: Infinity,
+      h: Infinity,
     }))
   );
 };

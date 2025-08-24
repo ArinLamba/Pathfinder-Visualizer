@@ -26,17 +26,18 @@ export const SelectMaze = ({ setGrid }: Props) => {
   const [selectedMaze, setSelectedMaze] = useState<MazeSelection>(null);
   const [mazeTrigger, setMazeTrigger] = useState(0);
 
-  const isRunning = useRunning(state => state.isRunning);
+  const { isRunning, setIsRunning } = useRunning();
 
   useEffect(() => {
     if(isRunning) return;
     const run = async () => {
-
       switch (selectedMaze) {
         case "Recursive Division":
+          setIsRunning(true);
           setGrid(generateGrid());
           const mazeConstructionPath = recursiveDivision();
           await animateMaze(mazeConstructionPath, setGrid);
+          setIsRunning(false);
           break;
         
         default:

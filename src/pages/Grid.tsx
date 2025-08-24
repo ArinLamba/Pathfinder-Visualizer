@@ -21,6 +21,8 @@ import { animateDijkstra } from "@/animations/animateDijkstra";
 import { dijkstra } from "@/algorithms/dijkstra";
 import { getPath } from "@/lib/utils/getPath";
 import { useAlgorithm } from "@/store/use-algorithm";
+import { astar } from "@/algorithms/astar";
+import { animateAstar } from "@/animations/animateASTAR";
 
 type Props = {
   grid: GridType;
@@ -181,6 +183,16 @@ export const Grid = ({ grid, setGrid, resetFlag, visualizerTrigger, obstacle } :
         await animatePath(shortestPath, setGrid);
         setIsRunning(false);
         return;
+      }
+
+      if(algo === "A*") {
+        setIsRunning(true);
+        const newGrid = cloneGrid(grid);
+        const visitedNodes = astar({ newGrid, startPos, endPos });
+        const shortestPath = getPath(endPos, newGrid);
+        await animateAstar(visitedNodes, setGrid);
+        await animatePath(shortestPath, setGrid);
+        setIsRunning(false);
       }
     }
     run();
