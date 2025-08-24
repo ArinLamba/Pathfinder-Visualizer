@@ -11,19 +11,26 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { obstacles } from "@/lib/utils/constants";
 import { Button } from "../ui/button";
+import { useObstacle } from "@/store/use-obstacle";
+import { useRunning } from "@/store/use-running";
 
 type Props = {
   selectedAlgo: AlgoSelection;
-  setObstacle: (obstacle: ObstacleSelection) => void;
 };
 
-export const WeightSelection = ({ setObstacle, selectedAlgo }: Props) => {
+export const WeightSelection = ({ selectedAlgo }: Props) => {
   
   const [selectedWeight, setSelectedWeight] = useState<ObstacleSelection>(null);
-  const disabled = selectedAlgo !== "DIJKSTRA";
+  const setObstacle = useObstacle(state => state.setObstacle);
+  const isRunning = useRunning(state => state.isRunning);
+
+  const isWeighted = 
+    selectedAlgo === "A*" ||
+    selectedAlgo === "DIJKSTRA"||
+    selectedAlgo === "Greedy Best-First-Search";
 
   useEffect(() => {
-    if (disabled) {
+    if (!isWeighted) {
       setSelectedWeight(null);  // reset to null when algo changes
       setObstacle("Wall");
     }
@@ -39,15 +46,15 @@ export const WeightSelection = ({ setObstacle, selectedAlgo }: Props) => {
     <DropdownMenu >
       <DropdownMenuTrigger 
         className="focus:outline-none"
-        disabled={disabled}
+        disabled={isRunning}
         asChild
       >
         <Button
           variant="secondary"
           className={`w-full dark:text-neutral-100 dark:bg-neutral-800 rounded shadow-sm bg-transparent dark:border-b dark:border-b-indigo-400 transition
-            ${disabled ? "opacity-50 cursor-not-allowed" : "hover:bg-black/5 dark:hover:bg-zinc-700/50"} 
+            ${isRunning ? "opacity-50 cursor-not-allowed" : "hover:bg-black/5 dark:hover:bg-zinc-700/50"} 
             transition`}
-            disabled={disabled}
+            disabled={!isWeighted}
         >
           {selectedWeight ? selectedWeight : "Weight"}
           <ChevronDown className="w-5 h-5 ml-auto"/>

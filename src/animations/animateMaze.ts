@@ -12,7 +12,7 @@ export const animateMaze = (path: Position[], setGrid: (grid: React.SetStateActi
           return newGrid;
         })
         if(i === path.length - 1) resolve();
-      }, 10 * i);
+      }, 8 * i);
     })
   ))
 };
