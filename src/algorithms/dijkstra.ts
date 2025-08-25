@@ -1,4 +1,4 @@
-import type { GridType, Position } from "@/lib/types";
+import type { GridType, NodeAttributes, Position } from "@/lib/types";
 import { MinHeap } from "@/lib/datastructure/minHeap";
 import { directions, isValid } from "@/lib/utils/constants";
 import { generateEmptyGrid } from "@/lib/utils/generateGrid";
@@ -51,7 +51,7 @@ export const dijkstra = ({
       const neighbour = newGrid[nrow][ncol];
       const distTillNow = distance + neighbour.weight;
 
-      if(neighbour.isWall) continue;
+      if(isBlocked(neighbour)) continue;
 
       if(distTillNow < dist[nrow][ncol]) {
         dist[nrow][ncol] = distTillNow;
@@ -62,3 +62,7 @@ export const dijkstra = ({
   }
   return visitedNodes;
 };
+
+function isBlocked(node: NodeAttributes): boolean {
+  return node.isWall; // Walls are always blocked, terrains are never blocked anymore
+}

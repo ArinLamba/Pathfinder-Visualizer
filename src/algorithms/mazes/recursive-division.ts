@@ -70,7 +70,7 @@ const addBorder = () => {
     if(isStartOrEnd(r, 0)) continue;
     mazeContructionPath.push([r,0])
     if(isStartOrEnd(r, BOARD_COLS - 1)) continue;
-    mazeContructionPath.push([r, BOARD_COLS -1])
+    mazeContructionPath.push([r, BOARD_COLS -1]);
 
   }
   for (let c = 0; c < BOARD_COLS; c++) {
