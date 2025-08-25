@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import { MAZES } from "@/lib/utils/constants";
-import type { GridType, MazeSelection } from "@/lib/types";
+import type { GridType, MazeSelection, Position } from "@/lib/types";
 
 import {
   DropdownMenu,
@@ -20,32 +20,33 @@ import { useRunning } from "@/store/use-running";
 type Props = {
   setGrid: (grid: React.SetStateAction<GridType>) => void;
 };
-
 export const SelectMaze = ({ setGrid }: Props) => {
-
+  
   const [selectedMaze, setSelectedMaze] = useState<MazeSelection>(null);
-  const [mazeTrigger, setMazeTrigger] = useState(0);
-
+  
   const { isRunning, setIsRunning } = useRunning();
+  
+  const handleClick = async (maze: MazeSelection) => {
 
-  useEffect(() => {
-    if(isRunning) return;
-    const run = async () => {
-      switch (selectedMaze) {
-        case "Recursive Division":
-          setIsRunning(true);
-          setGrid(generateGrid());
-          const mazeConstructionPath = recursiveDivision();
-          await animateMaze(mazeConstructionPath, setGrid);
-          setIsRunning(false);
-          break;
-        
-        default:
-          break;
-      }
+    if (isRunning) return;
+    
+    setSelectedMaze(maze);
+    setGrid(generateGrid()); // reset grid before drawing maze
+    let mazeConstructionPath: Position[] = [];
+    
+    switch (maze) {
+      case "Recursive Division":
+        setIsRunning(true);
+        mazeConstructionPath = recursiveDivision();
+        break;
+
+      default:
+        break;
     }
-    run();
-  },[mazeTrigger]);
+
+    await animateMaze(mazeConstructionPath, setGrid);
+    setIsRunning(false);
+  };
 
   return (
     <DropdownMenu>
@@ -66,8 +67,9 @@ export const SelectMaze = ({ setGrid }: Props) => {
         {MAZES.map((maze) => (
 
           <DropdownMenuItem
+            key={maze}
             className="dark:text-indigo-500 px-3 py-2 text-sm cursor-pointer "
-            onSelect={() => {setSelectedMaze(maze as MazeSelection); setMazeTrigger(prev => prev + 1)}}
+            onClick={() => handleClick(maze as MazeSelection)}
           >
             {maze}
           </DropdownMenuItem>

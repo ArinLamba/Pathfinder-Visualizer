@@ -128,7 +128,7 @@ export const Controls = ({
           </Button>
 
           <Button 
-            variant={"ghost"} 
+            variant={"ghost"}
             disabled={isRunning}
             onClick={handleClearPath}
           >

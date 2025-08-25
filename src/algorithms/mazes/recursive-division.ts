@@ -1,10 +1,10 @@
 import type { Position } from "@/lib/types";
 import { BOARD_ROWS, BOARD_COLS } from "../../lib/utils/constants";
 
-
 const mazeContructionPath: Position[] = [];
 
 export const recursiveDivision = (): Position[] => {
+  mazeContructionPath.length = 0;   // fix re rendering
   addBorder();
   divide(1, BOARD_ROWS - 2, 1, BOARD_COLS - 2, chooseOrientation(BOARD_ROWS - 2, BOARD_COLS - 2));
   return mazeContructionPath;

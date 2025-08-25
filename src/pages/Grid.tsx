@@ -11,7 +11,6 @@ import { dfs } from "@/algorithms/dfs";
 
 import { generateGrid } from "@/lib/utils/generateGrid";
 import { addFixedWeights, addGrass, addMountain, addWalls, addWater, cloneGrid } from "@/lib/utils/handlers";
-import { END_COL, END_ROW, START_COL, START_ROW } from "@/lib/utils/constants";
 
 import { animateBFS } from "@/animations/animateBFS";
 import { animateDFS } from "@/animations/animateDFS";
@@ -26,6 +25,8 @@ import { animateAstar } from "@/animations/animateASTAR";
 import { greedyBFS } from "@/algorithms/greedy-best-first-search";
 import { animateGreedy } from "@/animations/animateGreedy";
 import { useObstacle } from "@/store/use-obstacle";
+import { useStart } from "@/store/use-start";
+import { useEnd } from "@/store/use-end";
 
 type Props = {
   grid: GridType;
@@ -36,8 +37,6 @@ type Props = {
 
 export const Grid = ({ grid, setGrid, resetFlag, visualizerTrigger } : Props) => {
   
-  const [startPos, setStartPos] = useState<[number,number]>([START_ROW, START_COL]);
-  const [endPos, setEndPos] = useState<[number,number]>([END_ROW, END_COL]);
   const [isMouseDown, setIsMouseDown] = useState(false);
   const [isKeyDown, setIsKeyDown] = useState(false);
   const [mode, setMode] = useState<ModeSelection>(null);
@@ -45,6 +44,8 @@ export const Grid = ({ grid, setGrid, resetFlag, visualizerTrigger } : Props) =>
   const { isRunning, setIsRunning } = useRunning();
   const obstacle = useObstacle(state => state.obstacle);
   const algo = useAlgorithm(state => state.algo);
+  const { startPos, setStartPos } = useStart();
+  const { endPos, setEndPos } = useEnd();
 
   const toggleWall = (row:number, col:number) => {
     if(grid[row][col].isStart || grid[row][col].isEnd || isRunning) return;
@@ -216,9 +217,8 @@ export const Grid = ({ grid, setGrid, resetFlag, visualizerTrigger } : Props) =>
   useEffect(() => {
     if(isRunning) return;
     setGrid(generateGrid());
-    setStartPos([START_ROW,START_COL]);
-    setEndPos([END_ROW,END_COL]);
     setIsMouseDown(false);
+    setIsKeyDown(false);
   }, [resetFlag]);
 
   return (
