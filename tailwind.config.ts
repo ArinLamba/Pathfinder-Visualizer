@@ -29,7 +29,7 @@ export default {
 					'0%':   { backgroundColor: '#52525b', transform: 'scale(0.4)' }, // zinc-300 (light gray, pops on black bg)
 					'33%':  { backgroundColor: '#71717a', transform: 'scale(0.8)' }, // zinc-400
 					'67%':  { backgroundColor: '#a1a1aa', transform: 'scale(1.1)' }, // zinc-500
-					'100%': { backgroundColor: '#d4d4d8', transform: 'scale(1)' }    // zinc-600 (dark gray, not black)
+					'100%': { backgroundColor: '#d4d4d8', transform: 'scale(1)', }    // zinc-600 (dark gray, not black)
 				},
 
 				grassCell: {
@@ -56,7 +56,7 @@ export default {
 					'0%': 	{ backgroundColor: '#f59e0b', transform: 'scale(0.8)' },
 					'33%': 	{ backgroundColor: '#f59e0b', transform: 'scale(1)' },
 					'50%': 	{ backgroundColor: '#facc15', transform: 'scale(1.2)' },
-					'100%': { backgroundColor: '#fbbf24', transform: 'scale(1)' },
+					'100%': { backgroundColor: '#fbbf24', transform: 'scale(1)', border: "#fbbf24" },
 				},
 
   			pulseScale: {
@@ -77,11 +77,11 @@ export default {
         },
 
 				LightWallCell: {
-					'0%':   { backgroundColor: '#0D0D0D', transform: 'scale(0.6)' },
+					'0%':   { backgroundColor: '#0D0D0D', transform: 'scale(0.6)', },
 					'25%':  { backgroundColor: '#0D0D0D', transform: 'scale(0.8)' },
 					'50%':  { backgroundColor: '#0D0D0D', transform: 'scale(1)' },
 					'75%':  { backgroundColor: '#0D0D0D', transform: 'scale(1.2)' },
-					'100%': { backgroundColor: '#0D0D0D', transform: 'scale(1)' }    
+					'100%': { backgroundColor: '#0D0D0D', transform: 'scale(1)', border: "#0D0D0D"  }    
 				},
   		},
 
