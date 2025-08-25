@@ -19,7 +19,20 @@ export const addWalls = ({
     const newGrid = [...prevGrid];
     const newRow = [...newGrid[row]];
     const node = newRow[col];
-    newRow[col] = { ...newRow[col], isWall: !node.isWall};
+
+    if(node.isGrass || node.isMountain || node.isWater || node.weight === FIXED_WEIGHT) {
+      newRow[col] = {
+        ...node,
+        isGrass: false,
+        isWater: false,
+        isMountain: false,
+        weight: DEFAULT_WEIGHT,
+        isWall: true,
+      };
+    }
+    else {
+      newRow[col] = { ...newRow[col], isWall: !node.isWall};
+    }
     newGrid[row] = newRow;
     return newGrid;
   })
@@ -35,9 +48,9 @@ export const addGrass = ({
     const newRow = [...newGrid[row]];
     const node = newRow[col];
     
-    newRow[col] = node.isGrass ? 
-      {...newRow[col], isGrass: false, weight: DEFAULT_WEIGHT} : 
-      {...newRow[col], isGrass: true, weight: 3};
+    newRow[col] = node.isGrass 
+      ? {...node, isGrass: false, weight: DEFAULT_WEIGHT}
+      : {...node, isGrass: true, isMountain: false, isWall: false, isWater: false, weight: 3};
     
     newGrid[row] = newRow;
     return newGrid;
@@ -54,9 +67,9 @@ export const addWater = ({
     const newRow = [...newGrid[row]];
     const node = newRow[col];
     
-    newRow[col] = node.isWater ? 
-      {...newRow[col], isWater: false, weight: DEFAULT_WEIGHT} : 
-      {...newRow[col], isWater: true, weight: 6};
+    newRow[col] = node.isWater 
+      ? {...node, isWater: false, weight: DEFAULT_WEIGHT}
+      : {...node, isWater: true, isMountain: false, isWall: false, isGrass: false, weight: 5};
     
     newGrid[row] = newRow;
     return newGrid;
@@ -74,8 +87,8 @@ export const addMountain = ({
     const node = newRow[col];
     
     newRow[col] = node.isMountain ? 
-      {...newRow[col], isMountain: false, weight: DEFAULT_WEIGHT} : 
-      {...newRow[col], isMountain: true, weight: 9};
+      {...node, isMountain: false, weight: DEFAULT_WEIGHT} : 
+      {...node, isMountain: true, isWater: false, isWall: false, isGrass: false, weight: 8};
     
     newGrid[row] = newRow;
     return newGrid;
@@ -92,7 +105,9 @@ export const addFixedWeights = ({
     const newRow = [...newGrid[row]];
     const node = newRow[col];
     
-    newRow[col] = node.weight === FIXED_WEIGHT ? {...node, weight: DEFAULT_WEIGHT} : {... node, weight: FIXED_WEIGHT};
+    newRow[col] = node.weight === FIXED_WEIGHT 
+      ? {...node, weight: DEFAULT_WEIGHT} 
+      : {...node, isWater: false, isMountain: false, isWall: false, isGrass: false, weight: FIXED_WEIGHT};
 
     newGrid[row] = newRow;
     return newGrid;
