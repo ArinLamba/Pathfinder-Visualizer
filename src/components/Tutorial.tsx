@@ -1,24 +1,33 @@
+import { Guide } from "./Guide";
 
 import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip"
+  Dialog,
+  DialogContent,
+  DialogTrigger,
+} from "@/components/ui/dialog"
 
 import { Info } from "lucide-react";
+import { ActionTooltip } from "./ActionTooltip";
+import { useEffect, useState } from "react";
 
 export const Tutorial = () => {
+  const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    setOpen(true);
+  }, []);
+
   return (
-    <TooltipProvider>
-      <Tooltip>
-        <TooltipTrigger asChild>
+    <Dialog open={open} onOpenChange={setOpen}>
+      <ActionTooltip>
+        <DialogTrigger asChild>
           <Info className="text-cyan-600 hover:cursor-pointer hover:text-cyan-400 transition delay-0 size-6"/>
-        </TooltipTrigger>
-        <TooltipContent>
-          Adding Tutorial Later
-        </TooltipContent>
-      </Tooltip>
-    </TooltipProvider>
-   );
+        </DialogTrigger>
+      </ActionTooltip>
+      <DialogContent  className="max-w-[920px] p-0">
+        <Guide />
+      </DialogContent>
+      
+    </Dialog>
+  );
 };

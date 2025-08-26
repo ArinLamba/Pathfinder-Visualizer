@@ -65,6 +65,7 @@ export const WeightSelection = ({ selectedAlgo }: Props) => {
         {obstacles.map((obstacle) => (
           
           <DropdownMenuItem 
+          key={obstacle.title}
           className="dark:text-indigo-400 px-3 py-2 text-sm tracking-wider cursor-pointer"
           onSelect={() => handleChange(obstacle.title as ObstacleSelection)}
           >

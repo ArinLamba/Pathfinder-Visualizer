@@ -34,9 +34,10 @@ export function SelectAlgo({ setSelectedAlgo }: Props) {
           <ChevronDown className="w-5 h-4 ml-auto"/>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-44 space-y-[2px] font-medium dark:border-white/20 shadow-md border-2 border-t-0" align="start">
+      <DropdownMenuContent className="w-56 space-y-[2px] font-medium dark:border-white/20 shadow-md border-2 border-t-0" align="center">
         {algorithms.map((algorithm) => (
           <DropdownMenuItem
+          key={algorithm}
             className="dark:text-indigo-500 px-3 py-2 text-sm cursor-pointer"
             onSelect={() => setSelectedAlgo(algorithm)}
           >

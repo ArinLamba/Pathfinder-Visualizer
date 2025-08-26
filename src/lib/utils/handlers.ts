@@ -1,5 +1,16 @@
-import type { HandleEndProps, HandleStartProps, NodeAttributes } from "@/lib/types"
+import type { AlgoSelection, CallProps, GridType, HandleEndProps, HandleStartProps, NodeAttributes } from "@/lib/types"
 import { DEFAULT_WEIGHT, FIXED_WEIGHT } from "./constants";
+
+import { callAstar } from "@/algorithms/astar";
+import { callBfs } from "@/algorithms/bfs";
+import { callBidirectionalBfs } from "@/algorithms/bidirectional";
+import { callDFS } from "@/algorithms/dfs";
+import { callDijkstra } from "@/algorithms/dijkstra";
+import { callGreedyBFS } from "@/algorithms/greedy-best-first-search";
+
+type HandleAlgoProps = CallProps & {
+  algo: AlgoSelection;
+};
 
 type ObstacleProps = Pick<HandleStartProps, "row" | "col"> & {
   setGrid: React.Dispatch<React.SetStateAction<NodeAttributes[][]>>;
@@ -114,12 +125,50 @@ export const addFixedWeights = ({
   })
 };
 
-export const handleStart = ({grid, row ,col, startPos, setStartPos}: HandleStartProps) => {
-  const [prevRow, prevCol] = startPos;
-  grid[row][col] = {...grid[row][col], isStart: true, isWall: false, isGrass: false, isMountain: false, isVisited: false, isWater: false}
-  grid[prevRow][prevCol].isStart = false;
-  setStartPos([row,col]);
+export const setCellAsStart = (
+  row: number,
+  col: number,
+  setGrid: React.Dispatch<React.SetStateAction<GridType>>
+) => {
+  setGrid((prevGrid) => {
+    const newGrid = [...prevGrid];
+    const newRow = [...newGrid[row]];
+    newRow[col] = {
+      ...newRow[col],
+      isStart: true,
+      isEnd: false,
+      isWall: false,
+      isWater: false,
+      isGrass: false,
+      isMountain: false,
+    };
+    newGrid[row] = newRow;
+    return newGrid;
+  });
 };
+
+export const setCellAsEnd = (
+  row: number,
+  col: number,
+  setGrid: React.Dispatch<React.SetStateAction<GridType>>
+) => {
+  setGrid((prevGrid) => {
+    const newGrid = [...prevGrid];
+    const newRow = [...newGrid[row]];
+    newRow[col] = {
+      ...newRow[col],
+      isStart: false,
+      isEnd: true,
+      isWall: false,
+      isWater: false,
+      isGrass: false,
+      isMountain: false,
+    };
+    newGrid[row] = newRow;
+    return newGrid;
+  });
+};
+
 
 export const handleEnd = ({grid, row ,col, endPos, setEndPos}: HandleEndProps) => {
   const [prevRow, prevCol] = endPos;
@@ -127,3 +176,32 @@ export const handleEnd = ({grid, row ,col, endPos, setEndPos}: HandleEndProps) =
   grid[prevRow][prevCol].isEnd = false;
   setEndPos([row,col]);
 };
+
+export const handleAlgo = async ({
+  grid,
+  startPos,
+  endPos,
+  setGrid,
+  algo,
+}: HandleAlgoProps) => {
+  switch (algo) {
+    case "BFS":
+      await callBfs({ grid, startPos, endPos, setGrid });
+      break;
+    case "DFS":
+      await callDFS({ grid, startPos, endPos, setGrid });
+      break;
+    case "DIJKSTRA":
+      await callDijkstra({ grid, startPos, endPos, setGrid });
+      break;
+    case "A*":
+      await callAstar({ grid, startPos, endPos, setGrid });
+      break;
+    case "Bidirectional BFS":
+      await callBidirectionalBfs({ grid, startPos, endPos, setGrid });
+      break;
+    case "Greedy Best-First-Search":
+      await callGreedyBFS({ grid, startPos, endPos, setGrid });
+      break;
+  }
+}

@@ -1,7 +1,27 @@
 
-import type { GridType, Position } from "@/lib/types"
+import { animatePath } from "@/animations/animatePath";
+import type { CallProps, GridType, Position } from "@/lib/types"
 import { directions, isValid } from "@/lib/utils/constants";
 import { generateEmptyGrid } from "@/lib/utils/generateGrid";
+import { getPath } from "@/lib/utils/getPath";
+import { cloneGrid } from "@/lib/utils/handlers";
+import { animateBFS } from "@/animations/animateBFS";
+
+
+
+export const callBfs= async ({
+  grid,
+  startPos,
+  endPos,
+  setGrid,
+} : CallProps) => {
+  const newGrid = cloneGrid(grid);
+  const visitedNodes  = bfs({newGrid, startPos, endPos});
+  const shortestPath = getPath(endPos, newGrid);
+  await animateBFS(visitedNodes, setGrid);
+  await animatePath(shortestPath, setGrid);
+};
+
 
 type Props = {
   newGrid: GridType;
