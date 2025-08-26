@@ -3,9 +3,11 @@ import { useState } from "react";
 import { generateGrid } from "@/lib/utils/generateGrid";
 
 import { Grid } from "@/pages/Grid";
+
 import { Controls } from "@/components/Controls";
 import { Instructions } from "@/components/Instructions";
 import { Message } from "@/components/Message";
+
 import { useRunning } from "@/store/use-running";
 import { useObstacle } from "@/store/use-obstacle";
 

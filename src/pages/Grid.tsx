@@ -7,12 +7,13 @@ import { type GridType, type ModeSelection } from "@/lib/types";
 import { Node } from "@/pages/Node";
 
 import { generateGrid } from "@/lib/utils/generateGrid";
-import { addFixedWeights, addGrass, addMountain, addWalls, addWater, handleAlgo } from "@/lib/utils/handlers";
+import { addFixedWeights, addGrass, addMountain, addWalls, addWater, handleAlgo, setCellAsEnd, setCellAsStart } from "@/lib/utils/handlers";
 
 import { useAlgorithm } from "@/store/use-algorithm";
 import { useObstacle } from "@/store/use-obstacle";
 import { useStart } from "@/store/use-start";
 import { useEnd } from "@/store/use-end";
+import { END_COL, END_ROW, START_COL, START_ROW } from "@/lib/utils/constants";
 
 type Props = {
   grid: GridType;
@@ -63,37 +64,17 @@ export const Grid = ({ grid, setGrid, resetFlag, visualizerTrigger } : Props) =>
     if(isRunning || row === startPos[0] && col === startPos[1] || row === endPos[0] && col === endPos[1]) return;
 
     const cell = grid[row][col];
-    // const cellIsTerran = cell.isWall || cell.isGrass || cell.isMountain || cell.isWater || cell.weight === 15;
     
-    if(isMouseDown && mode === "draggingStart") {
-      if(cell.isEnd) return;
-      //TODO: kal ye karna hai alag function mai kyuki walls pr gdbd hori hai vo fir chali jati hai agar ek bar un par start ya end aagya
-
-      // if(cellIsTerran) {
-      //   setGrid((prevGrid) => {
-      //     const newGrid = [...prevGrid];
-      //     const newRow = [...newGrid[row]];
-      //     newRow[col] = {... newRow[col], isStart: true, isWater: false, isWall: false, isGrass: false, isMountain: false};
-      //     newGrid[row] = newRow;
-      //     return newGrid;
-      //   })
-      // }
-      setStartPos([row,col]);
+    if (isMouseDown && mode === "draggingStart") {
+      if (cell.isEnd) return;
+      setCellAsStart(row, col, setGrid);
+      setStartPos([row, col]);
       return;
     }
+
     if(isMouseDown && mode === "draggingEnd") {
       if(cell.isStart) return;
-      //TODO: kal ye karna hai alag function mai kyuki walls pr gdbd hori hai vo fir chali jati hai agar ek bar un par start ya end aagya
-
-      // if(cellIsTerran) {
-      //   setGrid((prevGrid) => {
-      //     const newGrid = [...prevGrid];
-      //     const newRow = [...newGrid[row]];
-      //     newRow[col] = {... newRow[col], isEnd: true, isWater: false, isWall: false, isGrass: false, isMountain: false};
-      //     newGrid[row] = newRow;
-      //     return newGrid;
-      //   })
-      // }
+      setCellAsEnd(row, col, setGrid);
       setEndPos([row,col]);
       return;
     }
@@ -157,6 +138,8 @@ export const Grid = ({ grid, setGrid, resetFlag, visualizerTrigger } : Props) =>
   useEffect(() => {
     if(isRunning) return;
     setGrid(generateGrid());
+    setStartPos([START_ROW, START_COL]);
+    setEndPos([END_ROW, END_COL])
     setIsMouseDown(false);
     setIsKeyDown(false);
   }, [resetFlag]);

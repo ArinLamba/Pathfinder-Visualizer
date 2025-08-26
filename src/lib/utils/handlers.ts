@@ -1,4 +1,4 @@
-import type { AlgoSelection, CallProps, HandleEndProps, HandleStartProps, NodeAttributes } from "@/lib/types"
+import type { AlgoSelection, CallProps, GridType, HandleEndProps, HandleStartProps, NodeAttributes } from "@/lib/types"
 import { DEFAULT_WEIGHT, FIXED_WEIGHT } from "./constants";
 
 import { callAstar } from "@/algorithms/astar";
@@ -125,12 +125,50 @@ export const addFixedWeights = ({
   })
 };
 
-export const handleStart = ({grid, row ,col, startPos, setStartPos}: HandleStartProps) => {
-  const [prevRow, prevCol] = startPos;
-  grid[row][col] = {...grid[row][col], isStart: true, isWall: false, isGrass: false, isMountain: false, isVisited: false, isWater: false}
-  grid[prevRow][prevCol].isStart = false;
-  setStartPos([row,col]);
+export const setCellAsStart = (
+  row: number,
+  col: number,
+  setGrid: React.Dispatch<React.SetStateAction<GridType>>
+) => {
+  setGrid((prevGrid) => {
+    const newGrid = [...prevGrid];
+    const newRow = [...newGrid[row]];
+    newRow[col] = {
+      ...newRow[col],
+      isStart: true,
+      isEnd: false,
+      isWall: false,
+      isWater: false,
+      isGrass: false,
+      isMountain: false,
+    };
+    newGrid[row] = newRow;
+    return newGrid;
+  });
 };
+
+export const setCellAsEnd = (
+  row: number,
+  col: number,
+  setGrid: React.Dispatch<React.SetStateAction<GridType>>
+) => {
+  setGrid((prevGrid) => {
+    const newGrid = [...prevGrid];
+    const newRow = [...newGrid[row]];
+    newRow[col] = {
+      ...newRow[col],
+      isStart: false,
+      isEnd: true,
+      isWall: false,
+      isWater: false,
+      isGrass: false,
+      isMountain: false,
+    };
+    newGrid[row] = newRow;
+    return newGrid;
+  });
+};
+
 
 export const handleEnd = ({grid, row ,col, endPos, setEndPos}: HandleEndProps) => {
   const [prevRow, prevCol] = endPos;

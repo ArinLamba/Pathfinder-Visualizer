@@ -28,7 +28,6 @@ export const Node = React.memo(
     let className =
       "aspect-square h-full flex items-center justify-center border-[0.1px] border-sky-300/60 dark:border-neutral-800 cursor-default";
 
-    // PRIORITY: Start > End > Path/Weights > Terrain > Wall > Visited > Default
     if (isStart) className += " bg-yellow-500";
     else if (isEnd) className += " bg-red-600";
     else if (isPath) className += " animate-pathHighlight";
