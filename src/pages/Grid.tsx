@@ -6,24 +6,10 @@ import { type GridType, type ModeSelection } from "@/lib/types";
 
 import { Node } from "@/pages/Node";
 
-import { bfs } from "@/algorithms/bfs";
-import { dfs } from "@/algorithms/dfs";
-
 import { generateGrid } from "@/lib/utils/generateGrid";
-import { addFixedWeights, addGrass, addMountain, addWalls, addWater, cloneGrid } from "@/lib/utils/handlers";
+import { addFixedWeights, addGrass, addMountain, addWalls, addWater, handleAlgo } from "@/lib/utils/handlers";
 
-import { animateBFS } from "@/animations/animateBFS";
-import { animateDFS } from "@/animations/animateDFS";
-import { animatePath } from "@/animations/animatePath";
-import { animateDijkstra } from "@/animations/animateDijkstra";
-
-import { dijkstra } from "@/algorithms/dijkstra";
-import { getPath } from "@/lib/utils/getPath";
 import { useAlgorithm } from "@/store/use-algorithm";
-import { astar } from "@/algorithms/astar";
-import { animateAstar } from "@/animations/animateASTAR";
-import { greedyBFS } from "@/algorithms/greedy-best-first-search";
-import { animateGreedy } from "@/animations/animateGreedy";
 import { useObstacle } from "@/store/use-obstacle";
 import { useStart } from "@/store/use-start";
 import { useEnd } from "@/store/use-end";
@@ -159,55 +145,9 @@ export const Grid = ({ grid, setGrid, resetFlag, visualizerTrigger } : Props) =>
   
   useEffect(() => {
     const run = async () => {
-
-      if(algo === "BFS") {
-        setIsRunning(true);
-        const newGrid = cloneGrid(grid);
-        const visitedNodes = bfs({ newGrid, startPos, endPos });
-        const shortestPath = getPath(endPos, newGrid);
-        await animateBFS(visitedNodes, setGrid);
-        await animatePath(shortestPath, setGrid);
-        setIsRunning(false);
-        return;
-      }
-      if(algo === "DFS") {
-        setIsRunning(true);
-        const dfsPath = dfs({ grid, startPos, endPos });
-        await animateDFS(dfsPath, setGrid);
-        await animatePath(dfsPath, setGrid);
-        setIsRunning(false);
-        return;
-      }
-      if(algo === "DIJKSTRA") {
-        setIsRunning(true);
-        const newGrid = cloneGrid(grid);
-        const visitedNodes = dijkstra({newGrid, startPos, endPos});
-        const shortestPath = getPath(endPos, newGrid);
-        await animateDijkstra(visitedNodes, setGrid);
-        await animatePath(shortestPath, setGrid);
-        setIsRunning(false);
-        return;
-      }
-
-      if(algo === "Greedy Best-First-Search") {
-        setIsRunning(true);
-        const newGrid = cloneGrid(grid);
-        const visitedNodes = greedyBFS({ newGrid, startPos, endPos });
-        const shortestPath = getPath(endPos, newGrid);
-        await animateGreedy(visitedNodes, setGrid);
-        await animatePath(shortestPath, setGrid);
-        setIsRunning(false);
-      }
-
-      if(algo === "A*") {
-        setIsRunning(true);
-        const newGrid = cloneGrid(grid);
-        const visitedNodes = astar({ newGrid, startPos, endPos });
-        const shortestPath = getPath(endPos, newGrid);
-        await animateAstar(visitedNodes, setGrid);
-        await animatePath(shortestPath, setGrid);
-        setIsRunning(false);
-      }
+      setIsRunning(true);
+      await handleAlgo({ grid, startPos, endPos, setGrid, algo});
+      setIsRunning(false);
     }
     run();
     

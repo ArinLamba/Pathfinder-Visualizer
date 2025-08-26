@@ -1,5 +1,16 @@
-import type { HandleEndProps, HandleStartProps, NodeAttributes } from "@/lib/types"
+import type { AlgoSelection, CallProps, HandleEndProps, HandleStartProps, NodeAttributes } from "@/lib/types"
 import { DEFAULT_WEIGHT, FIXED_WEIGHT } from "./constants";
+
+import { callAstar } from "@/algorithms/astar";
+import { callBfs } from "@/algorithms/bfs";
+import { callBidirectionalBfs } from "@/algorithms/bidirectional";
+import { callDFS } from "@/algorithms/dfs";
+import { callDijkstra } from "@/algorithms/dijkstra";
+import { callGreedyBFS } from "@/algorithms/greedy-best-first-search";
+
+type HandleAlgoProps = CallProps & {
+  algo: AlgoSelection;
+};
 
 type ObstacleProps = Pick<HandleStartProps, "row" | "col"> & {
   setGrid: React.Dispatch<React.SetStateAction<NodeAttributes[][]>>;
@@ -127,3 +138,32 @@ export const handleEnd = ({grid, row ,col, endPos, setEndPos}: HandleEndProps) =
   grid[prevRow][prevCol].isEnd = false;
   setEndPos([row,col]);
 };
+
+export const handleAlgo = async ({
+  grid,
+  startPos,
+  endPos,
+  setGrid,
+  algo,
+}: HandleAlgoProps) => {
+  switch (algo) {
+    case "BFS":
+      await callBfs({ grid, startPos, endPos, setGrid });
+      break;
+    case "DFS":
+      await callDFS({ grid, startPos, endPos, setGrid });
+      break;
+    case "DIJKSTRA":
+      await callDijkstra({ grid, startPos, endPos, setGrid });
+      break;
+    case "A*":
+      await callAstar({ grid, startPos, endPos, setGrid });
+      break;
+    case "Bidirectional BFS":
+      await callBidirectionalBfs({ grid, startPos, endPos, setGrid });
+      break;
+    case "Greedy Best-First-Search":
+      await callGreedyBFS({ grid, startPos, endPos, setGrid });
+      break;
+  }
+}

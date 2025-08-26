@@ -1,7 +1,26 @@
-import type { GridType, NodeAttributes, Position } from "@/lib/types";
+import type { CallProps, GridType, NodeAttributes, Position } from "@/lib/types";
 import { MinHeap } from "@/lib/datastructure/minHeap";
 import { directions, isValid } from "@/lib/utils/constants";
+
 import { generateEmptyGrid } from "@/lib/utils/generateGrid";
+import { getPath } from "@/lib/utils/getPath";
+import { cloneGrid } from "@/lib/utils/handlers";
+import { animateDijkstra } from "@/animations/animateDijkstra";
+import { animatePath } from "@/animations/animatePath";
+
+export const callDijkstra= async ({
+  grid,
+  startPos,
+  endPos,
+  setGrid,
+} : CallProps) => {
+  const newGrid = cloneGrid(grid);
+  const visitedNodes  = dijkstra({newGrid, startPos, endPos});
+  const shortestPath = getPath(endPos, newGrid);
+  await animateDijkstra(visitedNodes, setGrid);
+  await animatePath(shortestPath, setGrid);
+};
+
 
 type Props = {
   newGrid: GridType;

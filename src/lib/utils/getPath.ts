@@ -1,6 +1,6 @@
-import type { NodeAttributes, Position } from "@/lib/types";
+import type { NodeAttributes, Position, GridType } from "@/lib/types";
 
-export const getPath = (endPos: Position, grid: NodeAttributes[][]) : Position[] =>  {
+export const getPath = (endPos: Position, grid: GridType) : Position[] =>  {
   
   const [endR, endC] = endPos;
   const path: Position[] = [];
