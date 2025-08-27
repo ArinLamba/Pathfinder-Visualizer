@@ -1,4 +1,5 @@
 
+
 export type NodeAttributes = {
   row: number;
   col: number;
@@ -18,7 +19,7 @@ export type GridType = NodeAttributes[][];
 export type ModeSelection = "draggingStart" | "draggingEnd" | null;
 export type AlgoSelection = "BFS" | "DFS" | "DIJKSTRA" | "Greedy Best-First-Search" | "A*" | null;
 export type ObstacleSelection = "Wall" | "Grass" | "Water" | "Mountain" | null;
-export type MazeSelection = "Recursive Division" | null;
+export type MazeSelection = "Recursive Division" | "Vertical Skew" | "Horizontal Skew" | null;
 
 export type Position = [number, number];
 
