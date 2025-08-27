@@ -4,13 +4,20 @@ import { useStart } from "@/store/use-start";
 import { useEnd } from "@/store/use-end";
 
 const mazeContructionPath: Position[] = [];
+type type = "verticalSkew" | "horizontalSkew" | null;
 
-export const recursiveDivision = (): Position[] => {
+export const recursiveDivision = (type? : type): Position[] => {
 
   mazeContructionPath.length = 0;   // fix re rendering
   addBorder();
-  const orientation = Math.random() > 0.5;
-  divide(1, BOARD_ROWS - 2, 1, BOARD_COLS - 2, orientation);
+  // for only vertical and horizontal skew division
+  if(type === "verticalSkew") divide(1, BOARD_ROWS - 2, 1, BOARD_COLS - 2, false, type);
+  else if(type === "horizontalSkew") divide(1, BOARD_ROWS - 2, 1, BOARD_COLS - 2, true, type);
+  // null condition means no skew is selected
+  else {
+    const orientation = Math.random() > 0.5;
+    divide(1, BOARD_ROWS - 2, 1, BOARD_COLS - 2, orientation);
+  }
   return mazeContructionPath;
 };
 
@@ -20,6 +27,7 @@ const divide = (
   colStart: number,
   colEnd: number,
   horizontal: boolean,
+  type?: type
 ) => {
   if (rowEnd <= rowStart || colEnd <= colStart) return;
 
@@ -40,8 +48,8 @@ const divide = (
     const height = wallRow - 2 - rowStart;
     const width = colEnd - colStart;
 
-    divide(rowStart, wallRow - 1, colStart, colEnd, chooseOrientation(height, width));
-    divide(wallRow + 1, rowEnd, colStart, colEnd, chooseOrientation(height, width));
+    divide(rowStart, wallRow - 1, colStart, colEnd, chooseOrientation(height, width, type), type);
+    divide(wallRow + 1, rowEnd, colStart, colEnd, chooseOrientation(height, width, type), type);
 
   } else {
     if (colEnd - colStart < 2) return;
@@ -60,8 +68,8 @@ const divide = (
     const height = rowEnd - rowStart;
     const width = wallCol - 2 - colStart;
 
-    divide(rowStart, rowEnd, colStart, wallCol - 1, chooseOrientation(height, width));
-    divide(rowStart, rowEnd, wallCol + 1, colEnd, chooseOrientation(height, width));
+    divide(rowStart, rowEnd, colStart, wallCol - 1, chooseOrientation(height, width, type), type);
+    divide(rowStart, rowEnd, wallCol + 1, colEnd, chooseOrientation(height, width, type), type);
   }
 };
 
@@ -83,7 +91,17 @@ const addBorder = () => {
   return mazeContructionPath;
 };
 
-const chooseOrientation = (height: number, width: number): boolean => {
+const chooseOrientation = (height: number, width: number, type?: type): boolean => {
+
+  if(type === "verticalSkew") {
+    if(Math.random() < 0.7) return false;   // for skewness
+    return height >= width;   // if not then check for basic height check if bigger cut horizontally else vertically
+  }
+  if(type === "horizontalSkew") {
+    if(Math.random() < 0.7) return true;
+    return height > width;
+  }
+
   // If one dimension is much larger, bias towards cutting that dimension.
   if (height < width) return false;  // vertical
   if (width < height) return true;   // horizontal
@@ -104,9 +122,10 @@ const randomOdd = (min: number, max: number): number => {
   return odds[Math.floor(Math.random() * odds.length)];
 };
 
+const startPos = useStart.getState().startPos;
+const endPos = useEnd.getState().endPos
+
 const isStartOrEnd = (row: number, col: number) => {
-  const startPos = useStart.getState().startPos;
-  const endPos = useEnd.getState().endPos
 
   return (
     (row === startPos[0] && col === startPos[1]) ||

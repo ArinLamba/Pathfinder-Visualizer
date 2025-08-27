@@ -25,7 +25,7 @@ export const isValid = (row: number, col: number) : boolean => {
 };
 
 export const algorithms = ["BFS", "DFS", "DIJKSTRA", "A*", "Bidirectional BFS", "Greedy Best-First-Search"] as const;
-export const MAZES = ["Recursive Division"] as const;
+export const MAZES = ["Recursive Division", "Vertical Skew", "Horizontal Skew"] as const;
 
 export const obstacles = [
   { title: "Wall", weight: "99", color: "bg-purple-800" },

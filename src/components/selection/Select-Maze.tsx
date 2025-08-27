@@ -39,11 +39,18 @@ export const SelectMaze = ({ setGrid }: Props) => {
         setIsRunning(true);
         mazeConstructionPath = recursiveDivision();
         break;
-
+      case "Vertical Skew":
+        setIsRunning(true);
+        mazeConstructionPath = recursiveDivision("verticalSkew");
+        break;
+      case "Horizontal Skew":
+        setIsRunning(true);
+        mazeConstructionPath = recursiveDivision("horizontalSkew");
+        break;
+      
       default:
         break;
     }
-
     await animateMaze(mazeConstructionPath, setGrid);
     setIsRunning(false);
   };
