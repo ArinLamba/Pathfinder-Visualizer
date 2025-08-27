@@ -4,6 +4,9 @@ export default {
     content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
   	extend: {
+			fontFamily: {
+				geist: ['Geist', 'sans-serif'],
+			},
   		keyframes: {
 				visitedCell: {
 					'0%':   { backgroundColor: '#facc15', transform: 'scale(0.5)', borderRadius: "95%"}, // amber start

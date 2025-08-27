@@ -1,9 +1,29 @@
-import type { GridType, Position } from "@/lib/types";
+import type { CallProps, GridType, Position } from "@/lib/types";
 
 import { MinHeap } from "@/lib/datastructure/minHeap";
 import { BOARD_COLS, BOARD_ROWS, directions, isValid } from "@/lib/utils/constants";
 
+import { cloneGrid } from "@/lib/utils/handlers";
 import { generateEmptyGrid } from "@/lib/utils/generateGrid";
+import { getPath } from "@/lib/utils/getPath";
+
+import { animatePath } from "@/animations/animatePath";
+import { animateGreedy } from "@/animations/animateGreedy";
+
+
+export const callGreedyBFS= async ({
+  grid,
+  startPos,
+  endPos,
+  setGrid,
+} : CallProps) => {
+  const newGrid = cloneGrid(grid);
+  const visitedNodes = greedyBFS({ newGrid, startPos, endPos });
+  const shortestPath = getPath(endPos, newGrid);
+  await animateGreedy(visitedNodes, setGrid);
+  await animatePath(shortestPath, setGrid);
+};
+
 
 type Props = {
   newGrid: GridType;
@@ -12,7 +32,7 @@ type Props = {
 };
 
 
-export const greedyBFS = ({
+const greedyBFS = ({
   newGrid,
   startPos,
   endPos,

@@ -17,11 +17,18 @@ export type NodeAttributes = {
 
 export type GridType = NodeAttributes[][];
 export type ModeSelection = "draggingStart" | "draggingEnd" | null;
-export type AlgoSelection = "BFS" | "DFS" | "DIJKSTRA" | "Greedy Best-First-Search" | "A*" | null;
+export type AlgoSelection = "BFS" | "DFS" | "DIJKSTRA" | "A*" | "Bidirectional BFS" | "Greedy Best-First-Search" | null;
 export type ObstacleSelection = "Wall" | "Grass" | "Water" | "Mountain" | null;
 export type MazeSelection = "Recursive Division" | "Vertical Skew" | "Horizontal Skew" | null;
 
 export type Position = [number, number];
+
+export type CallProps = {
+  grid: GridType;
+  startPos: Position;
+  endPos: Position;
+ setGrid: React.Dispatch<React.SetStateAction<GridType>>;
+};
 
 export type HandleStartProps = {
   startPos: Position;

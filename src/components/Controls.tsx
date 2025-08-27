@@ -74,11 +74,15 @@ export const Controls = ({
   return (
     <header className="w-full flex z-50 px-4 py-2 shadow-md dark:text-neutral-100 bg-zinc-50 dark:bg-neutral-900">
       {/* Side bar goes here if ever needed in future */}
-      <div className="lg:max-w-[1650px] w-full mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
-        <h1 className="text-2xl font-semibold flex items-center gap-x-3 flex-shrink-0">
-          <img src="/Logo.png" alt="logo" className='size-5'/> Pathfinding Visualizer
+      <div className="lg:max-w-[1700px] w-full mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+        <div className="flex gap-x-2 items-center flex-shrink-0">
+          <a href="/" className="text-2xl font-semibold flex items-center gap-x-2 flex-shrink-0 cursor-default">
+            <img src="/Logo.png" alt="logo" className='size-5'/>
+            Pathfinding Visualizer
+          </a>
           <Tutorial />
-        </h1>
+
+        </div>
         <div className="flex items-center gap-4 flex-wrap">
           <ModeToggle />
           
@@ -105,7 +109,7 @@ export const Controls = ({
           {/* Visualize Button */}
           <Button
             variant={"visualize"}
-            className="tracking-wide rounded"
+            className="rounded font-medium"
             disabled={isRunning}
             onClick={handleVisualize}
           >

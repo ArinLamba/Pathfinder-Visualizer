@@ -1,5 +1,21 @@
-import type { GridType, Position } from "@/lib/types"
+
+import { animatePath } from "@/animations/animatePath";
+import type { CallProps, GridType, Position } from "@/lib/types"
 import { BOARD_COLS, BOARD_ROWS, directions, isValid } from "@/lib/utils/constants";
+import { animateDFS } from "@/animations/animateDFS";
+
+
+
+export const callDFS= async ({
+  grid,
+  startPos,
+  endPos,
+  setGrid,
+} : CallProps) => {
+  const dfsPath = dfs({ grid, startPos, endPos });
+  await animateDFS(dfsPath, setGrid);
+  await animatePath(dfsPath, setGrid);
+};
 
 type Props = {
   grid: GridType;
@@ -7,7 +23,7 @@ type Props = {
   endPos: Position;
 };
 
-export const dfs = ({
+const dfs = ({
   grid,
   startPos,
   endPos,
