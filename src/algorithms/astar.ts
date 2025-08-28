@@ -54,6 +54,7 @@ export const astar = ({
   tempGrid[startRow][startCol].h = 0;
 
 
+
   while(!queue.isEmpty()) {
     const front = queue.pop();
     if(!front) break;
@@ -102,7 +103,14 @@ export const astar = ({
 
 };
 
-// Manhattan Distance
-const calculateHeuristic = (cellRow: number, cellCol: number, destRow: number, destCol: number) =>  {
-  return Math.abs(cellRow - destRow) + Math.abs(cellCol - destCol);
-}
+const calculateHeuristic = (
+  cellRow: number,
+  cellCol: number,
+  destRow: number,
+  destCol: number
+) => {
+  const rowDiff = Math.abs(cellRow - destRow);
+  const colDiff = Math.abs(cellCol - destCol);
+
+  return rowDiff + colDiff ;
+};

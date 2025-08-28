@@ -13,7 +13,6 @@ import { ChevronDown } from "lucide-react"
 
 
 type Props = {
-  selectedAlgo: AlgoSelection;
   setSelectedAlgo: (algo: AlgoSelection) => void;
 }
 

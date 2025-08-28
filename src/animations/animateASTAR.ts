@@ -11,8 +11,9 @@ export const animateAstar = (
           const newGrid = [...prevGrid];
           const newRow = [...newGrid[row]];
           // Mark visited
-          const cell = { ...newRow[col], isVisited: true };
-          newRow[col] = cell;
+          const node = newRow[col];
+          newRow[col] = { ...node, isVisited: true, isWeightedVisited: node.weight > 1 };
+          // newRow[col] = node;
           newGrid[row] = newRow;
           return newGrid;
         });

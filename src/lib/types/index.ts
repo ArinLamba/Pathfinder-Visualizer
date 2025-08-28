@@ -11,6 +11,7 @@ export type NodeAttributes = {
   isWater: boolean;
   isMountain: boolean;
   weight: number;
+  isWeightedVisited?: boolean;
   isPath?: boolean;
   parent?: [number, number] | null;
 };
