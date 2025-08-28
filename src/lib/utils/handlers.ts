@@ -1,4 +1,4 @@
-import type { AlgoSelection, CallProps, GridType, HandleEndProps, HandleStartProps, NodeAttributes } from "@/lib/types"
+import type { AlgoSelection, CallProps, GridType, HandleStartProps, NodeAttributes } from "@/lib/types"
 import { DEFAULT_WEIGHT, FIXED_WEIGHT } from "./constants";
 
 import { callAstar } from "@/algorithms/astar";
@@ -7,6 +7,8 @@ import { callBidirectionalBfs } from "@/algorithms/bidirectional";
 import { callDFS } from "@/algorithms/dfs";
 import { callDijkstra } from "@/algorithms/dijkstra";
 import { callGreedyBFS } from "@/algorithms/greedy-best-first-search";
+import { useStart } from "@/store/use-start";
+import { useEnd } from "@/store/use-end";
 
 type HandleAlgoProps = CallProps & {
   algo: AlgoSelection;
@@ -125,57 +127,60 @@ export const addFixedWeights = ({
   })
 };
 
-export const setCellAsStart = (
+
+// memory for last start and end
+const prevStates: Record<"start" | "end", NodeAttributes | null> = {
+  start: null,
+  end: null,
+};
+
+export const setCell = (
   row: number,
   col: number,
+  type: "start" | "end",
   setGrid: React.Dispatch<React.SetStateAction<GridType>>
 ) => {
+
   setGrid((prevGrid) => {
     const newGrid = [...prevGrid];
+
+    // restore previous cell if exists
+    const prevNode = prevStates[type];
+    if(prevNode) {
+      const prevRowCopy = [...newGrid[prevNode.row]];
+      prevRowCopy[prevNode.col] = {...prevNode,isPath : prevRowCopy[prevNode.col].isPath ? true : false, };
+      newGrid[prevNode.row] = prevRowCopy
+    }
+
+    // save the current cell before overwriting
     const newRow = [...newGrid[row]];
+    prevStates[type] = { ...newRow[col] };
+
+    // overwrite new cell as start or end
     newRow[col] = {
       ...newRow[col],
-      isStart: true,
-      isEnd: false,
+      isStart: type === "start",
+      isEnd: type === "end",
       isWall: false,
       isWater: false,
       isGrass: false,
       isMountain: false,
+      weight: 1,
     };
     newGrid[row] = newRow;
-    return newGrid;
-  });
-};
 
-export const setCellAsEnd = (
-  row: number,
-  col: number,
-  setGrid: React.Dispatch<React.SetStateAction<GridType>>
-) => {
-  setGrid((prevGrid) => {
-    const newGrid = [...prevGrid];
-    const newRow = [...newGrid[row]];
-    newRow[col] = {
-      ...newRow[col],
-      isStart: false,
-      isEnd: true,
-      isWall: false,
-      isWater: false,
-      isGrass: false,
-      isMountain: false,
-    };
-    newGrid[row] = newRow;
+    // update zustand store
+    if (type === "start") {
+      useStart.getState().setStartPos([row, col]);
+    } else {
+      useEnd.getState().setEndPos([row, col]);
+    }
+
     return newGrid;
   });
 };
 
 
-export const handleEnd = ({grid, row ,col, endPos, setEndPos}: HandleEndProps) => {
-  const [prevRow, prevCol] = endPos;
-  grid[row][col] = {...grid[row][col], isEnd: true, isWall: false, isGrass: false, isMountain: false, isVisited: false, isWater: false}
-  grid[prevRow][prevCol].isEnd = false;
-  setEndPos([row,col]);
-};
 
 export const handleAlgo = async ({
   grid,
@@ -203,5 +208,5 @@ export const handleAlgo = async ({
     case "Greedy Best-First-Search":
       await callGreedyBFS({ grid, startPos, endPos, setGrid });
       break;
-  }
-}
+  };
+};

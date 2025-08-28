@@ -28,8 +28,8 @@ export const algorithms = ["BFS", "DFS", "DIJKSTRA", "A*", "Bidirectional BFS", 
 export const MAZES = ["Recursive Division", "Vertical Skew", "Horizontal Skew"] as const;
 
 export const obstacles = [
-  { title: "Wall", weight: "99", color: "bg-purple-800" },
-  { title: "Grass", weight: "3", color: "bg-emerald-500"},
-  { title: "Water", weight: "5", color: "bg-blue-500" },
-  { title: "Mountain", weight: "8", color: "bg-slate-400"},
+  { title: "Wall", weight: "99", color: "dark:bg-[#d4d4d8] bg-[#0D0D0D]" },
+  { title: "Grass", weight: "3", color: "bg-[#15803d]" },
+  { title: "Water", weight: "5", color: "bg-[#1d4ed8]" },
+  { title: "Mountain", weight: "8", color: "bg-[#8b5e3c]"},
 ] as const;
