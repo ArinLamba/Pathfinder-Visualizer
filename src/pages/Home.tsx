@@ -5,7 +5,7 @@ import { generateGrid } from "@/lib/utils/generateGrid";
 import { Grid } from "@/pages/Grid";
 
 import { Controls } from "@/components/Controls";
-import { Instructions } from "@/components/Instructions";
+import { Legends } from "@/components/Legends";
 import { Message } from "@/components/Message";
 
 import { useRunning } from "@/store/use-running";
@@ -36,7 +36,7 @@ export const Home = () => {
         onReset={handleReset}
         setVisualizerTrigger={setVisualizerTrigger}
       />
-      <Instructions />
+      <Legends />
       <Message />
       <div className="mx-6 my-2 p-2 rounded-lg overflow-x-auto dark:bg-neutral-800 bg-[#E7E7E7] border border-white/20">
         <div className="flex justify-center">

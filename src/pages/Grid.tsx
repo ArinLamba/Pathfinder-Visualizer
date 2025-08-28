@@ -7,7 +7,7 @@ import { type GridType, type ModeSelection } from "@/lib/types";
 import { Node } from "@/pages/Node";
 
 import { generateGrid } from "@/lib/utils/generateGrid";
-import { addFixedWeights, addGrass, addMountain, addWalls, addWater, handleAlgo, setCellAsEnd, setCellAsStart } from "@/lib/utils/handlers";
+import { addFixedWeights, addGrass, addMountain, addWalls, addWater, handleAlgo, setCell } from "@/lib/utils/handlers";
 
 import { useAlgorithm } from "@/store/use-algorithm";
 import { useObstacle } from "@/store/use-obstacle";
@@ -67,15 +67,13 @@ export const Grid = ({ grid, setGrid, resetFlag, visualizerTrigger } : Props) =>
     
     if (isMouseDown && mode === "draggingStart") {
       if (cell.isEnd) return;
-      setCellAsStart(row, col, setGrid);
-      setStartPos([row, col]);
+      setCell(row, col, "start", setGrid);
       return;
     }
 
     if(isMouseDown && mode === "draggingEnd") {
       if(cell.isStart) return;
-      setCellAsEnd(row, col, setGrid);
-      setEndPos([row,col]);
+      setCell(row, col, "end", setGrid);
       return;
     }
 

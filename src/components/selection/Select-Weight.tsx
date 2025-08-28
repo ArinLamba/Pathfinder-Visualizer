@@ -3,13 +3,14 @@ import { ChevronDown } from "lucide-react";
 
 import type { AlgoSelection, ObstacleSelection } from "@/lib/types";
 
+import { obstacles } from "@/lib/utils/constants";
+
 import { 
   DropdownMenu, 
   DropdownMenuContent, 
   DropdownMenuItem, 
   DropdownMenuTrigger 
 } from "@/components/ui/dropdown-menu";
-import { obstacles } from "@/lib/utils/constants";
 import { Button } from "../ui/button";
 import { useObstacle } from "@/store/use-obstacle";
 import { useRunning } from "@/store/use-running";

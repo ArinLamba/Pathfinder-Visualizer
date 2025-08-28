@@ -8,16 +8,20 @@ type type = "verticalSkew" | "horizontalSkew" | null;
 
 export const recursiveDivision = (type? : type): Position[] => {
 
+  const startPos = useStart.getState().startPos;
+  const endPos = useEnd.getState().endPos
+
   mazeContructionPath.length = 0;   // fix re rendering
-  addBorder();
+  addBorder(startPos, endPos);
   // for only vertical and horizontal skew division
-  if(type === "verticalSkew") divide(1, BOARD_ROWS - 2, 1, BOARD_COLS - 2, false, type);
-  else if(type === "horizontalSkew") divide(1, BOARD_ROWS - 2, 1, BOARD_COLS - 2, true, type);
+  if(type === "verticalSkew") divide(1, BOARD_ROWS - 2, 1, BOARD_COLS - 2, false, startPos, endPos, type);
+  else if(type === "horizontalSkew") divide(1, BOARD_ROWS - 2, 1, BOARD_COLS - 2, true, startPos, endPos, type);
   // null condition means no skew is selected
   else {
     const orientation = Math.random() > 0.5;
-    divide(1, BOARD_ROWS - 2, 1, BOARD_COLS - 2, orientation);
+    divide(1, BOARD_ROWS - 2, 1, BOARD_COLS - 2, orientation, startPos, endPos);
   }
+  
   return mazeContructionPath;
 };
 
@@ -27,7 +31,9 @@ const divide = (
   colStart: number,
   colEnd: number,
   horizontal: boolean,
-  type?: type
+  startPos: Position,
+  endPos: Position,
+  type?: type,
 ) => {
   if (rowEnd <= rowStart || colEnd <= colStart) return;
 
@@ -41,15 +47,15 @@ const divide = (
 
     for (let col = colStart; col <= colEnd; col++) {
       if (col === passageCol) continue;
-      if(isStartOrEnd(wallRow, col)) continue;
+      if(isStartOrEnd(wallRow, col, startPos, endPos)) continue;
       mazeContructionPath.push([wallRow, col]);
     }
 
     const height = wallRow - 2 - rowStart;
     const width = colEnd - colStart;
 
-    divide(rowStart, wallRow - 1, colStart, colEnd, chooseOrientation(height, width, type), type);
-    divide(wallRow + 1, rowEnd, colStart, colEnd, chooseOrientation(height, width, type), type);
+    divide(rowStart, wallRow - 1, colStart, colEnd, chooseOrientation(height, width, type), startPos, endPos,type);
+    divide(wallRow + 1, rowEnd, colStart, colEnd, chooseOrientation(height, width, type), startPos, endPos, type);
 
   } else {
     if (colEnd - colStart < 2) return;
@@ -61,30 +67,30 @@ const divide = (
 
     for (let row = rowStart; row <= rowEnd; row++) {
       if (row === passageRow) continue;
-      if(isStartOrEnd(row, wallCol)) continue;
+      if(isStartOrEnd(row, wallCol, startPos, endPos)) continue;
       mazeContructionPath.push([row,wallCol]);
     }
 
     const height = rowEnd - rowStart;
     const width = wallCol - 2 - colStart;
 
-    divide(rowStart, rowEnd, colStart, wallCol - 1, chooseOrientation(height, width, type), type);
-    divide(rowStart, rowEnd, wallCol + 1, colEnd, chooseOrientation(height, width, type), type);
+    divide(rowStart, rowEnd, colStart, wallCol - 1, chooseOrientation(height, width, type), startPos, endPos, type);
+    divide(rowStart, rowEnd, wallCol + 1, colEnd, chooseOrientation(height, width, type), startPos, endPos, type);
   }
 };
 
-const addBorder = () => {
+const addBorder = (startPos: Position, endPos: Position) => {
   for (let r = 0; r < BOARD_ROWS; r++) {
-    if(isStartOrEnd(r, 0)) continue;
+    if(isStartOrEnd(r, 0, startPos, endPos)) continue;
     mazeContructionPath.push([r,0])
-    if(isStartOrEnd(r, BOARD_COLS - 1)) continue;
+    if(isStartOrEnd(r, BOARD_COLS - 1, startPos, endPos)) continue;
     mazeContructionPath.push([r, BOARD_COLS -1]);
 
   }
   for (let c = 0; c < BOARD_COLS; c++) {
-    if(isStartOrEnd(0, c)) continue;
+    if(isStartOrEnd(0, c, startPos, endPos)) continue;
     mazeContructionPath.push([0, c]);
-    if(isStartOrEnd(BOARD_ROWS - 1, c)) continue;
+    if(isStartOrEnd(BOARD_ROWS - 1, c, startPos, endPos)) continue;
     mazeContructionPath.push([BOARD_ROWS - 1, c]);
   }
 
@@ -98,7 +104,7 @@ const chooseOrientation = (height: number, width: number, type?: type): boolean 
     return height >= width;   // if not then check for basic height check if bigger cut horizontally else vertically
   }
   if(type === "horizontalSkew") {
-    if(Math.random() < 0.7) return true;
+    if(Math.random() < 0.6) return true;
     return height > width;
   }
 
@@ -122,10 +128,7 @@ const randomOdd = (min: number, max: number): number => {
   return odds[Math.floor(Math.random() * odds.length)];
 };
 
-const startPos = useStart.getState().startPos;
-const endPos = useEnd.getState().endPos
-
-const isStartOrEnd = (row: number, col: number) => {
+const isStartOrEnd = (row: number, col: number, startPos: Position, endPos: Position) => {
 
   return (
     (row === startPos[0] && col === startPos[1]) ||
