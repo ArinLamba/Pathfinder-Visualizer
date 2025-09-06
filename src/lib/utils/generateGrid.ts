@@ -67,3 +67,13 @@ export const clearTerrains = (grid: GridType) => {
     ))
   );
 };
+
+export const clearBidirection = (grid: GridType) => {
+  return (
+    grid.map(row => (
+      row.map(cell => (
+        {...cell, isGrass: false, isMountain: false, isWater: false, isVisited: false, isPath: false, weight: 1, isWeightedVisited: false, parentFront: null, parentBack: null}
+      ))
+    ))
+  );
+};

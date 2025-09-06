@@ -30,6 +30,7 @@ export const Node = React.memo(
 
     if (isStart) className += " bg-yellow-500";
     else if (isEnd) className += " bg-red-600";
+    else if (isWall) className += " dark:animate-wallCell animate-LightWallCell";
     else if (isPath) className += " bg-yellow-500 animate-pathHighlight";
     else if (isVisited) className += " bg-purple-600 dark:animate-visitedCell animate-LightVisitedCell";
     if (isWeightedVisited) className += " pulseOverlay";
@@ -37,7 +38,6 @@ export const Node = React.memo(
     else if (isWater) className += " animate-waterCell";
     else if (isGrass) className += " animate-grassCell";
     else if (isMountain) className += " animate-mountainCell";
-    else if (isWall) className += " dark:animate-wallCell animate-LightWallCell";
     else className += " dark:bg-neutral-950 bg-white dark:hover:bg-neutral-800 hover:bg-white/10 transition ease-in-out";
 
     if (isDraggingStart) className += " scale-110 ring-1 ring-green-600 shadow-lg shadow-green-500/40";

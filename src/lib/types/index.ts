@@ -32,7 +32,8 @@ export type CallProps = {
   grid: GridType;
   startPos: Position;
   endPos: Position;
- setGrid: React.Dispatch<React.SetStateAction<GridType>>;
+  setGrid: React.Dispatch<React.SetStateAction<GridType>>;
+  instant?: boolean;
 };
 
 export type HandleStartProps = {

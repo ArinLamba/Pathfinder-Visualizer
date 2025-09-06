@@ -13,6 +13,8 @@ import { Tutorial } from './Tutorial';
 
 import { useRunning } from "@/store/use-running"
 import { useAlgorithm } from '@/store/use-algorithm';
+import { useAfterAlgo } from '@/store/use-after-algo';
+import type React from 'react';
 
 
 type Props = {
@@ -33,6 +35,7 @@ export const Controls = ({
 
   const isRunning = useRunning((state) => state.isRunning);
   const setAlgo = useAlgorithm((state) => state.setAlgo);
+    const setHasVisualizationRun = useAfterAlgo(state => state.setHasVisualizationRun);
 
   const handleVisualize = () => {
     if(!selectedAlgo || isRunning) return;
@@ -48,7 +51,6 @@ export const Controls = ({
       const newGrid = clearTerrains(grid);
       setGrid(newGrid);
     }
-
     setVisualizerTrigger(prev => prev + 1);
     setAlgo(selectedAlgo);
     
@@ -62,11 +64,13 @@ export const Controls = ({
 
   const handleClearPath = () => {
     const newGrid = clearVisitedAndPath(grid);
+    setHasVisualizationRun(false);
     setGrid(newGrid);
   };
 
   const handleClearWallsWeights = () => {
     const newGrid = clearWallsAndWeight(grid);
+    setHasVisualizationRun(false);
     setGrid(newGrid);
   };
 

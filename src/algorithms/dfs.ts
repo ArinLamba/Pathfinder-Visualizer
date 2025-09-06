@@ -5,17 +5,29 @@ import { BOARD_COLS, BOARD_ROWS, directions, isValid } from "@/lib/utils/constan
 // import { animateDFS } from "@/animations/animateDFS";
 import { cloneGrid } from "@/lib/utils/handlers";
 import { animateUnweightedAlgo } from "@/animations/animate-unweighted-algo";
+import { clearTerrains } from "@/lib/utils/generateGrid";
 
 export const callDFS= async ({
   grid,
   startPos,
   endPos,
   setGrid,
+  instant = false,
 } : CallProps) => {
-  const newGrid = cloneGrid(grid)
+  const baseGrid = cloneGrid(grid);
+  const newGrid = clearTerrains(baseGrid);
   const dfsPath = dfs({ newGrid, startPos, endPos });
-  await animateUnweightedAlgo(dfsPath, setGrid);
-  await animatePath(dfsPath, setGrid);
+  if(instant) {
+    // instantly mark visited
+    for(const {row, col} of dfsPath) {
+      newGrid[row][col].isVisited = true;
+      newGrid[row][col].isPath = true;
+    }
+    setGrid(newGrid);
+  } else {
+    await animateUnweightedAlgo(dfsPath, setGrid);
+    await animatePath(dfsPath, setGrid);
+  }
 };
 
 type Props = {

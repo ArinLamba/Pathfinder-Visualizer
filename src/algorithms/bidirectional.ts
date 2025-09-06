@@ -3,7 +3,7 @@ import { animatePath } from "@/animations/animate-path";
 import { animateUnweightedAlgo } from "@/animations/animate-unweighted-algo";
 import type { CallProps, GridType, NodeAttributes, Position } from "@/lib/types";
 import { directions, isValid } from "@/lib/utils/constants";
-import { generateEmptyGrid } from "@/lib/utils/generateGrid";
+import { clearBidirection, generateEmptyGrid } from "@/lib/utils/generateGrid";
 import { cloneGrid } from "@/lib/utils/handlers";
 
 
@@ -13,11 +13,26 @@ export const callBidirectionalBfs= async ({
   startPos,
   endPos,
   setGrid,
+  instant = false,
 } : CallProps) => {
-  const newGrid = cloneGrid(grid);
+  const baseGrid = cloneGrid(grid);
+  const newGrid = clearBidirection(baseGrid);
   const { visitedNodes, shortestPath}  = bidirectionalBFS({newGrid, startPos, endPos});
-  await animateUnweightedAlgo(visitedNodes, setGrid);
-  await animatePath(shortestPath, setGrid);
+  
+  if(instant) {
+    // instantly mark visited
+    for(const {row, col} of visitedNodes) {
+      newGrid[row][col].isVisited = true;
+    }
+    // instantly mark path nodes
+    for(const {row, col} of shortestPath) {
+      newGrid[row][col].isPath = true;
+    }
+    setGrid(newGrid);
+  } else {
+    await animateUnweightedAlgo(visitedNodes, setGrid);
+    await animatePath(shortestPath, setGrid);
+  }
 };
 
 
@@ -127,5 +142,5 @@ const mergePaths = (meetNode: NodeAttributes): NodeAttributes[] => {
     backPath.push(back);
     back = back.parentBack ?? null; 
   }
-  return [...frontPath, ...backPath];
+  return [...frontPath, ...backPath.slice(1)];
 };

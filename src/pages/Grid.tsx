@@ -14,8 +14,9 @@ import { useObstacle } from "@/store/use-obstacle";
 import { useStart } from "@/store/use-start";
 import { useEnd } from "@/store/use-end";
 import { END_COL, END_ROW, START_COL, START_ROW } from "@/lib/utils/constants";
-// import { useAfterAlgo } from "@/store/use-after-algo";
-// import { bfsAfter } from "@/algorithms/bfsAfter";
+import { useAfterAlgo } from "@/store/use-after-algo";
+
+
 
 type Props = {
   grid: GridType;
@@ -35,7 +36,7 @@ export const Grid = ({ grid, setGrid, resetFlag, visualizerTrigger } : Props) =>
   const algo = useAlgorithm(state => state.algo);
   const { startPos, setStartPos } = useStart();
   const { endPos, setEndPos } = useEnd();
-  // const { afterAlgoTrigger, increment } = useAfterAlgo();
+  const { hasVisualizationRun, setHasVisualizationRun } = useAfterAlgo();
 
   const toggleWall = (row:number, col:number) => {
     if(grid[row][col].isStart || grid[row][col].isEnd || isRunning) return;
@@ -63,7 +64,7 @@ export const Grid = ({ grid, setGrid, resetFlag, visualizerTrigger } : Props) =>
     addFixedWeights({row, col, setGrid});
   }
 
-  const handleMouseEnter = (row: number, col: number) => {
+  const handleMouseEnter = async (row: number, col: number) => {
     if(isRunning || row === startPos[0] && col === startPos[1] || row === endPos[0] && col === endPos[1]) return;
 
     const cell = grid[row][col];
@@ -71,18 +72,18 @@ export const Grid = ({ grid, setGrid, resetFlag, visualizerTrigger } : Props) =>
     if (isMouseDown && mode === "draggingStart") {
       if (cell.isEnd) return;
       setCell(row, col, "start", setGrid);
-      // if(afterAlgoTrigger >= 1) {
-      //   bfsAfter({ grid, startPos, endPos, setGrid});
-      // }
+      if(hasVisualizationRun) {
+        await handleAlgo({ grid, startPos, endPos, setGrid, algo, instant: true });
+      }
       return;
     }
 
     if(isMouseDown && mode === "draggingEnd") {
       if(cell.isStart) return;
       setCell(row, col, "end", setGrid);
-      // if(afterAlgoTrigger >= 1) {
-      //   bfsAfter({ grid, startPos, endPos, setGrid});
-      // }
+      if(hasVisualizationRun) {
+        await handleAlgo({ grid, startPos, endPos, setGrid, algo, instant: true });
+      }
       return;
     }
 
@@ -130,17 +131,13 @@ export const Grid = ({ grid, setGrid, resetFlag, visualizerTrigger } : Props) =>
     if(obstacle === "Water") toggleWater(row, col);
     if(obstacle === "Mountain") toggleMountain(row, col);
   };
-  
-  // useEffect(() => {
-    
-  // },[afterAlgoTrigger])
 
   useEffect(() => {
     const run = async () => {
       setIsRunning(true);
-      await handleAlgo({ grid, startPos, endPos, setGrid, algo});
+      await handleAlgo({ grid, startPos, endPos, setGrid, algo });
       setIsRunning(false);
-      // increment();
+      setHasVisualizationRun(true)
     }
     run();
     
