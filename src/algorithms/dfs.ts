@@ -1,10 +1,10 @@
 
-import { animatePath } from "@/animations/animatePath";
-import type { CallProps, GridType, Position } from "@/lib/types"
+import { animatePath } from "@/animations/animate-path";
+import type { CallProps, GridType, NodeAttributes, Position } from "@/lib/types"
 import { BOARD_COLS, BOARD_ROWS, directions, isValid } from "@/lib/utils/constants";
-import { animateDFS } from "@/animations/animateDFS";
-
-
+// import { animateDFS } from "@/animations/animateDFS";
+import { cloneGrid } from "@/lib/utils/handlers";
+import { animateUnweightedAlgo } from "@/animations/animate-unweighted-algo";
 
 export const callDFS= async ({
   grid,
@@ -12,22 +12,23 @@ export const callDFS= async ({
   endPos,
   setGrid,
 } : CallProps) => {
-  const dfsPath = dfs({ grid, startPos, endPos });
-  await animateDFS(dfsPath, setGrid);
+  const newGrid = cloneGrid(grid)
+  const dfsPath = dfs({ newGrid, startPos, endPos });
+  await animateUnweightedAlgo(dfsPath, setGrid);
   await animatePath(dfsPath, setGrid);
 };
 
 type Props = {
-  grid: GridType;
+  newGrid: GridType;
   startPos: Position;
   endPos: Position;
 };
 
 const dfs = ({
-  grid,
+  newGrid,
   startPos,
   endPos,
-} : Props) : Position[] => {
+} : Props) : NodeAttributes[] => {
 
   const visited: boolean[][] = Array.from({ length: BOARD_ROWS}, () => Array.from({ length: BOARD_COLS } , () => false));
 
@@ -35,11 +36,11 @@ const dfs = ({
   const [endRow, endCol] = endPos;
 
   let stopPropogation: boolean = false;
-  const dfsPath: Position[] = [];
+  const dfsPath: NodeAttributes[] = [];
 
   function dfsTraversal(row: number, col: number) {
-    visited[row][col]= true;
-    dfsPath.push([row,col]);
+    visited[row][col] = true;
+    dfsPath.push(newGrid[row][col]);
     if(row === endRow && col === endCol){
       stopPropogation = true;
       return;
@@ -52,7 +53,7 @@ const dfs = ({
       if(stopPropogation) break;
 
       if(!isValid(nrow,ncol)) continue;
-      const neighbour = grid[nrow][ncol];
+      const neighbour = newGrid[nrow][ncol];
       if(visited[nrow][ncol] || neighbour.isWall) continue;
 
       dfsTraversal(nrow, ncol);

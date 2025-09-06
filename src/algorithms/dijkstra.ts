@@ -5,8 +5,9 @@ import { directions, isValid } from "@/lib/utils/constants";
 import { generateEmptyGrid } from "@/lib/utils/generateGrid";
 import { getPath } from "@/lib/utils/getPath";
 import { cloneGrid } from "@/lib/utils/handlers";
-import { animateDijkstra } from "@/animations/animateDijkstra";
-import { animatePath } from "@/animations/animatePath";
+
+import { animatePath } from "@/animations/animate-path";
+import { animateWeightedAlgo } from "@/animations/animate-weighted-algo";
 
 export const callDijkstra= async ({
   grid,
@@ -16,8 +17,9 @@ export const callDijkstra= async ({
 } : CallProps) => {
   const newGrid = cloneGrid(grid);
   const visitedNodes  = dijkstra({newGrid, startPos, endPos});
-  const shortestPath = getPath(endPos, newGrid);
-  await animateDijkstra(visitedNodes, setGrid);
+  const endNode = newGrid[endPos[0]][endPos[1]];
+  const shortestPath = getPath(endNode);
+  await animateWeightedAlgo(visitedNodes, setGrid);
   await animatePath(shortestPath, setGrid);
 };
 
@@ -28,16 +30,16 @@ type Props = {
   endPos: Position
 };
 
-export const dijkstra = ({
+const dijkstra = ({
   newGrid,
   startPos,
   endPos,
-}: Props): Position[] => {
+}: Props): NodeAttributes[] => {
   const [startRow, startCol] = startPos;
   const [endRow, endCol] = endPos;
 
   const visitedGrid = generateEmptyGrid();
-  const visitedNodes: Position[] = [];  // final path to return for animation
+  const visitedNodes: NodeAttributes[] = [];  // final path to return for animation
   const dist: number[][] = Array.from({length : newGrid.length}, () => Array(newGrid[0].length).fill(Infinity));
   const cell = newGrid[startRow][startCol];
 
@@ -56,7 +58,7 @@ export const dijkstra = ({
     if(visitedGrid[row][col].isVisited) continue;
 
     visitedGrid[row][col].isVisited = true;
-    visitedNodes.push([row,col]);
+    visitedNodes.push(newGrid[row][col]);
 
     if(row === endRow && col === endCol) {
       return visitedNodes;
@@ -75,7 +77,7 @@ export const dijkstra = ({
       if(distTillNow < dist[nrow][ncol]) {
         dist[nrow][ncol] = distTillNow;
         queue.add([dist[nrow][ncol], nrow, ncol]);
-        neighbour.parent = [row, col];
+        neighbour.parent = newGrid[row][col];
       }
     }
   }

@@ -30,10 +30,10 @@ export const generateEmptyGrid = () => {
 
   return Array.from({length: BOARD_ROWS}, () =>
     Array.from({length: BOARD_COLS}, () => ({
-      isVisited: false,
       f: Infinity,
       g: Infinity,
       h: Infinity,
+      isVisited: false,
     }))
   );
 };
@@ -42,7 +42,7 @@ export const clearVisitedAndPath = (grid: GridType) => {
   return (
     grid.map(row => (
       row.map(cell => (
-        {...cell, isVisited: false, isPath: false}
+        {...cell, isVisited: false, isPath: false, isWeightedVisited: false, parent: null}
       ))
     ))
   );
@@ -52,7 +52,7 @@ export const clearWallsAndWeight = (grid: GridType) => {
   return (
     grid.map(row => (
       row.map(cell => (
-        {...cell, isWall: false, isGrass: false, isMountain: false, isWater: false, isVisited: false, isPath: false, weight: 1}
+        {...cell, isWall: false, isGrass: false, isMountain: false, isWater: false, isVisited: false, isPath: false, weight: 1, isWeightedVisited: false}
       ))
     ))
   );
@@ -62,7 +62,7 @@ export const clearTerrains = (grid: GridType) => {
   return (
     grid.map(row => (
       row.map(cell => (
-        {...cell, isGrass: false, isMountain: false, isWater: false, isVisited: false, isPath: false, weight: 1}
+        {...cell, isGrass: false, isMountain: false, isWater: false, isVisited: false, isPath: false, weight: 1, isWeightedVisited: false}
       ))
     ))
   );

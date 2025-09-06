@@ -27,8 +27,7 @@ export const WeightSelection = ({ selectedAlgo }: Props) => {
 
   const isWeighted = 
     selectedAlgo === "A*" ||
-    selectedAlgo === "DIJKSTRA"||
-    selectedAlgo === "Greedy Best-First-Search";
+    selectedAlgo === "DIJKSTRA"
 
   useEffect(() => {
     if (!isWeighted) {

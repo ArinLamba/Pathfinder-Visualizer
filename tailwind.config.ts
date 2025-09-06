@@ -17,15 +17,16 @@ export default {
 				},
 
         flashWeighted: {
-          "0%": 	{ backgroundColor: "#ef4444", },   // yellow-400 (flash start)
-          "100%": { backgroundColor: "#9333ea" }, // blue-500 (final visited color)
+          "0%": 	{ backgroundColor: "#facc15", transform: 'scale(0.8)' },   // yellow-400 (flash start)
+          "50%": 	{ backgroundColor: "#ef4444", transform: 'scale(1.1)' },   // yellow-400 (flash start)
+          "100%": { backgroundColor: "#9333ea", transform: 'scale(1)' } // blue-500 (final visited color)
         },
 
 				waterCell: {
 					'0%':   { backgroundColor: '#06b6d4', transform: 'scale(0.4)' }, // bright cyan
 					'33%':  { backgroundColor: '#06b6d4', transform: 'scale(0.8)' },
 					'67%':  { backgroundColor: '#0891b2', transform: 'scale(1.1)' }, // deep cyan
-					'100%': { backgroundColor: '#1d4ed8', transform: 'scale(1)' }    // strong blue
+					'100%': { backgroundColor: '#1d4ed8', transform: 'scale(1)', backgrondBlenMode: "color" }    // strong blue
 				},
 
 				wallCell: {

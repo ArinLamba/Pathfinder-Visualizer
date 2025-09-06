@@ -1,18 +1,20 @@
-import type { NodeAttributes, Position } from "@/lib/types";
+import type { NodeAttributes } from "@/lib/types";
 
-export const animateDijkstra = (
-  visitedNodes: Position[],
+export const animateWeightedAlgo = (
+  visitedNodes: NodeAttributes[],
   setGrid: React.Dispatch<React.SetStateAction<NodeAttributes[][]>>
 ) => {
   return new Promise<void>((resolve) => {
-    visitedNodes.forEach(([row, col], i) => {
+    visitedNodes.forEach(({row, col}, i) => {
+      
       setTimeout(() => {
         setGrid((prevGrid) => {
           const newGrid = [...prevGrid];
           const newRow = [...newGrid[row]];
           // Mark visited
-          const cell = { ...newRow[col], isVisited: true };
-          newRow[col] = cell;
+          const node = newRow[col];
+          newRow[col] = { ...node, isVisited: true, isWeightedVisited: node.weight > 1 };
+          // newRow[col] = node;
           newGrid[row] = newRow;
           return newGrid;
         });

@@ -1,9 +1,10 @@
-import type { NodeAttributes, Position } from "@/lib/types";
+import type { NodeAttributes } from "@/lib/types";
 
-export const animatePath = (path: Position[], setGrid: React.Dispatch<React.SetStateAction<NodeAttributes[][]>>) => {
+export const animatePath = (path: NodeAttributes[], setGrid: React.Dispatch<React.SetStateAction<NodeAttributes[][]>>) => {
 
   return new Promise<void>(resolve => {
-    path.forEach(([row,col], i) => {
+    path.forEach(({row, col}, i) => {
+
       setTimeout(() => {
         setGrid((prevGrid) => {
           const newGrid = [...prevGrid];           // clone outer array
@@ -14,7 +15,7 @@ export const animatePath = (path: Position[], setGrid: React.Dispatch<React.SetS
         });
 
         if(i === path.length - 1) resolve();
-      },30 * i );
+      }, 30 * i );
     })
   })
 };

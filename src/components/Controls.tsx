@@ -39,8 +39,7 @@ export const Controls = ({
 
     const isWeighted = 
       selectedAlgo === "A*" || 
-      selectedAlgo === "DIJKSTRA" || 
-      selectedAlgo === "Greedy Best-First-Search";
+      selectedAlgo === "DIJKSTRA";
       
     if(isWeighted) {
       const newGrid = clearVisitedAndPath(grid);
@@ -100,10 +99,7 @@ export const Controls = ({
 
           {/* Custom Algorithm Select */}
           <div className="relative inline-block w-44">
-            <SelectAlgo 
-              selectedAlgo={selectedAlgo} 
-              setSelectedAlgo={setSelectedAlgo}
-            />
+            <SelectAlgo setSelectedAlgo={setSelectedAlgo} />
           </div>
           
           {/* Visualize Button */}
