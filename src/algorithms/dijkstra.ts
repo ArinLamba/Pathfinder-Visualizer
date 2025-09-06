@@ -2,7 +2,7 @@ import type { CallProps, GridType, NodeAttributes, Position } from "@/lib/types"
 import { MinHeap } from "@/lib/datastructure/minHeap";
 import { directions, isValid } from "@/lib/utils/constants";
 
-import { generateEmptyGrid } from "@/lib/utils/generateGrid";
+import { clearVisitedAndPath, generateEmptyGrid } from "@/lib/utils/generateGrid";
 import { getPath } from "@/lib/utils/getPath";
 import { cloneGrid } from "@/lib/utils/handlers";
 
@@ -14,13 +14,28 @@ export const callDijkstra= async ({
   startPos,
   endPos,
   setGrid,
+  instant,
 } : CallProps) => {
-  const newGrid = cloneGrid(grid);
-  const visitedNodes  = dijkstra({newGrid, startPos, endPos});
+  const baseGrid = clearVisitedAndPath(grid);
+  const newGrid = cloneGrid(baseGrid);
+  const visitedNodes = dijkstra({ newGrid, startPos, endPos });
   const endNode = newGrid[endPos[0]][endPos[1]];
   const shortestPath = getPath(endNode);
-  await animateWeightedAlgo(visitedNodes, setGrid);
-  await animatePath(shortestPath, setGrid);
+
+  if(instant) {
+    // instantly mark visited
+    for(const {row, col} of visitedNodes) {
+      newGrid[row][col].isVisited = true;
+    }
+    // instantly mark path nodes
+    for(const {row, col} of shortestPath) {
+      newGrid[row][col].isPath = true;
+    }
+    setGrid(newGrid);
+  } else {
+    await animateWeightedAlgo(visitedNodes, setGrid);
+    await animatePath(shortestPath, setGrid);
+  }
 };
 
 

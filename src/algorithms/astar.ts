@@ -4,7 +4,7 @@ import { MinHeap } from "@/lib/datastructure/minHeap";
 import { BOARD_COLS, BOARD_ROWS, directions, isValid } from "@/lib/utils/constants";
 
 import { cloneGrid } from "@/lib/utils/handlers";
-import { generateEmptyGrid } from "@/lib/utils/generateGrid";
+import { clearVisitedAndPath, generateEmptyGrid } from "@/lib/utils/generateGrid";
 import { getPath } from "@/lib/utils/getPath";
 import { animatePath } from "@/animations/animate-path";
 import { animateWeightedAlgo } from "@/animations/animate-weighted-algo";
@@ -16,15 +16,28 @@ export const callAstar= async ({
   startPos,
   endPos,
   setGrid,
+  instant,
 } : CallProps) => {
-  const newGrid = cloneGrid(grid);
+  const baseGrid = clearVisitedAndPath(grid);
+  const newGrid = cloneGrid(baseGrid);
   const visitedNodes = astar({ newGrid, startPos, endPos });
   const endNode = newGrid[endPos[0]][endPos[1]];
   const shortestPath = getPath(endNode);
-  await animateWeightedAlgo(visitedNodes, setGrid);
-  await animatePath(shortestPath, setGrid);
 
-  // make some changes so that the algo run on run time and see changes to user
+  if(instant) {
+    // instantly mark visited
+    for(const {row, col} of visitedNodes) {
+      newGrid[row][col].isVisited = true;
+    }
+    // instantly mark path nodes
+    for(const {row, col} of shortestPath) {
+      newGrid[row][col].isPath = true;
+    }
+    setGrid(newGrid);
+  } else {
+    await animateWeightedAlgo(visitedNodes, setGrid);
+    await animatePath(shortestPath, setGrid);
+  }
   
 };
 
@@ -115,5 +128,5 @@ const calculateHeuristic = (
   const rowDiff = Math.abs(cellRow - destRow);
   const colDiff = Math.abs(cellCol - destCol);
 
-  return rowDiff + colDiff;
+  return rowDiff * 1.1 + colDiff;
 };

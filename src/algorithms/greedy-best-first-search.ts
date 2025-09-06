@@ -4,7 +4,7 @@ import { MinHeap } from "@/lib/datastructure/minHeap";
 import { BOARD_COLS, BOARD_ROWS, directions, isValid } from "@/lib/utils/constants";
 
 import { cloneGrid } from "@/lib/utils/handlers";
-import { generateEmptyGrid } from "@/lib/utils/generateGrid";
+import { clearTerrains, generateEmptyGrid } from "@/lib/utils/generateGrid";
 import { getPath } from "@/lib/utils/getPath";
 
 import { animatePath } from "@/animations/animate-path";
@@ -16,13 +16,28 @@ export const callGreedyBFS= async ({
   startPos,
   endPos,
   setGrid,
+  instant = false,
 } : CallProps) => {
-  const newGrid = cloneGrid(grid);
-  const visitedNodes = greedyBFS({ newGrid, startPos, endPos });
+  const baseGrid = cloneGrid(grid);
+  const newGrid = clearTerrains(baseGrid);
+  const visitedNodes  = greedyBFS({newGrid, startPos, endPos});
   const endNode = newGrid[endPos[0]][endPos[1]];
   const shortestPath = getPath(endNode);
-  await animateUnweightedAlgo(visitedNodes, setGrid);
-  await animatePath(shortestPath, setGrid);
+
+  if(instant) {
+    // instantly mark visited
+    for(const {row, col} of visitedNodes) {
+      newGrid[row][col].isVisited = true;
+    }
+    // instantly mark path nodes
+    for(const {row, col} of shortestPath) {
+      newGrid[row][col].isPath = true;
+    }
+    setGrid(newGrid);
+  } else {
+    await animateUnweightedAlgo(visitedNodes, setGrid);
+    await animatePath(shortestPath, setGrid);
+  }
 };
 
 

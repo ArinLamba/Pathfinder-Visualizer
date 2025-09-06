@@ -9,6 +9,7 @@ import { callDijkstra } from "@/algorithms/dijkstra";
 import { callGreedyBFS } from "@/algorithms/greedy-best-first-search";
 import { useStart } from "@/store/use-start";
 import { useEnd } from "@/store/use-end";
+import { useAfterAlgo } from "@/store/use-after-algo";
 
 type HandleAlgoProps = CallProps & {
   algo: AlgoSelection;
@@ -188,25 +189,51 @@ export const handleAlgo = async ({
   endPos,
   setGrid,
   algo,
+  instant = false,
 }: HandleAlgoProps) => {
-  switch (algo) {
-    case "BFS":
-      await callBfs({ grid, startPos, endPos, setGrid });
-      break;
-    case "DFS":
-      await callDFS({ grid, startPos, endPos, setGrid });
-      break;
-    case "DIJKSTRA":
-      await callDijkstra({ grid, startPos, endPos, setGrid });
-      break;
-    case "A*":
-      await callAstar({ grid, startPos, endPos, setGrid });
-      break;
-    case "Bidirectional BFS":
-      await callBidirectionalBfs({ grid, startPos, endPos, setGrid });
-      break;
-    case "Greedy Best-First-Search":
-      await callGreedyBFS({ grid, startPos, endPos, setGrid });
-      break;
-  };
+  const hasVisualizationRun = useAfterAlgo.getState().hasVisualizationRun;
+
+  if(hasVisualizationRun) {
+    switch (algo) {
+      case "BFS": 
+        await callBfs({ grid, startPos, endPos, setGrid, instant });        
+        break;
+      case "DFS":
+        await callDFS({ grid, startPos, endPos, setGrid, instant });
+        break;
+      case "DIJKSTRA":
+        await callDijkstra({ grid, startPos, endPos, setGrid, instant });
+        break;
+      case "A*":
+        await callAstar({ grid, startPos, endPos, setGrid, instant });
+        break;
+      case "Bidirectional BFS":
+        await callBidirectionalBfs({ grid, startPos, endPos, setGrid, instant });
+        break;
+      case "Greedy Best-First-Search":
+        await callGreedyBFS({ grid, startPos, endPos, setGrid, instant });
+        break;
+    };
+  } else {
+    switch (algo) {
+      case "BFS": 
+        await callBfs({ grid, startPos, endPos, setGrid });        
+        break;
+      case "DFS":
+        await callDFS({ grid, startPos, endPos, setGrid });
+        break;
+      case "DIJKSTRA":
+        await callDijkstra({ grid, startPos, endPos, setGrid });
+        break;
+      case "A*":
+        await callAstar({ grid, startPos, endPos, setGrid });
+        break;
+      case "Bidirectional BFS":
+        await callBidirectionalBfs({ grid, startPos, endPos, setGrid });
+        break;
+      case "Greedy Best-First-Search":
+        await callGreedyBFS({ grid, startPos, endPos, setGrid });
+        break;
+    };
+  }
 };

@@ -4,27 +4,38 @@ import { animatePath } from "@/animations/animate-path";
 import { animateUnweightedAlgo } from "@/animations/animate-unweighted-algo";
 
 import { directions, isValid } from "@/lib/utils/constants";
-import { generateEmptyGrid } from "@/lib/utils/generateGrid";
+import { clearTerrains, generateEmptyGrid } from "@/lib/utils/generateGrid";
 import { getPath } from "@/lib/utils/getPath";
 import { cloneGrid } from "@/lib/utils/handlers";
-// import { bfsAfter } from "./bfsAfter";
-
-
 
 export const callBfs= async ({
   grid,
   startPos,
   endPos,
   setGrid,
+  instant = false,
 } : CallProps) => {
-  const newGrid = cloneGrid(grid);
+  if(instant) {}
+  const baseGrid = cloneGrid(grid);
+  const newGrid = clearTerrains(baseGrid);
   const visitedNodes  = bfs({newGrid, startPos, endPos});
   const endNode = newGrid[endPos[0]][endPos[1]];
   const shortestPath = getPath(endNode);
-  await animateUnweightedAlgo(visitedNodes, setGrid);
-  await animatePath(shortestPath, setGrid);
-  
-  // bfsAfter({ grid, startPos, endPos, setGrid});
+
+  if(instant) {
+    // instantly mark visited
+    for(const {row, col} of visitedNodes) {
+      newGrid[row][col].isVisited = true;
+    }
+    // instantly mark path nodes
+    for(const {row, col} of shortestPath) {
+      newGrid[row][col].isPath = true;
+    }
+    setGrid(newGrid);
+  } else {
+    await animateUnweightedAlgo(visitedNodes, setGrid);
+    await animatePath(shortestPath, setGrid);
+  }
 };
 
 
