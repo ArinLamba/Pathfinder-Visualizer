@@ -1,4 +1,4 @@
-import type { CallProps, GridType, Position } from "@/lib/types";
+import type { CallProps, GridType, NodeAttributes, Position } from "@/lib/types";
 
 import { MinHeap } from "@/lib/datastructure/minHeap";
 import { BOARD_COLS, BOARD_ROWS, directions, isValid } from "@/lib/utils/constants";
@@ -7,8 +7,8 @@ import { cloneGrid } from "@/lib/utils/handlers";
 import { generateEmptyGrid } from "@/lib/utils/generateGrid";
 import { getPath } from "@/lib/utils/getPath";
 
-import { animatePath } from "@/animations/animatePath";
-import { animateGreedy } from "@/animations/animateGreedy";
+import { animatePath } from "@/animations/animate-path";
+import { animateUnweightedAlgo } from "@/animations/animate-unweighted-algo";
 
 
 export const callGreedyBFS= async ({
@@ -19,8 +19,9 @@ export const callGreedyBFS= async ({
 } : CallProps) => {
   const newGrid = cloneGrid(grid);
   const visitedNodes = greedyBFS({ newGrid, startPos, endPos });
-  const shortestPath = getPath(endPos, newGrid);
-  await animateGreedy(visitedNodes, setGrid);
+  const endNode = newGrid[endPos[0]][endPos[1]];
+  const shortestPath = getPath(endNode);
+  await animateUnweightedAlgo(visitedNodes, setGrid);
   await animatePath(shortestPath, setGrid);
 };
 
@@ -36,10 +37,10 @@ const greedyBFS = ({
   newGrid,
   startPos,
   endPos,
-} : Props) : Position[] => {
+} : Props) : NodeAttributes[] => {
 
   const tempGrid = generateEmptyGrid();
-  const visitedNodes : Position[] = [];
+  const visitedNodes : NodeAttributes[] = [];
   const visited: boolean[][] = Array.from({ length : BOARD_ROWS }, () => Array.from({ length : BOARD_COLS }, () => false));
   const queue = new MinHeap<[number, number, number]>((a, b) => a[0] - b[0]);  
 
@@ -58,7 +59,7 @@ const greedyBFS = ({
 
     if(visited[row][col]) continue;
     visited[row][col] = true;
-    visitedNodes.push([row, col]);
+    visitedNodes.push(newGrid[row][col]);
     
     if(row === endRow && col === endCol) {
       return visitedNodes;
@@ -85,7 +86,7 @@ const greedyBFS = ({
       if(f === Infinity || newF < f) {
         queue.add([newF, nrow, ncol]);
         tempGrid[nrow][ncol] = {... tempGrid[nrow][ncol], f: newF, h: newH};
-        neighbour.parent = [row, col];
+        neighbour.parent = newGrid[row][col];
         
       }
     }

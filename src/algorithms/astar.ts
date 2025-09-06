@@ -1,4 +1,4 @@
-import type { CallProps, GridType, Position } from "@/lib/types";
+import type { CallProps, GridType, NodeAttributes, Position } from "@/lib/types";
 
 import { MinHeap } from "@/lib/datastructure/minHeap";
 import { BOARD_COLS, BOARD_ROWS, directions, isValid } from "@/lib/utils/constants";
@@ -6,8 +6,8 @@ import { BOARD_COLS, BOARD_ROWS, directions, isValid } from "@/lib/utils/constan
 import { cloneGrid } from "@/lib/utils/handlers";
 import { generateEmptyGrid } from "@/lib/utils/generateGrid";
 import { getPath } from "@/lib/utils/getPath";
-import { animatePath } from "@/animations/animatePath";
-import { animateAstar } from "@/animations/animateASTAR";
+import { animatePath } from "@/animations/animate-path";
+import { animateWeightedAlgo } from "@/animations/animate-weighted-algo";
 
 
 
@@ -19,9 +19,13 @@ export const callAstar= async ({
 } : CallProps) => {
   const newGrid = cloneGrid(grid);
   const visitedNodes = astar({ newGrid, startPos, endPos });
-  const shortestPath = getPath(endPos, newGrid);
-  await animateAstar(visitedNodes, setGrid);
+  const endNode = newGrid[endPos[0]][endPos[1]];
+  const shortestPath = getPath(endNode);
+  await animateWeightedAlgo(visitedNodes, setGrid);
   await animatePath(shortestPath, setGrid);
+
+  // make some changes so that the algo run on run time and see changes to user
+  
 };
 
 
@@ -32,14 +36,14 @@ type Props = {
 };
 
 
-export const astar = ({
+const astar = ({
   newGrid,
   startPos,
   endPos,
-} : Props) : Position[] => {
+} : Props) : NodeAttributes[] => {
 
   const tempGrid = generateEmptyGrid();
-  const visitedNodes : Position[] = [];
+  const visitedNodes : NodeAttributes[] = [];
   const visited: boolean[][] = Array.from({ length : BOARD_ROWS }, () => Array.from({ length : BOARD_COLS }, () => false));
   const queue = new MinHeap<[number, number, number]>((a, b) => a[0] - b[0]);  
 
@@ -63,10 +67,9 @@ export const astar = ({
 
     if(visited[row][col]) continue;
     visited[row][col] = true;
-    visitedNodes.push([row, col]);
+    visitedNodes.push(newGrid[row][col]);
 
     if(row === endRow && col === endCol) {
-      // TODO: Return Path of Visited Nodes
       return visitedNodes;
     }
 
@@ -92,7 +95,7 @@ export const astar = ({
       if(f === Infinity || newF < f) {
         queue.add([newF, nrow, ncol]);
         tempGrid[nrow][ncol] = {... tempGrid[nrow][ncol], f: newF, g: newG, h: newH};
-        neighbour.parent = [row, col];
+        neighbour.parent = newGrid[row][col];
 
       }
 
@@ -112,5 +115,5 @@ const calculateHeuristic = (
   const rowDiff = Math.abs(cellRow - destRow);
   const colDiff = Math.abs(cellCol - destCol);
 
-  return rowDiff + colDiff ;
+  return rowDiff + colDiff;
 };

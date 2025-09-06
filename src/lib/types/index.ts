@@ -13,7 +13,11 @@ export type NodeAttributes = {
   weight: number;
   isWeightedVisited?: boolean;
   isPath?: boolean;
-  parent?: [number, number] | null;
+  parent?: NodeAttributes | null;
+
+  // For Bidirectional BFS
+  parentFront?: NodeAttributes | null;
+  parentBack?: NodeAttributes | null;
 };
 
 export type GridType = NodeAttributes[][];

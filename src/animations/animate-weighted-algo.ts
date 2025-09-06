@@ -1,11 +1,12 @@
-import type { GridType, Position } from "@/lib/types";
+import type { NodeAttributes } from "@/lib/types";
 
-export const animateAstar = (
-  visitedNodes: Position[],
-  setGrid: React.Dispatch<React.SetStateAction<GridType>>
+export const animateWeightedAlgo = (
+  visitedNodes: NodeAttributes[],
+  setGrid: React.Dispatch<React.SetStateAction<NodeAttributes[][]>>
 ) => {
   return new Promise<void>((resolve) => {
-    visitedNodes.forEach(([row, col], i) => {
+    visitedNodes.forEach(({row, col}, i) => {
+      
       setTimeout(() => {
         setGrid((prevGrid) => {
           const newGrid = [...prevGrid];

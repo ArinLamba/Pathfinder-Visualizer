@@ -1,12 +1,12 @@
-import type { GridType, Position } from "@/lib/types";
+import type { GridType, NodeAttributes } from "@/lib/types";
 
-export const animateDFS = (
-  dfsPath: Position[],
+export const animateUnweightedAlgo = (
+  visitedNodes: NodeAttributes[],
   setGrid: React.Dispatch<React.SetStateAction<GridType>>
 ) => {
-  return new Promise<void>(resolve => {
+  return new Promise<void>(reslove => {
+    visitedNodes.forEach(({row, col}, i) => {
 
-    dfsPath.forEach(([row, col], i) => {
       setTimeout(() => {
         setGrid((prevGrid) => {
           const newGrid = [...prevGrid];           // clone outer array
@@ -16,8 +16,8 @@ export const animateDFS = (
           return newGrid;
         });
 
-        if(i === dfsPath.length - 1) resolve();
-      }, 20 * i);
-    });
-  })
+        if(i === visitedNodes.length - 1) reslove();
+      }, 12 * i);
+    })
+  });
 };

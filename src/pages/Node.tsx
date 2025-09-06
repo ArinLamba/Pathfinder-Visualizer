@@ -30,8 +30,8 @@ export const Node = React.memo(
 
     if (isStart) className += " bg-yellow-500";
     else if (isEnd) className += " bg-red-600";
-    else if (isPath) className += " animate-pathHighlight";
-    else if (isVisited) className += " dark:animate-visitedCell animate-LightVisitedCell";
+    else if (isPath) className += " bg-yellow-500 animate-pathHighlight";
+    else if (isVisited) className += " bg-purple-600 dark:animate-visitedCell animate-LightVisitedCell";
     if (isWeightedVisited) className += " pulseOverlay";
     else if (weight === 15) className += " animate-weightedVisitedCell dark:text-white bg-background";
     else if (isWater) className += " animate-waterCell";

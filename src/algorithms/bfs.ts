@@ -1,11 +1,13 @@
+import type { CallProps, GridType, NodeAttributes, Position } from "@/lib/types"
 
-import { animatePath } from "@/animations/animatePath";
-import type { CallProps, GridType, Position } from "@/lib/types"
+import { animatePath } from "@/animations/animate-path";
+import { animateUnweightedAlgo } from "@/animations/animate-unweighted-algo";
+
 import { directions, isValid } from "@/lib/utils/constants";
 import { generateEmptyGrid } from "@/lib/utils/generateGrid";
 import { getPath } from "@/lib/utils/getPath";
 import { cloneGrid } from "@/lib/utils/handlers";
-import { animateBFS } from "@/animations/animateBFS";
+// import { bfsAfter } from "./bfsAfter";
 
 
 
@@ -17,9 +19,12 @@ export const callBfs= async ({
 } : CallProps) => {
   const newGrid = cloneGrid(grid);
   const visitedNodes  = bfs({newGrid, startPos, endPos});
-  const shortestPath = getPath(endPos, newGrid);
-  await animateBFS(visitedNodes, setGrid);
+  const endNode = newGrid[endPos[0]][endPos[1]];
+  const shortestPath = getPath(endNode);
+  await animateUnweightedAlgo(visitedNodes, setGrid);
   await animatePath(shortestPath, setGrid);
+  
+  // bfsAfter({ grid, startPos, endPos, setGrid});
 };
 
 
@@ -29,16 +34,17 @@ type Props = {
   endPos: Position;
 };
 
-export const bfs = ({
+
+const bfs = ({
   newGrid,
   startPos,
   endPos,
-}: Props) : Position[] => {
+}: Props) : NodeAttributes[] => {
 
   // to keep track of the vistied nodes on separete grid
   const visitedGrid = generateEmptyGrid();
   // to animate the bfs path
-  const visitedNodes: Position[] = [];
+  const visitedNodes: NodeAttributes[] = [];
 
   const [startRow,startCol] = startPos;
   const [endRow, endCol] = endPos;
@@ -49,7 +55,7 @@ export const bfs = ({
   const cell = newGrid[startRow][startCol];
   cell.parent = null;
   // 
-  visitedNodes.push([startRow, startCol]);
+  visitedNodes.push(cell);
 
   let head = 0;
   while(head < queue.length) {
@@ -69,10 +75,10 @@ export const bfs = ({
 
       if(visitedGrid[nrow][ncol].isVisited || neighbour.isWall) continue;
       queue.push([nrow,ncol]);
-      neighbour.parent = [row,col];
+      neighbour.parent = newGrid[row][col];
       visitedGrid[nrow][ncol].isVisited = true;
       // to track the visited nodes in order to animate them
-      visitedNodes.push([nrow, ncol]);
+      visitedNodes.push(neighbour);
     }
   }
   return  visitedNodes;

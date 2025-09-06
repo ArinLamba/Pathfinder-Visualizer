@@ -1,17 +1,13 @@
-import type { NodeAttributes, Position, GridType } from "@/lib/types";
+import type { NodeAttributes } from "@/lib/types";
 
-export const getPath = (endPos: Position, grid: GridType) : Position[] =>  {
-  
-  const [endR, endC] = endPos;
-  const path: Position[] = [];
-  let current: NodeAttributes = grid[endR][endC];
+export const getPath = (endNode: NodeAttributes): NodeAttributes[] => {
+  const path: NodeAttributes[] = [];
+  let current: NodeAttributes | null = endNode;
 
-  while(current) {
-    path.push([current.row, current.col]);
-    if(!current.parent) break; // start node
-
-    const [pr, pc] = current.parent;
-    current = grid[pr][pc];
+  while (current) {
+    path.push(current);
+    current = current.parent ?? null;
   }
+
   return path.reverse();
 };
