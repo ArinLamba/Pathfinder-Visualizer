@@ -19,7 +19,7 @@ export const animateWeightedAlgo = (
           return newGrid;
         });
         if (i === visitedNodes.length - 1) resolve();
-      }, 10 * i);
+      }, 12 * i);
     });
   });
 };
