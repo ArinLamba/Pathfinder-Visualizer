@@ -58,6 +58,26 @@ export const Guide = () => {
       },
     },
     { 
+      heading: "Adding walls and weights", 
+      subHeading: 'Click on the grid to add a wall. Click on the grid while pressing W to add a weight. Generate mazes and patterns from the "Mazes & Patterns" drop-down menu.',
+      para: 'Walls are impenetrable, meaning that a path cannot cross through them. Weights, however, are not impassable. They are simply more "costly" to move through. In this application, moving through a weight node has a "cost" of 15.',
+      imageSrc: "walls-and-weights.gif",
+      isGif: true,
+    },
+    { 
+      heading: "Variable Weights", 
+      subHeading: 'Select any Weight from the weight drop down with variable values and visualize.',
+      para: 'Note: Weights can only be added if the Algorithm is selected is also weighted.',
+      imageSrc: "variableWeights.gif",
+    },
+    { 
+      heading: "Dragging nodes", 
+      subHeading: 'Click and drag the start, bomb, and target nodes to move them.',
+      para: 'Note that you can drag nodes even after an algorithm has finished running. This will allow you to instantly see different paths.',
+      imageSrc: "drag.gif",
+      isGif: true,
+    },
+    { 
       heading: "Visualizing and more", 
       subHeading: 'Use the navbar buttons to visualize algorithms and to do other stuff!',
       para: 'You can clear the current path, clear walls and weights, clear the entire board, and add mazes, all from the navbar. If you want to access this tutorial again, hover on the " i "  in the top left corner of your screen. You can also toggle between the light and Dark Mode by CLicking on the " Sun " and " Moon " Icon',
@@ -90,6 +110,7 @@ export const Guide = () => {
                 isNavImage={item.isNav}
                 href={item.href}
                 isGit={item.isGit}
+                isGif={item.isGif}
               />
             </CarouselItem>
           ))}
