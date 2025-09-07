@@ -14,6 +14,7 @@ type Props = {
   isNavImage?: boolean;
   isGit?: boolean;
   href?: string;
+  isGif?: boolean;
 };
 
 export const GuideItems = ({
@@ -26,6 +27,7 @@ export const GuideItems = ({
   isNavImage,
   isGit,
   href,
+  isGif
 } : Props) =>{
   return (
     <div className="dark:bg-white/5 bg-neutral-900/5 min-w-full min-h-full border dark:border-white/20 rounded-md flex mx-auto justify-center relative">
@@ -57,11 +59,11 @@ export const GuideItems = ({
               />
             </a>
           }
-          {imageSrc && !isNavImage && !isGit &&
+          {imageSrc && !isNavImage && !isGit && !isGif &&
             <img src={imageSrc} alt="image" 
             height={250}
             width={250}
-            className="m-5 dark:text-white"
+            className="mt-9 dark:text-white"
             />
           }
           {algorithms && (
@@ -89,6 +91,15 @@ export const GuideItems = ({
                 width={1080}
                 className="mt-9"
               />
+            </div>
+          }
+          {isGif &&
+            <div>
+              <img src={imageSrc} alt="image"
+                width={400}
+                className="m-4"
+              />
+              
             </div>
           }
           

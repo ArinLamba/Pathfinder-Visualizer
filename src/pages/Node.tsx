@@ -1,5 +1,5 @@
 import React from "react";
-import { ChevronRight, Target, Weight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Target, Weight } from "lucide-react";
 import type { ModeSelection, NodeAttributes, Position } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
@@ -19,6 +19,8 @@ export const Node = React.memo(
 
     const isStart = row === startPos[0] && col === startPos[1];
     const isEnd = row === endPos[0] && col === endPos[1];
+    const facingRight = startPos[1] - endPos[1] < 1;
+    
 
     // dragging flags
     const isDragging = mode === "draggingStart" || mode === "draggingEnd";
@@ -55,7 +57,7 @@ export const Node = React.memo(
         onMouseEnter={onMouseEnter}
         onKeyDown={onKeyDown}
       >
-        {isStart && <ChevronRight className="aspect-square bg-yellow-500" color="black" />}
+        {isStart && (facingRight ? <ChevronRight className="aspect-square bg-yellow-500" color="black" /> : <ChevronLeft className="aspect-square bg-yellow-500" color="black" />)}
         {isEnd && <Target className="aspect-square bg-red-600" color="black" />}
         {!isStart && !isEnd && weight === 15 && <Weight className="aspect-square" />}
       </button>
