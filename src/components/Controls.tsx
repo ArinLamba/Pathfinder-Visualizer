@@ -35,7 +35,7 @@ export const Controls = ({
 
   const isRunning = useRunning((state) => state.isRunning);
   const setAlgo = useAlgorithm((state) => state.setAlgo);
-    const setHasVisualizationRun = useAfterAlgo(state => state.setHasVisualizationRun);
+  const setHasVisualizationRun = useAfterAlgo(state => state.setHasVisualizationRun);
 
   const handleVisualize = () => {
     if(!selectedAlgo || isRunning) return;
@@ -96,9 +96,7 @@ export const Controls = ({
           
           {/* Weight Selection */}
           <div className="w-44 relative inline-block">
-            {<WeightSelection 
-              selectedAlgo={selectedAlgo}
-            />}
+            {<WeightSelection selectedAlgo={selectedAlgo} />}
           </div>
 
           {/* Custom Algorithm Select */}

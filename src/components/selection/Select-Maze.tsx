@@ -16,6 +16,7 @@ import { recursiveDivision } from "@/algorithms/mazes/recursive-division";
 import { animateMaze } from "@/animations/animateMaze";
 import { generateGrid } from "@/lib/utils/generateGrid";
 import { useRunning } from "@/store/use-running";
+import { useAfterAlgo } from "@/store/use-after-algo";
 
 type Props = {
   setGrid: (grid: React.SetStateAction<GridType>) => void;
@@ -25,6 +26,7 @@ export const SelectMaze = ({ setGrid }: Props) => {
   const [selectedMaze, setSelectedMaze] = useState<MazeSelection>(null);
   
   const { isRunning, setIsRunning } = useRunning();
+  const setHasVisualizationRun = useAfterAlgo(state => state.setHasVisualizationRun);
   
   const handleClick = async (maze: MazeSelection) => {
 
@@ -52,6 +54,7 @@ export const SelectMaze = ({ setGrid }: Props) => {
         break;
     }
     await animateMaze(mazeConstructionPath, setGrid);
+    setHasVisualizationRun(false);
     setIsRunning(false);
   };
 
