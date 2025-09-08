@@ -1,6 +1,6 @@
 import type React from "react";
 import { useEffect, useState } from "react";
-import { useRunning } from "@/store/use-running";
+import { flushSync } from "react-dom";
 
 import { type GridType, type ModeSelection } from "@/lib/types";
 
@@ -11,6 +11,7 @@ import { addFixedWeights, addGrass, addMountain, addWalls, addWater, handleAlgo,
 
 import { useAlgorithm } from "@/store/use-algorithm";
 import { useObstacle } from "@/store/use-obstacle";
+import { useRunning } from "@/store/use-running";
 import { useStart } from "@/store/use-start";
 import { useEnd } from "@/store/use-end";
 import { END_COL, END_ROW, START_COL, START_ROW } from "@/lib/utils/constants";
@@ -54,7 +55,7 @@ export const Grid = ({ grid, setGrid, resetFlag, visualizerTrigger } : Props) =>
     addFixedWeights({row, col, setGrid});
   };
   
-  const handleMouseEnter = (row: number, col: number) => {
+  const handleMouseEnter = async (row: number, col: number) => {
     if (
       isRunning ||
       (row === startPos[0] && col === startPos[1]) ||
@@ -64,19 +65,27 @@ export const Grid = ({ grid, setGrid, resetFlag, visualizerTrigger } : Props) =>
 
     const cell = grid[row][col];
 
-    if (isMouseDown && mode === "draggingStart" && !cell.isEnd) {
-      setCell(row, col, "start", setGrid, async (newGrid) => {
-        if (hasVisualizationRun) {
-          await handleAlgo({ grid: newGrid, startPos: [row, col], endPos, setGrid, algo, instant: true });
+    if (isMouseDown && mode === "draggingStart") {
+      if(cell.isEnd) return;
+      setCell(row, col, "start", setGrid, (newGrid) => {
+        flushSync(() => {
+          setGrid(newGrid); // commit immediately
+        });
+        if(hasVisualizationRun) {
+          handleAlgo({ grid: newGrid, startPos: [row, col], endPos, setGrid, algo, instant: true });
         }
       });
       return;
     }
 
-    if (isMouseDown && mode === "draggingEnd" && !cell.isStart) {
-      setCell(row, col, "end", setGrid, async (newGrid) => {
-        if (hasVisualizationRun) {
-          await handleAlgo({ grid: newGrid, startPos, endPos: [row, col], setGrid, algo, instant: true });
+    if (isMouseDown && mode === "draggingEnd") {
+      if(cell.isStart) return;
+      setCell(row, col, "end", setGrid, (newGrid) => {
+        flushSync(() => {
+          setGrid(newGrid); // commit immediately
+        });
+        if(hasVisualizationRun) {
+          handleAlgo({ grid: newGrid, startPos, endPos: [row, col], setGrid, algo, instant: true });
         }
       });
       return;
@@ -99,6 +108,7 @@ export const Grid = ({ grid, setGrid, resetFlag, visualizerTrigger } : Props) =>
     // Only toggle cells if not dragging
     placeObstacle(row, col);
   };
+
 
   useEffect(() => {
     const run = async () => {
