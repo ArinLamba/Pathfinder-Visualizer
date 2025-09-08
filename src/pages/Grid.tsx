@@ -1,6 +1,5 @@
 import type React from "react";
 import { useEffect, useState } from "react";
-import { flushSync } from "react-dom";
 
 import { type GridType, type ModeSelection } from "@/lib/types";
 
@@ -68,9 +67,6 @@ export const Grid = ({ grid, setGrid, resetFlag, visualizerTrigger } : Props) =>
     if (isMouseDown && mode === "draggingStart") {
       if(cell.isEnd) return;
       setCell(row, col, "start", setGrid, (newGrid) => {
-        flushSync(() => {
-          setGrid(newGrid); // commit immediately
-        });
         if(hasVisualizationRun) {
           handleAlgo({ grid: newGrid, startPos: [row, col], endPos, setGrid, algo, instant: true });
         }
@@ -81,9 +77,6 @@ export const Grid = ({ grid, setGrid, resetFlag, visualizerTrigger } : Props) =>
     if (isMouseDown && mode === "draggingEnd") {
       if(cell.isStart) return;
       setCell(row, col, "end", setGrid, (newGrid) => {
-        flushSync(() => {
-          setGrid(newGrid); // commit immediately
-        });
         if(hasVisualizationRun) {
           handleAlgo({ grid: newGrid, startPos, endPos: [row, col], setGrid, algo, instant: true });
         }
