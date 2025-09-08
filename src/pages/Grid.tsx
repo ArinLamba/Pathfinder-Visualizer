@@ -55,8 +55,6 @@ export const Grid = ({ grid, setGrid, resetFlag, visualizerTrigger } : Props) =>
   // keep a single animation frame reference
   let animationFrameId: number | null = null;
 
-
-
   // dont understand this block at all chat GPT fixed it. will learn about this later
   // throttle algo execution
   const runAlgoThrottled = (
