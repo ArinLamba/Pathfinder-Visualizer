@@ -1,7 +1,7 @@
 import type React from "react";
 import { useEffect, useState } from "react";
 
-import { type GridType, type ModeSelection } from "@/lib/types";
+import { type AlgoSelection, type GridType, type ModeSelection } from "@/lib/types";
 
 import { Node } from "@/pages/Node";
 
@@ -15,8 +15,6 @@ import { useStart } from "@/store/use-start";
 import { useEnd } from "@/store/use-end";
 import { END_COL, END_ROW, START_COL, START_ROW } from "@/lib/utils/constants";
 import { useAfterAlgo } from "@/store/use-after-algo";
-import { flushSync } from "react-dom";
-
 
 
 type Props = {
@@ -54,63 +52,58 @@ export const Grid = ({ grid, setGrid, resetFlag, visualizerTrigger } : Props) =>
     if(grid[row][col].isStart || grid[row][col].isEnd || isRunning) return;
     addFixedWeights({row, col, setGrid});
   };
+  // keep a single animation frame reference
+  let animationFrameId: number | null = null;
+
+  // throttle algo execution
+  const runAlgoThrottled = (
+    newGrid: GridType,
+    startPos: [number, number],
+    endPos: [number, number],
+    setGrid: React.Dispatch<React.SetStateAction<GridType>>,
+    algo: AlgoSelection
+  ) => {
+    if (animationFrameId) cancelAnimationFrame(animationFrameId);
+    animationFrameId = requestAnimationFrame(() => {
+      handleAlgo({ grid: newGrid, startPos, endPos, setGrid, algo, instant: true });
+    });
+  };
+
 const handleMouseEnter = (row: number, col: number) => {
   if (
     isRunning ||
     (row === startPos[0] && col === startPos[1]) ||
     (row === endPos[0] && col === endPos[1])
-  )
-    return;
+  ) return;
 
   const cell = grid[row][col];
 
-  // Dragging start node
   if (isMouseDown && mode === "draggingStart") {
     if (cell.isEnd) return;
 
     setCell(row, col, "start", setGrid, (newGrid) => {
-      flushSync(() => setGrid(newGrid));
-      // Always pass explicit positions
       if (hasVisualizationRun) {
-        handleAlgo({
-          grid: newGrid,
-          startPos: [row, col],
-          endPos,
-          setGrid,
-          algo,
-          instant: true,
-        });
+        runAlgoThrottled(newGrid, [row, col], endPos, setGrid, algo);
       }
     });
     return;
   }
 
-  // Dragging end node
   if (isMouseDown && mode === "draggingEnd") {
     if (cell.isStart) return;
 
     setCell(row, col, "end", setGrid, (newGrid) => {
-      flushSync(() => setGrid(newGrid));
       if (hasVisualizationRun) {
-        handleAlgo({
-          grid: newGrid,
-          startPos,
-          endPos: [row, col],
-          setGrid,
-          algo,
-          instant: true,
-        });
+        runAlgoThrottled(newGrid, startPos, [row, col], setGrid, algo);
       }
     });
     return;
   }
 
-  // Placing fixed weight
   if (isMouseDown && isKeyDown) return toggleFixedWeight(row, col);
-
-  // Placing obstacles
   if (isMouseDown && !isKeyDown) return placeObstacle(row, col);
 };
+
 
 
   const handleMouseDown = (row: number, col: number) => {
