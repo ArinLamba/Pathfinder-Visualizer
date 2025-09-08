@@ -9,7 +9,6 @@ import { callDijkstra } from "@/algorithms/dijkstra";
 import { callGreedyBFS } from "@/algorithms/greedy-best-first-search";
 import { useStart } from "@/store/use-start";
 import { useEnd } from "@/store/use-end";
-import { useAfterAlgo } from "@/store/use-after-algo";
 
 type HandleAlgoProps = CallProps & {
   algo: AlgoSelection;
@@ -128,7 +127,6 @@ export const addFixedWeights = ({
   })
 };
 
-
 // memory for last start and end
 const prevStates: Record<"start" | "end", NodeAttributes | null> = {
   start: null,
@@ -139,30 +137,36 @@ export const setCell = (
   row: number,
   col: number,
   type: "start" | "end",
-  setGrid: React.Dispatch<React.SetStateAction<GridType>>
+  setGrid: React.Dispatch<React.SetStateAction<GridType>>,
+  onUpdate?: (newGrid: GridType) => void // 👈 optional callback
 ) => {
-
   setGrid((prevGrid) => {
     const newGrid = [...prevGrid];
 
-    // restore previous cell if exists
+    // restore previous start/end cell if it existed
     const prevNode = prevStates[type];
-    if(prevNode) {
-      const prevRowCopy = [...newGrid[prevNode.row]];
-      prevRowCopy[prevNode.col] = {...prevNode,isPath : prevRowCopy[prevNode.col].isPath ? true : false, };
-      newGrid[prevNode.row] = prevRowCopy
+    if (prevNode) {
+      const { row: pr, col: pc } = prevNode;
+      const prevRowCopy = [...newGrid[pr]];
+      prevRowCopy[pc] = {
+        ...prevNode,
+        isPath: false,
+        isEnd: false,
+        isStart: false,
+      };
+      newGrid[pr] = prevRowCopy;
     }
 
     // save the current cell before overwriting
     const newRow = [...newGrid[row]];
     prevStates[type] = { ...newRow[col] };
 
-    // overwrite new cell as start or end
+    // overwrite the new cell as start or end
     newRow[col] = {
       ...newRow[col],
       isStart: type === "start",
       isEnd: type === "end",
-      isWall: false,
+      isWall: false,     // 👈 clears wall flag
       isWater: false,
       isGrass: false,
       isMountain: false,
@@ -170,12 +174,16 @@ export const setCell = (
     };
     newGrid[row] = newRow;
 
-    // update zustand store
+    // update zustand store for startPos / endPos
     if (type === "start") {
       useStart.getState().setStartPos([row, col]);
     } else {
       useEnd.getState().setEndPos([row, col]);
     }
+
+    // This is GPT
+    // 🔥 call back with the updated grid
+    if (onUpdate) onUpdate(newGrid);
 
     return newGrid;
   });
@@ -191,49 +199,26 @@ export const handleAlgo = async ({
   algo,
   instant = false,
 }: HandleAlgoProps) => {
-  const hasVisualizationRun = useAfterAlgo.getState().hasVisualizationRun;
 
-  if(hasVisualizationRun) {
-    switch (algo) {
-      case "BFS": 
-        await callBfs({ grid, startPos, endPos, setGrid, instant });        
-        break;
-      case "DFS":
-        await callDFS({ grid, startPos, endPos, setGrid, instant });
-        break;
-      case "DIJKSTRA":
-        await callDijkstra({ grid, startPos, endPos, setGrid, instant });
-        break;
-      case "A*":
-        await callAstar({ grid, startPos, endPos, setGrid, instant });
-        break;
-      case "Bidirectional BFS":
-        await callBidirectionalBfs({ grid, startPos, endPos, setGrid, instant });
-        break;
-      case "Greedy Best-First-Search":
-        await callGreedyBFS({ grid, startPos, endPos, setGrid, instant });
-        break;
-    };
-  } else {
-    switch (algo) {
-      case "BFS": 
-        await callBfs({ grid, startPos, endPos, setGrid });        
-        break;
-      case "DFS":
-        await callDFS({ grid, startPos, endPos, setGrid });
-        break;
-      case "DIJKSTRA":
-        await callDijkstra({ grid, startPos, endPos, setGrid });
-        break;
-      case "A*":
-        await callAstar({ grid, startPos, endPos, setGrid });
-        break;
-      case "Bidirectional BFS":
-        await callBidirectionalBfs({ grid, startPos, endPos, setGrid });
-        break;
-      case "Greedy Best-First-Search":
-        await callGreedyBFS({ grid, startPos, endPos, setGrid });
-        break;
-    };
-  }
+  switch (algo) {
+    case "BFS": 
+      await callBfs({ grid, startPos, endPos, setGrid, instant });        
+      break;
+    case "DFS":
+      await callDFS({ grid, startPos, endPos, setGrid, instant });
+      break;
+    case "DIJKSTRA":
+      await callDijkstra({ grid, startPos, endPos, setGrid, instant });
+      break;
+    case "A*":
+      await callAstar({ grid, startPos, endPos, setGrid, instant });
+      break;
+    case "Bidirectional BFS":
+      await callBidirectionalBfs({ grid, startPos, endPos, setGrid, instant });
+      break;
+    case "Greedy Best-First-Search":
+      await callGreedyBFS({ grid, startPos, endPos, setGrid, instant });
+      break;
+  };
+  
 };
