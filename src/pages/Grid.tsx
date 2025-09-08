@@ -53,42 +53,61 @@ export const Grid = ({ grid, setGrid, resetFlag, visualizerTrigger } : Props) =>
     if(grid[row][col].isStart || grid[row][col].isEnd || isRunning) return;
     addFixedWeights({row, col, setGrid});
   };
-  
-  const handleMouseEnter = async (row: number, col: number) => {
-    if (
-      isRunning ||
-      (row === startPos[0] && col === startPos[1]) ||
-      (row === endPos[0] && col === endPos[1])
-    )
-      return;
+const handleMouseEnter = (row: number, col: number) => {
+  if (
+    isRunning ||
+    (row === startPos[0] && col === startPos[1]) ||
+    (row === endPos[0] && col === endPos[1])
+  )
+    return;
 
-    const cell = grid[row][col];
+  const cell = grid[row][col];
 
-    if (isMouseDown && mode === "draggingStart") {
-      if(cell.isEnd) return;
-      setCell(row, col, "start", setGrid, (newGrid) => {
-        if(hasVisualizationRun) {
-          handleAlgo({ grid: newGrid, startPos: [row, col], endPos, setGrid, algo, instant: true });
-        }
-      });
-      return;
-    }
+  // Dragging start node
+  if (isMouseDown && mode === "draggingStart") {
+    if (cell.isEnd) return;
 
-    if (isMouseDown && mode === "draggingEnd") {
-      if(cell.isStart) return;
-      setCell(row, col, "end", setGrid, (newGrid) => {
-        if(hasVisualizationRun) {
-          handleAlgo({ grid: newGrid, startPos, endPos: [row, col], setGrid, algo, instant: true });
-        }
-      });
-      return;
-    }
+    setCell(row, col, "start", setGrid, (newGrid) => {
+      // Always pass explicit positions
+      if (hasVisualizationRun) {
+        handleAlgo({
+          grid: newGrid,
+          startPos: [row, col],
+          endPos,
+          setGrid,
+          algo,
+          instant: true,
+        });
+      }
+    });
+    return;
+  }
 
-    if (isMouseDown && isKeyDown) return toggleFixedWeight(row, col);
-    
-    if (isMouseDown && !isKeyDown) return placeObstacle(row, col);
-    
-  };
+  // Dragging end node
+  if (isMouseDown && mode === "draggingEnd") {
+    if (cell.isStart) return;
+
+    setCell(row, col, "end", setGrid, (newGrid) => {
+      if (hasVisualizationRun) {
+        handleAlgo({
+          grid: newGrid,
+          startPos,
+          endPos: [row, col],
+          setGrid,
+          algo,
+          instant: true,
+        });
+      }
+    });
+    return;
+  }
+
+  // Placing fixed weight
+  if (isMouseDown && isKeyDown) return toggleFixedWeight(row, col);
+
+  // Placing obstacles
+  if (isMouseDown && !isKeyDown) return placeObstacle(row, col);
+};
 
 
   const handleMouseDown = (row: number, col: number) => {
