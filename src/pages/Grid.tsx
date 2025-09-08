@@ -15,6 +15,7 @@ import { useStart } from "@/store/use-start";
 import { useEnd } from "@/store/use-end";
 import { END_COL, END_ROW, START_COL, START_ROW } from "@/lib/utils/constants";
 import { useAfterAlgo } from "@/store/use-after-algo";
+import { flushSync } from "react-dom";
 
 
 
@@ -68,6 +69,7 @@ const handleMouseEnter = (row: number, col: number) => {
     if (cell.isEnd) return;
 
     setCell(row, col, "start", setGrid, (newGrid) => {
+      flushSync(() => setGrid(newGrid));
       // Always pass explicit positions
       if (hasVisualizationRun) {
         handleAlgo({
@@ -88,6 +90,7 @@ const handleMouseEnter = (row: number, col: number) => {
     if (cell.isStart) return;
 
     setCell(row, col, "end", setGrid, (newGrid) => {
+      flushSync(() => setGrid(newGrid));
       if (hasVisualizationRun) {
         handleAlgo({
           grid: newGrid,
