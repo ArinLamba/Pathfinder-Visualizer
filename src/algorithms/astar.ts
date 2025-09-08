@@ -9,8 +9,6 @@ import { getPath } from "@/lib/utils/getPath";
 import { animatePath } from "@/animations/animate-path";
 import { animateWeightedAlgo } from "@/animations/animate-weighted-algo";
 
-
-
 export const callAstar= async ({
   grid,
   startPos,
@@ -83,7 +81,7 @@ const astar = ({
     visitedNodes.push(newGrid[row][col]);
 
     if(row === endRow && col === endCol) {
-      return visitedNodes;
+      return visitedNodes
     }
 
     for(const [dx, dy] of directions) {
@@ -92,6 +90,7 @@ const astar = ({
 
       if(!isValid(nrow, ncol) || visited[nrow][ncol]) continue;
       const neighbour = newGrid[nrow][ncol];
+
       if(neighbour.isWall) continue;
 
       // check conditions before proceeding further
@@ -127,6 +126,6 @@ const calculateHeuristic = (
 ) => {
   const rowDiff = Math.abs(cellRow - destRow);
   const colDiff = Math.abs(cellCol - destCol);
-
-  return rowDiff * 1.1 + colDiff;
+  return rowDiff * 1.002  + colDiff * 1.005;
+  // return rowDiff + colDiff;
 };

@@ -1,5 +1,5 @@
 import React from "react";
-import { ChevronLeft, ChevronRight, Target, Weight } from "lucide-react";
+import { ChevronDown, ChevronLeft, ChevronRight, ChevronUp, Target, Weight } from "lucide-react";
 import type { ModeSelection, NodeAttributes, Position } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
@@ -19,8 +19,6 @@ export const Node = React.memo(
 
     const isStart = row === startPos[0] && col === startPos[1];
     const isEnd = row === endPos[0] && col === endPos[1];
-    const facingRight = startPos[1] - endPos[1] < 1;
-    
 
     // dragging flags
     const isDragging = mode === "draggingStart" || mode === "draggingEnd";
@@ -57,10 +55,36 @@ export const Node = React.memo(
         onMouseEnter={onMouseEnter}
         onKeyDown={onKeyDown}
       >
-        {isStart && (facingRight ? <ChevronRight className="aspect-square bg-yellow-500" color="black" /> : <ChevronLeft className="aspect-square bg-yellow-500" color="black" />)}
+        {isStart &&
+          (() => {
+            const dir = getDirection(startPos, endPos);
+            switch (dir) {
+              case "right":
+                return <ChevronRight className="aspect-square bg-yellow-500" color="black" />;
+              case "up":
+                return <ChevronUp className="aspect-square bg-yellow-500" color="black" />;
+              case "down":
+                return <ChevronDown className="aspect-square bg-yellow-500" color="black" />;
+              case "left":
+                return <ChevronLeft className="aspect-square bg-yellow-500" color="black" />;
+            }
+          })()}
+            
         {isEnd && <Target className="aspect-square bg-red-600" color="black" />}
         {!isStart && !isEnd && weight === 15 && <Weight className="aspect-square" />}
       </button>
     );
   }
 );
+
+const getDirection = (startPos: Position, endPos: Position): "up" | "down" | "left" | "right" => {
+  const rowDiff = endPos[0] - startPos[0];
+  const colDiff = endPos[1] - startPos[1];
+
+  // if columns differ a lot, pick horizontal direction
+  if (Math.abs(colDiff) > Math.abs(rowDiff)) {
+    return colDiff > 0 ? "right" : "left";
+  }
+  // otherwise pick vertical direction
+  return rowDiff > 0 ? "down" : "up";
+};

@@ -18,6 +18,10 @@ export type NodeAttributes = {
   // For Bidirectional BFS
   parentFront?: NodeAttributes | null;
   parentBack?: NodeAttributes | null;
+
+  // New fields for A* animation
+  direction?: "up" | "down" | "left" | "right" | "up-left" | "up-right" | "down-left" | "down-right";
+  pathSteps?: string[]; // e.g., ["f", "l", "f"]
 };
 
 export type GridType = NodeAttributes[][];

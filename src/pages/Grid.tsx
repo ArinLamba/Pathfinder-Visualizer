@@ -38,98 +38,66 @@ export const Grid = ({ grid, setGrid, resetFlag, visualizerTrigger } : Props) =>
   const { endPos, setEndPos } = useEnd();
   const { hasVisualizationRun, setHasVisualizationRun } = useAfterAlgo();
 
-  const toggleWall = (row:number, col:number) => {
-    if(grid[row][col].isStart || grid[row][col].isEnd || isRunning) return;
-    addWalls({row, col, setGrid})
+
+  const placeObstacle = (row: number, col: number) => {
+    if (grid[row][col].isStart || grid[row][col].isEnd || isRunning) return;
+
+    switch (obstacle) {
+      case "Wall": addWalls({ row, col, setGrid }); break;
+      case "Grass": addGrass({ row, col, setGrid }); break;
+      case "Water": addWater({ row, col, setGrid }); break;
+      case "Mountain": addMountain({ row, col, setGrid }); break;
+    }
   };
-
-  const toggleGrass = (row: number, col: number) => {
-    if(grid[row][col].isStart || grid[row][col].isEnd || isRunning) return;
-    addGrass({row, col, setGrid});
-
-  };
-  const toggleWater = (row: number, col: number) => {
-    if(grid[row][col].isStart || grid[row][col].isEnd || isRunning) return;
-    addWater({row, col, setGrid});
-
-  };
-  const toggleMountain = (row: number, col: number) => {
-    if(grid[row][col].isStart || grid[row][col].isEnd || isRunning) return;
-    addMountain({row, col, setGrid});
-
-  };
-
   const toggleFixedWeight = (row: number, col: number) => {
     if(grid[row][col].isStart || grid[row][col].isEnd || isRunning) return;
     addFixedWeights({row, col, setGrid});
-  }
-
-  const handleMouseEnter = async (row: number, col: number) => {
-    if(isRunning || row === startPos[0] && col === startPos[1] || row === endPos[0] && col === endPos[1]) return;
+  };
+  
+  const handleMouseEnter = (row: number, col: number) => {
+    if (
+      isRunning ||
+      (row === startPos[0] && col === startPos[1]) ||
+      (row === endPos[0] && col === endPos[1])
+    )
+      return;
 
     const cell = grid[row][col];
+
+    if (isMouseDown && mode === "draggingStart" && !cell.isEnd) {
+      setCell(row, col, "start", setGrid, async (newGrid) => {
+        if (hasVisualizationRun) {
+          await handleAlgo({ grid: newGrid, startPos: [row, col], endPos, setGrid, algo, instant: true });
+        }
+      });
+      return;
+    }
+
+    if (isMouseDown && mode === "draggingEnd" && !cell.isStart) {
+      setCell(row, col, "end", setGrid, async (newGrid) => {
+        if (hasVisualizationRun) {
+          await handleAlgo({ grid: newGrid, startPos, endPos: [row, col], setGrid, algo, instant: true });
+        }
+      });
+      return;
+    }
+
+    if (isMouseDown && isKeyDown) return toggleFixedWeight(row, col);
     
-    if (isMouseDown && mode === "draggingStart") {
-      if (cell.isEnd) return;
-      setCell(row, col, "start", setGrid);
-      if(hasVisualizationRun) {
-        await handleAlgo({ grid, startPos, endPos, setGrid, algo, instant: true });
-      }
-      return;
-    }
-
-    if(isMouseDown && mode === "draggingEnd") {
-      if(cell.isStart) return;
-      setCell(row, col, "end", setGrid);
-      if(hasVisualizationRun) {
-        await handleAlgo({ grid, startPos, endPos, setGrid, algo, instant: true });
-      }
-      return;
-    }
-
-    if(isMouseDown && isKeyDown) {
-      toggleFixedWeight(row, col);
-      return;
-    }
-
-    if(isMouseDown && !isKeyDown) {
-      switch (obstacle) {
-        case "Wall":
-          toggleWall(row,col);
-          break;
-        case "Grass":
-          toggleGrass(row, col);
-          break;
-        case "Water":
-          toggleWater(row,col);
-          break;
-        case "Mountain":
-          toggleMountain(row,col);
-          break;
-      }
-    }
+    if (isMouseDown && !isKeyDown) return placeObstacle(row, col);
+    
   };
+
 
   const handleMouseDown = (row: number, col: number) => {
     setIsMouseDown(true);
-    if(row === startPos[0] && col === startPos[1]) {
-      setMode("draggingStart");
-      return;
-    }
-    if(row === endPos[0] && col === endPos[1]) {
-      setMode("draggingEnd");
-      return;
-    }
+    if(row === startPos[0] && col === startPos[1]) return setMode("draggingStart");
+    if(row === endPos[0] && col === endPos[1]) return setMode("draggingEnd");
 
-    if(isKeyDown) {
-      toggleFixedWeight(row, col);
-      return;
-    }
+    if(isKeyDown) return toggleFixedWeight(row, col);
+
     // Only toggle cells if not dragging
-    if(obstacle === "Wall") toggleWall(row, col);
-    if(obstacle === "Grass") toggleGrass(row, col);
-    if(obstacle === "Water") toggleWater(row, col);
-    if(obstacle === "Mountain") toggleMountain(row, col);
+    placeObstacle(row, col);
   };
 
   useEffect(() => {
